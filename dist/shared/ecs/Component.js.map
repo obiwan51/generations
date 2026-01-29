@@ -1,1 +1,0 @@
-{"version":3,"file":"Component.js","sourceRoot":"","sources":["../../../shared/ecs/Component.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AACH,MAAM,OAAO,SAAS;IACJ,EAAE,CAAS;IACpB,SAAS,GAAY,KAAK,CAAC;IAElC;QACE,IAAI,CAAC,EAAE,GAAG,MAAM,CAAC,UAAU,EAAE,CAAC;IAChC,CAAC;IAED;;;OAGG;IACH,MAAM;QACJ,IAAI,CAAC,SAAS,GAAG,IAAI,CAAC;IACxB,CAAC;CACF;AAED,eAAe,SAAS,CAAC"}

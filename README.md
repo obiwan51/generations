@@ -1,8 +1,8 @@
-# Generations
+# Generations JS
 
-**Generations** is a multiplayer survival engine and sandbox platform inspired by *One Hour One Life*, built with **Node.js**, **Socket.io**, and **HTML5 Canvas**. 
+**Generations JS** is a multiplayer survival engine and sandbox platform inspired by *One Hour One Life*, built with **Node.js**, **Socket.io**, and **HTML5 Canvas**. 
 
-More than just a survival game, **Generations** is a data-driven platform designed to allow developers and designers to create their own unique survival adventures. The entire game world—from biology and crafting recipes to ecosystems and object properties—is defined dynamically, making it a powerful engine for emergent multiplayer storytelling.
+More than just a survival game, **Generations JS** is a data-driven platform designed to allow developers and designers to create their own unique survival adventures. The entire game world—from biology and crafting recipes to ecosystems and object properties—is defined dynamically, making it a powerful engine for emergent multiplayer storytelling.
 
 ## 🚀 Technologies
 
@@ -26,7 +26,7 @@ More than just a survival game, **Generations** is a data-driven platform design
 
 ## 🌍 World Management Platform
 
-**Generations** empowers administrators to be game designers. The logic is decoupled from the content, allowing you to reshape the experience without touching code.
+**Generations JS** empowers administrators to be game designers. The logic is decoupled from the content, allowing you to reshape the experience without touching code.
 
 ### 1. Data-Driven Design (JSON)
 The core game rules are defined in accessible JSON files in `server/data/`:
