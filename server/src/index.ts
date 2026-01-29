@@ -16,15 +16,18 @@ import { validateName, formatName } from './utils/nameFilter.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const PORT = process.env.PORT || 3001;
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5173", "http://localhost:5174", "http://localhost:3000", "http://localhost:3001"],
+        origin: '*',
         methods: ["GET", "POST"]
     }
 });
 const engine = new GameEngine(io);
+
 
 // Ban Management
 const BANNED_IPS_FILE = path.join(__dirname, '../data/banned_ips.json');
@@ -45,7 +48,7 @@ const saveBans = () => {
     }
 };
 
-const PORT = process.env.PORT || 3001;
+
 
 // CORS middleware for static assets in development
 app.use((req, res, next) => {
@@ -54,10 +57,23 @@ app.use((req, res, next) => {
     next();
 });
 
+const CLIENT_DIST = path.join(__dirname, '../../client/dist');
+const ASSETS_PATH = path.join(__dirname, '../../assets');
+
 // Serve static files
-app.use(express.static(path.join(__dirname, '../../client')));
+app.use(express.static(CLIENT_DIST));
 app.use('/shared', express.static(path.join(__dirname, '../../shared')));
-app.use('/assets', express.static(path.join(__dirname, '../../assets')));
+app.use('/assets', express.static(ASSETS_PATH));
+
+// 3. Fallback: Any unknown route serves the index.html (Standard for SPA)
+app.get('*', (req, res) => {
+    const indexPath = path.join(CLIENT_DIST, 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('Client build not found. Did you run npm run build?');
+    }
+});
 
 // === AUTHENTICATION ===
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
