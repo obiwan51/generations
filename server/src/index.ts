@@ -59,6 +59,45 @@ app.use(express.static(path.join(__dirname, '../../client')));
 app.use('/shared', express.static(path.join(__dirname, '../../shared')));
 app.use('/assets', express.static(path.join(__dirname, '../../assets')));
 
+// === AUTHENTICATION ===
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+
+// Login endpoint
+app.post('/admin-api/login', express.json(), (req, res) => {
+    const { password } = req.body;
+    if (password === ADMIN_PASSWORD) {
+        // In a real app, generate a token. Here we'll just return success 
+        // and the client can use the password as the "token" or we could sign a JWT.
+        // For simplicity, we'll return a simple token string that matches the password for now,
+        // or a mock token if we wanted state. Let's just trust the password as the token for this scale.
+        res.json({ success: true, token: "admin-session-token" }); 
+    } else {
+        res.status(401).json({ success: false, message: "Invalid password" });
+    }
+});
+
+// Middleware to protect admin routes
+const authMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    // Skip auth for login
+    if (req.path === '/admin-api/login') {
+        return next();
+    }
+
+    // Check header
+    const authHeader = req.headers.authorization;
+    // We expect "Bearer <password>" or just checking a custom header for simplicity
+    // But since we returned "admin-session-token", let's expect that.
+    // Actually, for simplicity in this specific project context:
+    if (authHeader === `Bearer admin-session-token`) {
+        next();
+    } else {
+        res.status(401).json({ error: 'Unauthorized' });
+    }
+};
+
+// Apply auth middleware to all admin-api routes
+app.use('/admin-api', authMiddleware);
+
 // === ADMIN API ROUTES ===
 
 // Config management

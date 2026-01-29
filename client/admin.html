@@ -12,6 +12,53 @@
             color: #eee;
             min-height: 100vh;
         }
+
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #16213e;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-box {
+            background: #1a1a2e;
+            padding: 40px;
+            border-radius: 10px;
+            border: 1px solid #30475e;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .login-box h2 {
+            color: #e94560;
+            margin-bottom: 20px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: #0f3460;
+            border: 1px solid #30475e;
+            color: white;
+            border-radius: 5px;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            background: #e94560;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .login-btn:hover { background: #d63d56; }
         
         /* Header */
         .header {
@@ -762,6 +809,17 @@
     </style>
 </head>
 <body>
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <form onsubmit="handleLogin(event)">
+                <input type="password" id="admin-password" class="login-input" placeholder="Enter Admin Password" required>
+                <button type="submit" class="login-btn">Login</button>
+                <div id="login-error" style="color: #ff6b6b; margin-top: 10px; font-size: 0.9em; display: none;">Invalid password</div>
+            </form>
+        </div>
+    </div>
+
     <div class="header">
         <h1>🎮 Generations JS - Server Admin</h1>
         <div class="status">
@@ -1397,8 +1455,92 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3001/admin-api';
-        const ASSETS_BASE = 'http://localhost:3001/assets';
+        const API_BASE = '/admin-api';
+
+        // === AUTHENTICATION ===
+        let adminToken = localStorage.getItem('adminToken');
+        
+        // Override global fetch to handle auth
+        const originalFetch = window.fetch;
+        window.fetch = async (url, options = {}) => {
+            if (!options.headers) options.headers = {};
+            // If it's a JSON content type, ensure we respect that, but headers is usually a Headers object or plain object.
+            // We'll assume plain object for simplicity as per existing usage.
+            if (adminToken) {
+                if (options.headers instanceof Headers) {
+                    options.headers.append('Authorization', 'Bearer ' + adminToken);
+                } else {
+                    options.headers['Authorization'] = 'Bearer ' + adminToken;
+                }
+            }
+            
+            try {
+                const res = await originalFetch(url, options);
+                if (res.status === 401 && !url.includes('/login')) {
+                    adminToken = null;
+                    localStorage.removeItem('adminToken');
+                    showLogin();
+                }
+                return res;
+            } catch (e) {
+                throw e;
+            }
+        };
+
+        function showLogin() {
+            document.getElementById('login-overlay').style.display = 'flex';
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const password = document.getElementById('admin-password').value;
+            const errorDiv = document.getElementById('login-error');
+            
+            try {
+                // Use originalFetch for login to avoid circular auth check logic (though 401 handling is safe)
+                const res = await originalFetch(API_BASE + '/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    adminToken = data.token || "session";
+                    localStorage.setItem('adminToken', adminToken);
+                    document.getElementById('login-overlay').style.display = 'none';
+                    errorDiv.style.display = 'none';
+                    // Trigger data load
+                    const activeTab = document.querySelector('.nav-item.active');
+                    if (activeTab) activeTab.click();
+                } else {
+                    errorDiv.textContent = 'Invalid password';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+                errorDiv.textContent = 'Server connection error';
+                errorDiv.style.display = 'block';
+            }
+        }
+        
+        // Expose handleLogin to window
+        window.handleLogin = handleLogin;
+
+        // Initial check
+        window.addEventListener('DOMContentLoaded', () => {
+             if (!adminToken) {
+                showLogin();
+            } else {
+                document.getElementById('login-overlay').style.display = 'none';
+                // Trigger initial load since we might miss the first click/load
+                const activeTab = document.querySelector('.nav-item.active');
+                if (activeTab) activeTab.click();
+            }
+        });
+
+        const ASSETS_BASE = '/assets';
         let currentRegistry = { resources: {}, animals: {}, recipes: [] };
         let currentConfig = {};
         let statsInterval;
