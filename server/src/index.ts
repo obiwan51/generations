@@ -57,7 +57,7 @@ app.use((req, res, next) => {
     next();
 });
 
-const CLIENT_DIST = path.join(__dirname, '../../client/dist');
+const CLIENT_DIST = path.join(__dirname, '../../client');
 const ASSETS_PATH = path.join(__dirname, '../../assets');
 
 // Serve static files
