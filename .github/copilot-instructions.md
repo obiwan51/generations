@@ -1,4 +1,4 @@
-# Copilot Instructions for One Life
+# Copilot Instructions for Generations JS
 
 Project Overview: A multiplayer survival game (One Hour One Life clone) built with Node.js, Socket.io, and HTML5 Canvas.
 

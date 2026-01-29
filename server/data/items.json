@@ -99,7 +99,8 @@
     "isWeapon": true,
     "weaponType": "throw",
     "weaponDamage": 25,
-    "weaponMaxDist": 150
+    "weaponMaxDist": 150,
+    "uses": 10
   },
   "BONES": {
     "id": 113,

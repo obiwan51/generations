@@ -1,11 +1,39 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Soil -->
-  <ellipse cx="32" cy="55" rx="18" ry="7" fill="#5D4037"/>
-  <!-- Carrot greens poking out -->
-  <path d="M28 50 L25 35" stroke="#228B22" stroke-width="2"/>
-  <path d="M32 50 L32 30" stroke="#228B22" stroke-width="2"/>
-  <path d="M36 50 L39 35" stroke="#228B22" stroke-width="2"/>
-  <!-- Feathery leaves -->
-  <path d="M25 35 L20 30 M25 35 L28 28" stroke="#32CD32" stroke-width="1.5"/>
-  <path d="M32 30 L28 22 M32 30 L36 22" stroke="#32CD32" stroke-width="1.5"/>
+    <defs>
+        <radialGradient id="greensGrad" cx="50%" cy="100%" r="100%" fx="50%" fy="100%">
+            <stop offset="0%" style="stop-color:#81C784;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#2E7D32;stop-opacity:1" />
+        </radialGradient>
+        <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#5D4037;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#3E2723;stop-opacity:1" />
+        </linearGradient>
+         <filter id="plantShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/>
+            <feOffset dx="0" dy="1" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <!-- Soil Patch -->
+    <ellipse cx="32" cy="50" rx="16" ry="6" fill="url(#soilGrad)" />
+    
+    <!-- Carrot tops -->
+    <g filter="url(#plantShadow)">
+        <!-- Left Leaf -->
+        <path d="M32 50 Q 20 45 18 30 Q 25 35 32 48" fill="url(#greensGrad)" stroke="#1B5E20" stroke-width="0.5"/>
+        <!-- Right Leaf -->
+        <path d="M32 50 Q 44 45 46 30 Q 39 35 32 48" fill="url(#greensGrad)" stroke="#1B5E20" stroke-width="0.5"/>
+        <!-- Center Leaf -->
+        <path d="M32 50 Q 30 35 32 20 Q 34 35 32 48" fill="url(#greensGrad)" stroke="#1B5E20" stroke-width="0.5"/>
+        <!-- Small inner leaves -->
+        <path d="M32 50 Q 28 40 26 35" fill="none" stroke="#43A047" stroke-width="1.5"/>
+        <path d="M32 50 Q 36 40 38 35" fill="none" stroke="#43A047" stroke-width="1.5"/>
+        
+        <!-- Hint of orange at base -->
+        <ellipse cx="32" cy="50" rx="3" ry="1.5" fill="#FF7043"/>
+    </g>
 </svg>

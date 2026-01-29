@@ -42,6 +42,13 @@ export abstract class System<T extends Component = Component> {
   getComponentCount(): number {
     return this.components.filter(c => !c.isDeleted).length;
   }
+
+  /**
+   * Remove all components.
+   */
+  clear(): void {
+    this.components = [];
+  }
 }
 
 export default System;

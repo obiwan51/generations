@@ -1,0 +1,108 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <radialGradient id="skinGrad" cx="50%" cy="50%" r="50%" fx="40%" fy="40%">
+            <stop offset="0%" style="stop-color:#FFCCBC;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#D84315;stop-opacity:1" />
+        </radialGradient>
+        <linearGradient id="dressGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#EC407A;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#AD1457;stop-opacity:1" />
+        </linearGradient>
+        <filter id="softShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+            <feOffset dx="0" dy="2" result="offsetblur"/>
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.3"/>
+            </feComponentTransfer>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+        <radialGradient id="hairGrad" cx="30%" cy="30%" r="80%">
+            <stop offset="0%" style="stop-color:#795548;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#3E2723;stop-opacity:1" />
+        </radialGradient>
+    </defs>
+
+    <g filter="url(#softShadow)">
+        <!-- Back Hair Layer (Moved Behind Body) -->
+        <g transform="translate(0, -5)">
+            <path d="M 28 50 
+                     Q 28 0 64 0 
+                     Q 100 0 100 50 
+                     L 102 95 
+                     Q 64 105 26 95 
+                     Z" 
+                  fill="url(#hairGrad)" />
+        </g>
+
+        <!-- Legs -->
+        <rect x="54" y="90" width="8" height="30" rx="4" fill="#3E2723" />
+        <rect x="66" y="90" width="8" height="30" rx="4" fill="#3E2723" />
+
+        <!-- Dress -->
+        <path d="M44 50 L 84 50 L 96 100 Q 64 110 32 100 Z" fill="url(#dressGrad)" />
+        <path d="M44 50 Q 64 60 84 50" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="2" />
+        
+        <!-- Arms -->
+        <g transform="rotate(-15 44 55)">
+            <rect x="34" y="55" width="10" height="25" rx="5" fill="#FFCCBC" />
+        </g>
+        <g transform="rotate(15 84 55)">
+            <rect x="84" y="55" width="10" height="25" rx="5" fill="#FFCCBC" />
+        </g>
+
+        <!-- Head Group -->
+        <g transform="translate(0, -5)">
+            <!-- Ears (peeking out) -->
+            <circle cx="36" cy="55" r="5" fill="url(#skinGrad)" />
+            <circle cx="92" cy="55" r="5" fill="url(#skinGrad)" />
+
+            <!-- Face -->
+            <ellipse cx="64" cy="55" rx="28" ry="26" fill="url(#skinGrad)" />
+
+            <!-- Blunt Bangs (Straight across with slight curve) -->
+            <path d="M 34 45 
+                     Q 64 35 94 45
+                     L 94 30
+                     Q 94 10 64 10
+                     Q 34 10 34 30
+                     Z" 
+                  fill="url(#hairGrad)" />
+            
+            <!-- Side locks / framing strands -->
+            <path d="M 34 45 L 34 75 L 42 55 Z" fill="url(#hairGrad)" />
+            <path d="M 94 45 L 94 75 L 86 55 Z" fill="url(#hairGrad)" />
+
+            <!-- Eyes -->
+            <g transform="translate(0, 5)">
+                <ellipse cx="52" cy="48" rx="6" ry="8" fill="#3E2723" />
+                <ellipse cx="76" cy="48" rx="6" ry="8" fill="#3E2723" />
+                <circle cx="54" cy="45" r="2.5" fill="white" />
+                <circle cx="78" cy="45" r="2.5" fill="white" />
+                <circle cx="51" cy="51" r="1.5" fill="white" opacity="0.6" />
+                <circle cx="75" cy="51" r="1.5" fill="white" opacity="0.6" />
+            </g>
+            
+            <!-- Cheeks -->
+            <ellipse cx="48" cy="63" rx="6" ry="4" fill="#FF8A80" opacity="0.5" />
+            <ellipse cx="80" cy="63" rx="6" ry="4" fill="#FF8A80" opacity="0.5" />
+
+            <!-- Mouth -->
+            <path d="M60 67 Q 64 70 68 67" stroke="#D84315" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7" />
+
+            <!-- Flower -->
+            <g transform="translate(92, 30) rotate(15)">
+                <circle cx="0" cy="0" r="7" fill="#F44336" />
+                <circle cx="0" cy="-7" r="5" fill="#FFEB3B" opacity="0.8" />
+                <circle cx="6" cy="-3.5" r="5" fill="#FFEB3B" opacity="0.8" />
+                <circle cx="6" cy="3.5" r="5" fill="#FFEB3B" opacity="0.8" />
+                <circle cx="0" cy="7" r="5" fill="#FFEB3B" opacity="0.8" />
+                <circle cx="-6" cy="3.5" r="5" fill="#FFEB3B" opacity="0.8" />
+                <circle cx="-6" cy="-3.5" r="5" fill="#FFEB3B" opacity="0.8" />
+                <circle cx="0" cy="0" r="3" fill="#FFF" />
+            </g>
+        </g>
+    </g>
+</svg>

@@ -25,7 +25,7 @@ export type { PlayerRenderData as PlayerData };
 export class RenderSystem {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
-    private images: Record<string, HTMLImageElement> = {};
+    private images: Record<string, CanvasImageSource> = {};
     private registry: RegistryData | null = null;
     private weatherSystem: WeatherSystem;
     private playerRenderer: PlayerRenderer;
@@ -62,16 +62,44 @@ export class RenderSystem {
         return `${serverUrl}${path}`;
     }
 
+    private loadImage(key: string, path: string): void {
+        if (this.images[key]) return; // Already loading/loaded
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = this.getAssetUrl(path);
+        
+        // Store loading image
+        this.images[key] = img;
+
+        img.onload = () => {
+            // Optimization: Rasterize SVG to Canvas to avoid expensive filter calc per frame
+            try {
+                const size = Math.max(img.naturalWidth || 128, 128); 
+                const offscreen = document.createElement('canvas');
+                offscreen.width = size;
+                offscreen.height = size;
+                const ctx = offscreen.getContext('2d');
+                if (ctx) {
+                    ctx.drawImage(img, 0, 0, size, size);
+                    this.images[key] = offscreen;
+                }
+            } catch (e) {
+                console.warn('Failed to rasterize image', path, e);
+            }
+        };
+    }
+
     private loadBaseImages(): void {
         const baseUrls: Record<string, string> = {
             grass: '/assets/grass.svg',
             player: '/assets/player.svg',
+            player_male: '/assets/player_male.svg',
+            player_female: '/assets/player_female.svg',
             baby: '/assets/baby.svg'
         };
         for (const key in baseUrls) {
-            this.images[key] = new Image();
-            this.images[key].crossOrigin = 'anonymous';
-            this.images[key].src = this.getAssetUrl(baseUrls[key]);
+            this.loadImage(key, baseUrls[key]);
         }
     }
 
@@ -82,35 +110,23 @@ export class RenderSystem {
             for (const assetKey in animalAssets) {
                 const assetPath = animalAssets[assetKey];
                 if (assetPath) {
-                    const url = `/assets/${assetPath}`;
-                    if (!this.images[url]) {
-                        this.images[url] = new Image();
-                        this.images[url].crossOrigin = 'anonymous';
-                        this.images[url].src = this.getAssetUrl(url);
-                    }
+                    const fullPath = `/assets/${assetPath}`;
+                    this.loadImage(fullPath, fullPath);
                 }
             }
         }
         for (const key in registryData.resources) {
             const res = registryData.resources[key] as Resource;
             if (res.asset) {
-                const url = `/assets/${res.asset}`;
-                if (!this.images[url]) {
-                    this.images[url] = new Image();
-                    this.images[url].crossOrigin = 'anonymous';
-                    this.images[url].src = this.getAssetUrl(url);
-                }
+                const fullPath = `/assets/${res.asset}`;
+                this.loadImage(fullPath, fullPath);
             }
         }
         for (const key in registryData.items) {
             const item = registryData.items[key] as any;
             if (item.asset) {
-                const url = `/assets/${item.asset}`;
-                if (!this.images[url]) {
-                    this.images[url] = new Image();
-                    this.images[url].crossOrigin = 'anonymous';
-                    this.images[url].src = this.getAssetUrl(url);
-                }
+                const fullPath = `/assets/${item.asset}`;
+                this.loadImage(fullPath, fullPath);
             }
         }
     }
@@ -131,7 +147,7 @@ export class RenderSystem {
         return meta ? meta.name : 'Unknown';
     }
 
-    private getObjectImage(type: number): HTMLImageElement | null {
+    private getObjectImage(type: number): CanvasImageSource | null {
         const meta = this.getObjectMetadata(type);
         if (!meta) {
             // Fallback: try to find by asset pattern if not in registry metadata
@@ -279,7 +295,9 @@ export class RenderSystem {
                     const meta = this.getObjectMetadata(obj);
                     if (meta && (meta as any).isFloor) {
                         const img = this.getObjectImage(obj);
-                        if (img?.complete) {
+                        const isReady = img instanceof HTMLCanvasElement || 
+                            (img instanceof HTMLImageElement && img.complete && img.naturalWidth > 0);
+                        if (img && isReady) {
                             this.ctx.drawImage(img, screenX, screenY, TILE_SIZE, TILE_SIZE);
                         }
                     }
@@ -362,13 +380,18 @@ export class RenderSystem {
         const img = this.getObjectImage(obj);
         const meta = this.getObjectMetadata(obj);
 
-        if (img?.complete) {
+        const isReady = img instanceof HTMLCanvasElement || 
+            (img instanceof HTMLImageElement && img.complete && img.naturalWidth > 0);
+
+        if (img && isReady) {
             let w = TILE_SIZE, h = TILE_SIZE, yOffset = 0;
             if (meta) {
                 if ((meta as any).isLarge) {
                     const scale = (meta as any).size || 2;
                     // Preserve aspect ratio of the original image
-                    const imgAspect = img.naturalWidth / img.naturalHeight;
+                    const naturalWidth = img instanceof HTMLImageElement ? img.naturalWidth || 1 : img.width;
+                    const naturalHeight = img instanceof HTMLImageElement ? img.naturalHeight || 1 : img.height;
+                    const imgAspect = naturalWidth / naturalHeight;
                     h = TILE_SIZE * scale;
                     w = h * imgAspect;
                     yOffset = (meta as any).yOffset || TILE_SIZE;
@@ -401,7 +424,8 @@ export class RenderSystem {
             if (data?.inventory?.length > 0) {
                 data.inventory.forEach((itemType: number, index: number) => {
                     const subImg = this.getObjectImage(itemType);
-                    if (subImg?.complete) this.ctx.drawImage(subImg, screenX + 5 + (index * 15), screenY + 10, 20, 20);
+                    const subIsReady = subImg instanceof HTMLCanvasElement || (subImg instanceof HTMLImageElement && subImg.complete);
+                    if (subImg && subIsReady) this.ctx.drawImage(subImg, screenX + 5 + (index * 15), screenY + 10, 20, 20);
                 });
             }
         } else {
@@ -427,7 +451,9 @@ export class RenderSystem {
         projectiles.forEach(proj => {
             const px = proj.x + offsetX, py = proj.y + offsetY;
             const img = this.getObjectImage(proj.type);
-            if (img?.complete) {
+            const isReady = img instanceof HTMLCanvasElement || 
+                (img instanceof HTMLImageElement && img.complete && img.naturalWidth > 0);
+            if (img && isReady) {
                 this.ctx.save();
                 this.ctx.translate(px, py);
                 this.ctx.rotate(proj.angle + Math.PI / 4);

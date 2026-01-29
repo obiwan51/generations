@@ -1,10 +1,23 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Flour sack -->
-  <path d="M18 55 L18 30 Q18 25 25 25 L39 25 Q46 25 46 30 L46 55 Z" fill="#F5DEB3" stroke="#D2B48C" stroke-width="2"/>
-  <!-- Tie at top -->
-  <path d="M25 28 Q32 22 39 28" stroke="#8B4513" stroke-width="2" fill="none"/>
-  <!-- Flour texture -->
-  <circle cx="28" cy="40" r="2" fill="#FFF8DC" opacity="0.7"/>
-  <circle cx="36" cy="45" r="2" fill="#FFF8DC" opacity="0.7"/>
-  <circle cx="32" cy="38" r="1.5" fill="#FFF8DC" opacity="0.7"/>
+    <defs>
+        <radialGradient id="sackGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" style="stop-color:#F5F5F5;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#E0E0E0;stop-opacity:1" />
+        </radialGradient>
+        <filter id="itemShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/>
+            <feOffset dx="1" dy="1" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <g filter="url(#itemShadow)">
+        <path d="M22 45 Q 20 25 32 20 Q 44 25 42 45 Q 32 50 22 45" fill="url(#sackGrad)" stroke="#9E9E9E" stroke-width="0.5" />
+        <!-- Tied top -->
+         <path d="M30 20 L 28 15 L 36 15 L 34 20" fill="#E0E0E0" stroke="#9E9E9E" stroke-width="0.5" />
+         <line x1="30" y1="20" x2="34" y2="20" stroke="#757575" stroke-width="1"/>
+    </g>
 </svg>

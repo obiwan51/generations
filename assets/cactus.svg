@@ -1,32 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Desert cactus -->
-  
-  <!-- Ground shadow -->
-  <ellipse cx="32" cy="60" rx="12" ry="4" fill="#B8964A" opacity="0.3"/>
-  
-  <!-- Main cactus body -->
-  <rect x="26" y="20" width="12" height="40" rx="6" fill="#2E7D32"/>
-  
-  <!-- Left arm -->
-  <path d="M26 35 H18 Q12 35 12 41 V48 Q12 52 16 52 H18 Q22 52 22 48 V44" 
-        fill="none" stroke="#2E7D32" stroke-width="8" stroke-linecap="round"/>
-  
-  <!-- Right arm -->
-  <path d="M38 30 H46 Q52 30 52 36 V40 Q52 44 48 44 H46 Q42 44 42 40 V36" 
-        fill="none" stroke="#2E7D32" stroke-width="8" stroke-linecap="round"/>
-  
-  <!-- Highlights -->
-  <rect x="29" y="22" width="3" height="36" rx="1.5" fill="#43A047" opacity="0.5"/>
-  
-  <!-- Spines (small dots) -->
-  <circle cx="24" cy="28" r="1" fill="#1B5E20"/>
-  <circle cx="40" cy="28" r="1" fill="#1B5E20"/>
-  <circle cx="24" cy="38" r="1" fill="#1B5E20"/>
-  <circle cx="40" cy="38" r="1" fill="#1B5E20"/>
-  <circle cx="24" cy="48" r="1" fill="#1B5E20"/>
-  <circle cx="40" cy="48" r="1" fill="#1B5E20"/>
-  
-  <!-- Flower on top -->
-  <circle cx="32" cy="18" r="4" fill="#E91E63"/>
-  <circle cx="32" cy="18" r="2" fill="#FFEB3B"/>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="cactusGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#66BB6A;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#81C784;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#43A047;stop-opacity:1" />
+        </linearGradient>
+        <filter id="cactusShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/>
+            <feOffset dx="0" dy="1" result="offsetblur"/>
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.3"/>
+            </feComponentTransfer>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <!-- Ground Shadow -->
+    <ellipse cx="32" cy="54" rx="12" ry="4" fill="rgba(0,0,0,0.3)" />
+
+    <g filter="url(#cactusShadow)">
+        <!-- Main Body -->
+        <path d="M28 60 L28 20 Q28 10 32 10 Q36 10 36 20 L36 60 Z" fill="url(#cactusGrad)" stroke="#1B5E20" stroke-width="1"/>
+        
+        <!-- Left Arm -->
+        <path d="M28 40 Q20 40 20 35 L20 25 Q20 20 24 20 Q28 20 28 25" fill="none" stroke="#1B5E20" stroke-width="6" stroke-linecap="round"/>
+        <path d="M28 40 Q20 40 20 35 L20 25 Q20 20 24 20 Q28 20 28 25" fill="none" stroke="url(#cactusGrad)" stroke-width="4" stroke-linecap="round"/>
+
+        <!-- Right Arm -->
+        <path d="M36 30 Q44 30 44 25 L44 18 Q44 13 40 13 Q36 13 36 18" fill="none" stroke="#1B5E20" stroke-width="6" stroke-linecap="round"/>
+        <path d="M36 30 Q44 30 44 25 L44 18 Q44 13 40 13 Q36 13 36 18" fill="none" stroke="url(#cactusGrad)" stroke-width="4" stroke-linecap="round"/>
+
+        <!-- Detail Lines -->
+        <path d="M30 15 L30 55" stroke="#1B5E20" stroke-width="0.5" opacity="0.5"/>
+        <path d="M34 15 L34 55" stroke="#1B5E20" stroke-width="0.5" opacity="0.5"/>
+
+        <!-- Spines -->
+        <g stroke="#F0F4C3" stroke-width="1">
+            <path d="M28 20 L26 18"/> <path d="M36 20 L38 18"/>
+            <path d="M28 30 L26 28"/> <path d="M36 30 L38 28"/>
+            <path d="M28 40 L26 38"/> <path d="M36 40 L38 38"/>
+            <path d="M28 50 L26 48"/> <path d="M36 50 L38 48"/>
+            <path d="M20 25 L18 25"/> <path d="M44 18 L46 18"/>
+            <path d="M32 10 L32 8"/>
+        </g>
+    </g>
 </svg>

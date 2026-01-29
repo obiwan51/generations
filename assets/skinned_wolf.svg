@@ -1,38 +1,54 @@
-<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Skinned wolf - butchered, ready for fur harvest -->
-  
-  <!-- Shadow -->
-  <ellipse cx="32" cy="50" rx="24" ry="7" fill="#000" opacity="0.2"/>
-  
-  <!-- Body (red/pink exposed flesh) -->
-  <ellipse cx="28" cy="36" rx="17" ry="11" fill="#CC6666" stroke="#993333" stroke-width="1.5"/>
-  <ellipse cx="28" cy="36" rx="13" ry="8" fill="#DD8888" opacity="0.5"/>
-  
-  <!-- Head -->
-  <ellipse cx="48" cy="30" rx="10" ry="8" fill="#BB7777" stroke="#993333" stroke-width="1.5"/>
-  
-  <!-- Snout -->
-  <ellipse cx="56" cy="32" rx="5" ry="4" fill="#CC6666" stroke="#993333" stroke-width="1.5"/>
-  <circle cx="58" cy="32" r="1.5" fill="#660000"/>
-  
-  <!-- Ear (lying flat) -->
-  <path d="M 50 22 L 54 18 L 52 24 Z" fill="#CC6666" stroke="#993333" stroke-width="1"/>
-  
-  <!-- Eye (X to show dead) -->
-  <line x1="48" y1="28" x2="51" y2="31" stroke="#660000" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="51" y1="28" x2="48" y2="31" stroke="#660000" stroke-width="1.5" stroke-linecap="round"/>
-  
-  <!-- Teeth showing -->
-  <line x1="56" y1="34" x2="56" y2="36" stroke="#FFF" stroke-width="1" stroke-linecap="round"/>
-  <line x1="58" y1="34" x2="58" y2="36" stroke="#FFF" stroke-width="1" stroke-linecap="round"/>
-  
-  <!-- Legs (lying down) -->
-  <rect x="18" y="42" width="4" height="8" rx="2" fill="#CC6666" stroke="#993333" stroke-width="1"/>
-  <rect x="24" y="43" width="4" height="8" rx="2" fill="#CC6666" stroke="#993333" stroke-width="1"/>
-  <rect x="32" y="43" width="4" height="7" rx="2" fill="#CC6666" stroke="#993333" stroke-width="1"/>
-  <rect x="38" y="42" width="4" height="7" rx="2" fill="#CC6666" stroke="#993333" stroke-width="1"/>
-  
-  <!-- Tail area -->
-  <path d="M 12 36 Q 8 34, 10 30" stroke="#CC6666" stroke-width="5" fill="none" stroke-linecap="round"/>
-  <path d="M 10 30 L 8 28" stroke="#993333" stroke-width="3" stroke-linecap="round"/>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Muscle Texture -->
+    <filter id="muscleTexture">
+      <feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="5" result="noise" />
+      <feColorMatrix type="matrix" values="0.5 0 0 0 0.4  0 0.1 0 0 0  0 0 0.1 0 0  0 0 0 1 0" in="noise" result="coloredNoise" />
+      <feComposite operator="in" in="coloredNoise" in2="SourceGraphic" result="composite" />
+    </filter>
+    
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="1" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.4"/>
+      </feComponentTransfer>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+
+    <linearGradient id="muscleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#E53935;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B71C1C;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#dropShadow)" transform="rotate(90 64 64)">
+    <!-- Bones exposed on legs -->
+    <path d="M44,90 Q40,110 36,118" stroke="#ECEFF1" stroke-width="4" fill="none" />
+    <path d="M84,90 Q88,110 92,118" stroke="#ECEFF1" stroke-width="4" fill="none" />
+
+    <!-- Body -->
+    <ellipse cx="64" cy="75" rx="33" ry="26" fill="url(#muscleGradient)" filter="url(#muscleTexture)" />
+    
+    <!-- Ribs hint -->
+    <path d="M45,65 Q64,55 83,65" stroke="#ECEFF1" stroke-width="2" fill="none" opacity="0.5" />
+    <path d="M45,75 Q64,65 83,75" stroke="#ECEFF1" stroke-width="2" fill="none" opacity="0.5" />
+    <path d="M45,85 Q64,75 83,85" stroke="#ECEFF1" stroke-width="2" fill="none" opacity="0.5" />
+
+    <!-- Head (Skinned/Skull) -->
+    <circle cx="64" cy="45" r="20" fill="url(#muscleGradient)" filter="url(#muscleTexture)" />
+    
+    <!-- Eye Sockets -->
+    <circle cx="56" cy="42" r="4" fill="#3D0000" />
+    <circle cx="72" cy="42" r="4" fill="#3D0000" />
+    
+    <!-- Snout Bone -->
+    <path d="M60,48 L68,48 L64,65 Z" fill="#ECEFF1" opacity="0.8" />
+
+    <!-- Tail Bone -->
+    <path d="M30,70 Q10,75 15,95" stroke="#ECEFF1" stroke-width="3" fill="none" />
+  </g>
 </svg>

@@ -77,6 +77,10 @@ export class HungerSystem extends System<HungerComponent> {
       
       component.decreaseHunger(hungerAmount);
       
+      if (this.onHungerUpdate) {
+        this.onHungerUpdate(component.id, component.currentHunger);
+      }
+
       // Check for starvation
       if (!wasStarving && component.isStarving() && this.onStarve) {
         this.onStarve(component.id);

@@ -1,28 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Planted berry bush - small seedling -->
-  
-  <!-- Soil mound -->
-  <ellipse cx="32" cy="54" rx="16" ry="6" fill="#5D4037"/>
-  <ellipse cx="32" cy="52" rx="12" ry="4" fill="#795548"/>
-  
-  <!-- Small stem -->
-  <line x1="32" y1="52" x2="32" y2="36" stroke="#4A7C43" stroke-width="3"/>
-  
-  <!-- Small branches -->
-  <line x1="32" y1="42" x2="24" y2="36" stroke="#4A7C43" stroke-width="2"/>
-  <line x1="32" y1="42" x2="40" y2="36" stroke="#4A7C43" stroke-width="2"/>
-  <line x1="32" y1="38" x2="26" y2="32" stroke="#4A7C43" stroke-width="1.5"/>
-  <line x1="32" y1="38" x2="38" y2="32" stroke="#4A7C43" stroke-width="1.5"/>
-  
-  <!-- Small leaves -->
-  <ellipse cx="22" cy="34" rx="5" ry="3" fill="#2E7D32" transform="rotate(-20 22 34)"/>
-  <ellipse cx="42" cy="34" rx="5" ry="3" fill="#2E7D32" transform="rotate(20 42 34)"/>
-  <ellipse cx="24" cy="30" rx="4" ry="2.5" fill="#388E3C" transform="rotate(-30 24 30)"/>
-  <ellipse cx="40" cy="30" rx="4" ry="2.5" fill="#388E3C" transform="rotate(30 40 30)"/>
-  <ellipse cx="32" cy="34" rx="4" ry="3" fill="#43A047"/>
-  
-  <!-- Tiny flower buds (future berries) -->
-  <circle cx="30" cy="32" r="2" fill="#FFCDD2"/>
-  <circle cx="36" cy="30" r="1.5" fill="#FFCDD2"/>
-  <circle cx="34" cy="36" r="1.5" fill="#FFCDD2"/>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <radialGradient id="bushGrad" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+            <stop offset="0%" style="stop-color:#81C784;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#388E3C;stop-opacity:1" />
+        </radialGradient>
+        <filter id="bushShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+            <feOffset dx="0" dy="1" result="offsetblur"/>
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.3"/>
+            </feComponentTransfer>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <!-- Ground Shadow -->
+    <ellipse cx="32" cy="54" rx="14" ry="4" fill="rgba(0,0,0,0.3)" />
+
+    <!-- Main Bush Body (Smaller Clumps) -->
+    <g filter="url(#bushShadow)">
+        <circle cx="24" cy="46" r="10" fill="url(#bushGrad)" />
+        <circle cx="40" cy="46" r="10" fill="url(#bushGrad)" />
+        <circle cx="32" cy="38" r="12" fill="url(#bushGrad)" />
+    </g>
+
+    <!-- Leaves detail -->
+    <path d="M28 46 Q32 50 36 46" stroke="#1B5E20" stroke-width="1" fill="none" opacity="0.3"/>
+    
+    <!-- One or two small unripe berries -->
+    <circle cx="32" cy="40" r="2" fill="#DCE775" />
+    <circle cx="28" cy="44" r="1.5" fill="#DCE775" />
+
 </svg>

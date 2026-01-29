@@ -1,0 +1,54 @@
+<svg width="128" height="192" viewBox="0 0 128 192" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="oakTrunk" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#8D6E63;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#A1887F;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#5D4037;stop-opacity:1" />
+        </linearGradient>
+        <radialGradient id="oakLeaf" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+            <stop offset="0%" style="stop-color:#81C784;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#388E3C;stop-opacity:1" />
+        </radialGradient>
+        <filter id="blobShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+            <feOffset dx="0" dy="2" result="offsetblur"/>
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.3"/>
+            </feComponentTransfer>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+    
+    <!-- Ground Shadow -->
+    <ellipse cx="64" cy="180" rx="45" ry="14" fill="rgba(0,0,0,0.3)" />
+
+    <!-- Trunk -->
+    <path d="M54 120 L64 185 L74 120 L74 80 L54 80 Z" fill="url(#oakTrunk)" />
+    <!-- Roots/Base flair -->
+    <path d="M54 170 Q 40 185 40 190 L56 185 Z" fill="#5D4037" />
+    <path d="M74 170 Q 88 185 88 190 L72 185 Z" fill="#5D4037" />
+
+    <!-- Branches (Hidden mostly) -->
+    <path d="M64 100 L40 80" stroke="#5D4037" stroke-width="6" stroke-linecap="round" />
+    <path d="M64 100 L88 80" stroke="#5D4037" stroke-width="6" stroke-linecap="round" />
+    <path d="M64 80 L64 60" stroke="#5D4037" stroke-width="6" stroke-linecap="round" />
+
+    <!-- Leaves Clumps -->
+    <!-- Back Clumps -->
+    <circle cx="40" cy="80" r="30" fill="url(#oakLeaf)" filter="url(#blobShadow)" />
+    <circle cx="88" cy="80" r="30" fill="url(#oakLeaf)" filter="url(#blobShadow)" />
+    
+    <!-- Top Clump -->
+    <circle cx="64" cy="50" r="35" fill="url(#oakLeaf)" filter="url(#blobShadow)" />
+    
+    <!-- Front/Center Clumps -->
+    <circle cx="50" cy="90" r="28" fill="url(#oakLeaf)" filter="url(#blobShadow)" />
+    <circle cx="78" cy="90" r="28" fill="url(#oakLeaf)" filter="url(#blobShadow)" />
+    
+    <!-- Details on trunk -->
+    <path d="M60 140 L68 140" stroke="#3E2723" stroke-width="1" opacity="0.5" />
+    <path d="M58 150 L66 150" stroke="#3E2723" stroke-width="1" opacity="0.5" />
+</svg>

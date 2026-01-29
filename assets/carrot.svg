@@ -1,22 +1,32 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-    <!-- Carrot body -->
-    <path d="M28 22 Q26 35 28 45 Q30 52 32 56 Q34 52 36 45 Q38 35 36 22 Z" 
-          fill="#FF8C00" stroke="#D97000" stroke-width="1"/>
-    <!-- Carrot ridges -->
-    <path d="M28 28 Q32 29 36 28" stroke="#D97000" fill="none" stroke-width="0.8"/>
-    <path d="M27 34 Q32 35 37 34" stroke="#D97000" fill="none" stroke-width="0.8"/>
-    <path d="M27 40 Q32 41 37 40" stroke="#D97000" fill="none" stroke-width="0.8"/>
-    <path d="M28 46 Q32 47 36 46" stroke="#D97000" fill="none" stroke-width="0.8"/>
-    <!-- Highlight -->
-    <path d="M30 24 Q31 38 31 50" stroke="#FFB84D" stroke-width="1.5" opacity="0.6"/>
-    <!-- Green leaves -->
-    <path d="M28 22 Q26 18 24 14 Q22 10 20 6" stroke="#2E7D32" stroke-width="2" fill="none"/>
-    <path d="M30 20 Q28 14 26 8" stroke="#388E3C" stroke-width="2" fill="none"/>
-    <path d="M32 20 Q32 12 32 4" stroke="#43A047" stroke-width="2.5" fill="none"/>
-    <path d="M34 20 Q36 14 38 8" stroke="#388E3C" stroke-width="2" fill="none"/>
-    <path d="M36 22 Q38 18 40 14 Q42 10 44 6" stroke="#2E7D32" stroke-width="2" fill="none"/>
-    <!-- Leaf details -->
-    <path d="M24 14 L22 12" stroke="#1B5E20" stroke-width="1" opacity="0.6"/>
-    <path d="M26 8 L24 7" stroke="#1B5E20" stroke-width="1" opacity="0.6"/>
-    <path d="M38 8 L40 7" stroke="#1B5E20" stroke-width="1" opacity="0.6"/>
+    <defs>
+        <linearGradient id="carrotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FFAB91;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#FF7043;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#E64A19;stop-opacity:1" />
+        </linearGradient>
+        <filter id="itemShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+            <feOffset dx="1" dy="1" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <g filter="url(#itemShadow)" transform="rotate(45 32 32)">
+        <!-- Greens -->
+        <path d="M22 15 Q 30 25 32 32" stroke="#43A047" stroke-width="2" fill="none"/>
+        <path d="M42 15 Q 34 25 32 32" stroke="#43A047" stroke-width="2" fill="none"/>
+        <path d="M32 10 L 32 32" stroke="#43A047" stroke-width="2" fill="none"/>
+
+        <!-- Carrot Body -->
+        <path d="M24 32 Q 32 30 40 32 L 32 60 Z" fill="url(#carrotGrad)" stroke="#BF360C" stroke-width="0.5" />
+        
+        <!-- Texture lines -->
+        <path d="M26 36 L 38 36" stroke="#BF360C" stroke-width="0.5" opacity="0.5"/>
+        <path d="M28 42 L 36 42" stroke="#BF360C" stroke-width="0.5" opacity="0.5"/>
+        <path d="M30 48 L 34 48" stroke="#BF360C" stroke-width="0.5" opacity="0.5"/>
+    </g>
 </svg>

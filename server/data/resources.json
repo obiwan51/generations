@@ -1,32 +1,57 @@
 {
   "BERRY_BUSH": {
-    "id": 1,
+    "id": 51,
     "name": "Berry Bush",
     "asset": "berry_bush.svg",
     "description": "A bush with ripe berries ready for harvest.",
     "spawnRate": 0.04,
-    "biomes": ["grassland", "forest"]
+    "biomes": ["grassland", "forest"],
+    "yOffset": 10
   },
   "TREE": {
-    "id": 2,
-    "name": "Tree",
+    "id": 52,
+    "name": "Pine Tree",
     "asset": "tree.svg",
-    "description": "A tall tree that can be chopped for wood.",
-    "spawnRate": 0.06,
+    "description": "A tall pine tree that can be chopped for wood.",
+    "spawnRate": 0.04,
     "isLarge": true,
-    "yOffset": 64,
+    "size": 3,
+    "yOffset": 128,
+    "biomes": ["forest", "grassland"]
+  },
+  "TREE_OAK": {
+    "id": 53,
+    "name": "Oak Tree",
+    "asset": "tree_oak.svg",
+    "description": "A sturdy oak tree with broad leaves.",
+    "spawnRate": 0.03,
+    "isLarge": true,
+    "size": 3,
+    "yOffset": 128,
+    "biomes": ["forest", "grassland", "swamp"]
+  },
+  "TREE_BIRCH": {
+    "id": 54,
+    "name": "Birch Tree",
+    "asset": "tree_birch.svg",
+    "description": "A tall birch tree with white bark.",
+    "spawnRate": 0.03,
+    "isLarge": true,
+    "size": 3,
+    "yOffset": 128,
     "biomes": ["forest", "grassland"]
   },
   "ROCK": {
-    "id": 3,
+    "id": 55,
     "name": "Rock",
     "asset": "rock.svg",
     "description": "A solid rock useful for crafting tools.",
     "spawnRate": 0.02,
-    "biomes": ["grassland", "desert", "forest", "swamp"]
+    "biomes": ["grassland", "desert", "forest", "swamp"],
+    "yOffset": 5
   },
   "WILD_CARROT": {
-    "id": 4,
+    "id": 56,
     "name": "Wild Carrot",
     "asset": "carrot.svg",
     "description": "A wild carrot growing in the ground.",
@@ -36,7 +61,7 @@
     "biomes": ["grassland", "forest"]
   },
   "RUINS": {
-    "id": 5,
+    "id": 57,
     "name": "Ruins",
     "asset": "ruins.svg",
     "description": "Ancient ruins from a forgotten civilization.",
@@ -47,7 +72,7 @@
     "biomes": ["desert", "grassland"]
   },
   "GRASS": {
-    "id": 6,
+    "id": 58,
     "name": "Tall Grass",
     "asset": "tall_grass.svg",
     "description": "Tall grass swaying in the wind.",
@@ -56,7 +81,7 @@
     "biomes": ["grassland", "forest"]
   },
   "WILD_WHEAT": {
-    "id": 7,
+    "id": 59,
     "name": "Wild Wheat",
     "asset": "wild_wheat.svg",
     "description": "Wild wheat growing naturally.",
@@ -64,7 +89,7 @@
     "biomes": ["grassland"]
   },
   "CACTUS": {
-    "id": 8,
+    "id": 60,
     "name": "Cactus",
     "asset": "cactus.svg",
     "description": "A prickly desert cactus.",
@@ -72,7 +97,7 @@
     "biomes": ["desert"]
   },
   "DEAD_TREE": {
-    "id": 9,
+    "id": 61,
     "name": "Dead Tree",
     "asset": "dead_tree.svg",
     "description": "A withered dead tree.",
@@ -82,7 +107,7 @@
     "biomes": ["swamp", "desert"]
   },
   "MUSHROOM": {
-    "id": 10,
+    "id": 62,
     "name": "Mushroom",
     "asset": "mushroom.svg",
     "description": "A wild mushroom growing in damp areas.",
@@ -92,7 +117,7 @@
     "biomes": ["swamp", "forest"]
   },
   "REEDS": {
-    "id": 20,
+    "id": 63,
     "name": "Reeds",
     "asset": "reeds.svg",
     "description": "Tall reeds growing near water.",
@@ -100,7 +125,7 @@
     "biomes": ["swamp"]
   },
   "LILY_PAD": {
-    "id": 21,
+    "id": 64,
     "name": "Lily Pad",
     "asset": "lily_pad.svg",
     "description": "A floating lily pad on the water surface.",

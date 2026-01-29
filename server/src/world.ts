@@ -411,6 +411,20 @@ class World {
         this.saveWorld();
     }
 
+    // Clear all objects from the world but keep terrain
+    clearObjects(): void {
+        this.objects = {};
+        this.objectsData = {};
+        
+        // Clear objects from all chunks
+        for (const chunk of this.chunks.values()) {
+            chunk.objects = {};
+            chunk.objectsData = {};
+        }
+        
+        this.saveWorld();
+    }
+
     getState() {
         return {
             tiles: this.tiles,

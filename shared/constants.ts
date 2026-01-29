@@ -18,6 +18,7 @@ export const CONSTANTS = {
     BABY_MAX_AGE: 3,        // Age when child can walk normally
     BABY_CRAWL_SPEED: 0.5,  // Speed multiplier when crawling
     BABY_HUNGER_RATE: 2,    // Hunger depletes 2x faster
+    MAX_HUNGER: 20,         // Default max hunger
     SEASONS: {
         SPRING: 'spring',
         SUMMER: 'summer',

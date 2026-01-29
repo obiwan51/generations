@@ -1,42 +1,33 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Fire pit stones -->
-  <ellipse cx="32" cy="52" rx="22" ry="8" fill="#424242" opacity="0.3"/>
-  <!-- Stones around pit -->
-  <ellipse cx="18" cy="48" rx="6" ry="4" fill="#616161"/>
-  <ellipse cx="28" cy="50" rx="5" ry="3.5" fill="#757575"/>
-  <ellipse cx="36" cy="50" rx="5" ry="3.5" fill="#757575"/>
-  <ellipse cx="46" cy="48" rx="6" ry="4" fill="#616161"/>
-  <ellipse cx="24" cy="45" rx="4" ry="3" fill="#9E9E9E"/>
-  <ellipse cx="40" cy="45" rx="4" ry="3" fill="#9E9E9E"/>
-  <!-- Stone highlights -->
-  <ellipse cx="19" cy="47" rx="2" ry="1" fill="#BDBDBD" opacity="0.6"/>
-  <ellipse cx="45" cy="47" rx="2" ry="1" fill="#BDBDBD" opacity="0.6"/>
-  
-  <!-- Wood/coals in pit -->
-  <ellipse cx="32" cy="46" rx="10" ry="3" fill="#212121"/>
-  <rect x="26" y="42" width="4" height="8" rx="1" fill="#3E2723" transform="rotate(-15 28 46)"/>
-  <rect x="34" y="42" width="4" height="8" rx="1" fill="#3E2723" transform="rotate(15 36 46)"/>
-  <!-- Glowing coals -->
-  <ellipse cx="30" cy="44" rx="2" ry="1" fill="#FF6F00" opacity="0.8"/>
-  <ellipse cx="34" cy="44" rx="2" ry="1" fill="#FF6F00" opacity="0.8"/>
-  
-  <!-- Flames (outer red) -->
-  <path d="M32 44 Q28 38 30 30 Q32 35 34 30 Q36 38 32 44 Z" fill="#FF5722" opacity="0.9"/>
-  <path d="M28 42 Q26 36 27 28 Q28 32 29 28 Q30 36 28 42 Z" fill="#F4511E" opacity="0.8"/>
-  <path d="M36 42 Q38 36 37 28 Q36 32 35 28 Q34 36 36 42 Z" fill="#F4511E" opacity="0.8"/>
-  
-  <!-- Flames (middle orange) -->
-  <path d="M32 42 Q29 36 30 28 Q32 32 34 28 Q35 36 32 42 Z" fill="#FF9800" opacity="0.9"/>
-  <path d="M30 40 Q28 34 29 26 Q30 30 31 26 Q32 34 30 40 Z" fill="#FB8C00" opacity="0.8"/>
-  <path d="M34 40 Q36 34 35 26 Q34 30 33 26 Q32 34 34 40 Z" fill="#FB8C00" opacity="0.8"/>
-  
-  <!-- Flames (inner yellow/white) -->
-  <path d="M32 40 Q30 34 31 26 Q32 30 33 26 Q34 34 32 40 Z" fill="#FFC107" opacity="0.95"/>
-  <path d="M32 38 Q31 32 31.5 24 Q32 28 32.5 24 Q33 32 32 38 Z" fill="#FFEB3B" opacity="0.9"/>
-  <path d="M32 36 Q31.5 30 31.8 22 Q32 26 32.2 22 Q32.5 30 32 36 Z" fill="#FFF9C4" opacity="0.8"/>
-  
-  <!-- Smoke -->
-  <ellipse cx="32" cy="18" rx="4" ry="3" fill="#9E9E9E" opacity="0.3"/>
-  <ellipse cx="30" cy="12" rx="3" ry="2" fill="#BDBDBD" opacity="0.2"/>
-  <ellipse cx="34" cy="10" rx="2.5" ry="2" fill="#BDBDBD" opacity="0.15"/>
+    <defs>
+        <radialGradient id="fireBase" cx="50%" cy="80%" r="50%" fx="50%" fy="80%">
+             <stop offset="0%" style="stop-color:#FFEB3B;stop-opacity:1" />
+             <stop offset="50%" style="stop-color:#FF9800;stop-opacity:1" />
+             <stop offset="100%" style="stop-color:#F44336;stop-opacity:1" />
+        </radialGradient>
+        <filter id="fireGlow">
+             <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+             <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+             </feMerge>
+        </filter>
+    </defs>
+
+    <!-- Wood Base -->
+    <path d="M20 50 L 44 50 L 42 54 L 22 54 Z" fill="#5D4037" />
+    <path d="M25 52 L 40 46" stroke="#3E2723" stroke-width="2" />
+    <path d="M40 52 L 25 46" stroke="#3E2723" stroke-width="2" />
+
+    <g filter="url(#fireGlow)">
+        <!-- Flames -->
+        <path d="M32 50 Q 40 40 36 25 Q 32 10 28 25 Q 24 40 32 50" fill="url(#fireBase)" />
+        <path d="M28 50 Q 20 40 24 30 Q 28 40 28 50" fill="#FF9800" opacity="0.8"/>
+        <path d="M36 50 Q 44 40 40 30 Q 36 40 36 50" fill="#FF9800" opacity="0.8"/>
+        
+        <!-- Sparks -->
+        <circle cx="30" cy="20" r="1" fill="#FFEB3B" opacity="0.8"/>
+        <circle cx="34" cy="15" r="1" fill="#FFEB3B" opacity="0.6"/>
+        <circle cx="28" cy="12" r="0.5" fill="#FFEB3B" opacity="0.4"/>
+    </g>
 </svg>

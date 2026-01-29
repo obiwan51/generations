@@ -1,5 +1,24 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <line x1="10" y1="54" x2="54" y2="10" stroke="#795548" stroke-width="2" />
-  <path d="M50 14 L54 10 L58 14 Z" fill="#9E9E9E" />
-  <path d="M10 54 L15 50 M12 56 L17 52" stroke="#E0E0E0" stroke-width="2" />
+    <defs>
+        <filter id="toolShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/>
+            <feOffset dx="1" dy="1" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <g filter="url(#toolShadow)" transform="rotate(45 32 32)">
+        <!-- Shaft -->
+        <line x1="16" y1="32" x2="48" y2="32" stroke="#8D6E63" stroke-width="2" />
+        
+        <!-- Head (Flint) -->
+        <path d="M48 32 L 44 28 L 54 32 L 44 36 Z" fill="#757575" stroke="#424242" stroke-width="0.5" />
+        
+        <!-- Fletching -->
+        <path d="M16 32 L 12 28 L 20 28 L 24 32" fill="#ECEFF1" stroke="#CFD8DC" stroke-width="0.5" />
+        <path d="M16 32 L 12 36 L 20 36 L 24 32" fill="#ECEFF1" stroke="#CFD8DC" stroke-width="0.5" />
+    </g>
 </svg>

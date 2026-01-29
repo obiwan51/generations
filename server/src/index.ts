@@ -26,6 +26,25 @@ const io = new Server(server, {
 });
 const engine = new GameEngine(io);
 
+// Ban Management
+const BANNED_IPS_FILE = path.join(__dirname, '../data/banned_ips.json');
+let bannedIPs: string[] = [];
+try {
+    if (fs.existsSync(BANNED_IPS_FILE)) {
+        bannedIPs = JSON.parse(fs.readFileSync(BANNED_IPS_FILE, 'utf-8'));
+    }
+} catch (err) {
+    console.error("Failed to load banned IPs:", err);
+}
+
+const saveBans = () => {
+    try {
+        fs.writeFileSync(BANNED_IPS_FILE, JSON.stringify(bannedIPs, null, 2));
+    } catch (err) {
+        console.error("Failed to save banned IPs:", err);
+    }
+};
+
 const PORT = process.env.PORT || 3001;
 
 // CORS middleware for static assets in development
@@ -98,6 +117,11 @@ app.post('/admin-api/world/save', (req, res) => {
 app.post('/admin-api/world/reinitialize', express.json(), (req, res) => {
     engine.reinitializeWorld();
     res.json({ success: true, message: 'World reinitialized' });
+});
+
+app.post('/admin-api/world/reset-map', express.json(), (req, res) => {
+    engine.clearWorldObjects();
+    res.json({ success: true, message: 'Map entities cleared' });
 });
 
 // Sprite upload configuration
@@ -178,6 +202,98 @@ app.post('/admin-api/modules/:module', express.json(), (req, res) => {
     }
 });
 
+// Player Management APIs
+app.get('/admin-api/players', (req, res) => {
+    const playersList = [];
+    const sockets = io.sockets.sockets;
+    
+    for (const [id, player] of Object.entries(engine.players)) {
+        const socket = sockets.get(id);
+        const ip = socket ? (socket.handshake.headers['x-forwarded-for'] || socket.handshake.address) : 'Unknown';
+        
+        playersList.push({
+            id: player.id,
+            name: player.name,
+            age: Math.floor(player.age),
+            gender: player.gender,
+            ip: ip,
+            isDead: player.isDead,
+            generation: player.generation
+        });
+    }
+    res.json(playersList);
+});
+
+app.post('/admin-api/players/kick', express.json(), (req, res) => {
+    const { id, reason } = req.body;
+    const socket = io.sockets.sockets.get(id);
+    if (socket) {
+        socket.emit('textMessage', { text: 'You were kicked: ' + (reason || 'Admin kicked') });
+        socket.disconnect(true);
+        res.json({ success: true });
+    } else {
+        res.status(404).json({ success: false, message: 'Player not found' });
+    }
+});
+
+app.post('/admin-api/players/ban', express.json(), (req, res) => {
+    const { id, ip, reason } = req.body;
+    let targetIp = ip;
+    
+    if (id && !targetIp) {
+        const socket = io.sockets.sockets.get(id);
+        if (socket) {
+            targetIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+        }
+    }
+    
+    if (targetIp) {
+        if (!bannedIPs.includes(targetIp as string)) {
+            bannedIPs.push(targetIp as string);
+            saveBans();
+        }
+        
+        // Kick any players with this IP
+        for (const [sid, socket] of io.sockets.sockets) {
+            const sIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+            if (sIp === targetIp) {
+                socket.emit('textMessage', { text: 'You have been banned.' });
+                socket.disconnect(true);
+            }
+        }
+        
+        res.json({ success: true });
+    } else {
+        res.status(400).json({ success: false, message: 'Could not determine IP' });
+    }
+});
+
+app.get('/admin-api/bans', (req, res) => {
+    res.json(bannedIPs);
+});
+
+app.post('/admin-api/bans/remove', express.json(), (req, res) => {
+    const { ip } = req.body;
+    if (ip) {
+        bannedIPs = bannedIPs.filter(bannedIp => bannedIp !== ip);
+        saveBans();
+        res.json({ success: true });
+    } else {
+        res.status(400).json({ success: false, message: 'IP is required' });
+    }
+});
+
+app.get('/admin-api/bans', (req, res) => {
+    res.json(bannedIPs);
+});
+
+app.post('/admin-api/bans/remove', express.json(), (req, res) => {
+    const { ip } = req.body;
+    bannedIPs = bannedIPs.filter(b => b !== ip);
+    saveBans();
+    res.json({ success: true });
+});
+
 // Game loop (high frequency for engine internal updates)
 setInterval(() => engine.update(), 1000); 
 setInterval(() => engine.updateProjectiles(), 50);
@@ -206,6 +322,13 @@ setInterval(() => {
 }, 5000); // Check every 5 seconds
 
 io.on('connection', (socket) => {
+    // Check Ban
+    const ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+    if (bannedIPs.includes(ip as string)) {
+        socket.disconnect(true);
+        return;
+    }
+
     console.log('User connected: ' + socket.id);
 
     let sessionToken: string | null = null;
@@ -507,6 +630,17 @@ io.on('connection', (socket) => {
                     return;
                 }
             }
+
+            // Try picking up an animal
+            if (engine.pickUpAnimal(socket.id)) {
+                const updatedP = engine.players[socket.id];
+                io.emit('playerStatUpdate', { 
+                    id: socket.id, 
+                    holding: updatedP.holding, 
+                    holdingData: updatedP.holdingData
+                });
+                return;
+            }
         }
         
         // Otherwise try to pick up a world object
@@ -535,6 +669,7 @@ io.on('connection', (socket) => {
         if (isContainer && !p.backpack) {
             // Equip container as backpack
             world.removeObject(tx, ty);
+            engine.unregisterPlantedCrop(tx, ty);
             engine.equipBackpack(socket.id, targetType!, targetData);
             io.emit('worldUpdate', { x: tx, y: ty, type: null });
             const backpackData = engine.getPlayerBackpackData(socket.id);
@@ -552,6 +687,7 @@ io.on('connection', (socket) => {
 
         const result = world.removeObject(tx, ty);
         if (result) {
+            engine.unregisterPlantedCrop(tx, ty);
             engine.updatePlayerHolding(socket.id, result.type, result.data);
             io.emit('worldUpdate', { x: tx, y: ty, type: null });
             io.emit('playerStatUpdate', { id: socket.id, holding: result.type, holdingData: result.data });
@@ -589,6 +725,13 @@ io.on('connection', (socket) => {
             if (!world.getObject(tx, ty)) {
                 world.setObject(tx, ty, p.holding, p.holdingData);
                 const item = p.holding, data = p.holdingData;
+                
+                // Register for growth if it's a crop
+                engine.registerPlantedCrop(tx, ty, item);
+                
+                // Register as animal if it's a live animal
+                engine.registerAnimal(tx, ty, item, data);
+
                 engine.updatePlayerHolding(socket.id, null, null);
                 io.emit('worldUpdate', { x: tx, y: ty, type: item, data: data });
                 io.emit('playerStatUpdate', { id: socket.id, holding: null, holdingData: null });
@@ -794,7 +937,11 @@ io.on('connection', (socket) => {
 
             if (canFit && basket.def && basket.data.inventory.length < (basket.def.capacity || 3)) {
                 basket.data.inventory.push(item.type);
-                if (item.isGround) { world.removeObject(tx, ty); io.emit('worldUpdate', { x: tx, y: ty, type: null }); }
+                if (item.isGround) { 
+                    world.removeObject(tx, ty); 
+                    engine.unregisterPlantedCrop(tx, ty);
+                    io.emit('worldUpdate', { x: tx, y: ty, type: null }); 
+                }
                 else { engine.updatePlayerHolding(socket.id, null, null); }
 
                 if (basket.isGround) { world.setObject(tx, ty, basket.type, basket.data); io.emit('worldUpdate', { x: tx, y: ty, type: basket.type, data: basket.data }); }
@@ -917,6 +1064,7 @@ io.on('connection', (socket) => {
             } else {
                 // Regular recipe with tool - result goes on ground, tool stays in hand (with durability)
                 world.removeObject(tx, ty);
+                engine.unregisterPlantedCrop(tx, ty);
                 world.setObject(tx, ty, recipe.result);
                 io.emit('worldUpdate', { x: tx, y: ty, type: recipe.result });
                 

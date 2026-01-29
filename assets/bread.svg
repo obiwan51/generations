@@ -1,11 +1,23 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Bread loaf -->
-  <ellipse cx="32" cy="45" rx="22" ry="12" fill="#D2691E"/>
-  <ellipse cx="32" cy="42" rx="20" ry="10" fill="#DEB887"/>
-  <!-- Crust top -->
-  <path d="M15 42 Q32 25 49 42" fill="#CD853F"/>
-  <!-- Score lines -->
-  <path d="M22 38 L26 32" stroke="#8B4513" stroke-width="1.5" fill="none"/>
-  <path d="M30 36 L34 30" stroke="#8B4513" stroke-width="1.5" fill="none"/>
-  <path d="M38 38 L42 32" stroke="#8B4513" stroke-width="1.5" fill="none"/>
+    <defs>
+        <radialGradient id="breadGrad" cx="50%" cy="40%" r="50%" fx="50%" fy="40%">
+            <stop offset="0%" style="stop-color:#FFCA28;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#FF6F00;stop-opacity:1" />
+        </radialGradient>
+         <filter id="itemShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/>
+            <feOffset dx="1" dy="1" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <g filter="url(#itemShadow)">
+        <ellipse cx="32" cy="36" rx="14" ry="10" fill="url(#breadGrad)" stroke="#E65100" stroke-width="0.5" />
+        <!-- Cuts on top -->
+        <path d="M26 32 Q 30 30 34 34" stroke="#E65100" stroke-width="1" fill="none" opacity="0.6"/>
+        <path d="M30 30 Q 34 28 38 32" stroke="#E65100" stroke-width="1" fill="none" opacity="0.6"/>
+    </g>
 </svg>

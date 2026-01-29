@@ -1,4 +1,10 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-    <rect width="64" height="64" fill="#a8e063" />
-    <path d="M20 40 Q25 30 30 40 M40 45 Q45 35 50 45" stroke="#8bc34a" fill="none" stroke-width="1.5" opacity="0.6" />
+    <rect width="64" height="64" fill="#7CB342" />
+    <!-- Noise/Texture -->
+    <path d="M10 10 L 12 14 M40 20 L 42 24 M20 50 L 22 54 M50 50 L 52 46" stroke="#558B2F" stroke-width="1" opacity="0.5"/>
+    <path d="M5 40 L 8 44 M55 10 L 58 14 M30 30 L 32 26" stroke="#558B2F" stroke-width="1" opacity="0.5"/>
+    
+    <!-- Subtle tufts -->
+    <path d="M15 25 Q 17 20 19 25" stroke="#9CCC65" stroke-width="1" fill="none" opacity="0.3"/>
+    <path d="M45 45 Q 47 40 49 45" stroke="#9CCC65" stroke-width="1" fill="none" opacity="0.3"/>
 </svg>

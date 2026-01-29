@@ -77,6 +77,9 @@ class GameEngine {
 
     // Load registries
     this.reloadRegistry();
+    
+    // Initialize animals from world map
+    this.initializeAnimals();
   }
 
   private setupCallbacks(): void {
@@ -118,6 +121,31 @@ class GameEngine {
         }
       }
       return null;
+    };
+
+    // Broadcast hunger updates to clients
+    this.hungerSystem.onHungerUpdate = (componentId: string, hunger: number) => {
+        // Find player with this component
+        for (const [playerId, comps] of this.playerComponents) {
+            if (comps.hunger.id === componentId) {
+                // Calculate max hunger based on age for accurate UI
+                const age = comps.age.age;
+                let maxHunger = CONSTANTS.MAX_HUNGER;
+                
+                if (age < CONSTANTS.BABY_MAX_AGE) {
+                    const babyProgress = age / CONSTANTS.BABY_MAX_AGE;
+                    const babyMaxHunger = Math.floor(4 + (CONSTANTS.MAX_HUNGER - 4) * babyProgress);
+                    maxHunger = Math.min(CONSTANTS.MAX_HUNGER, Math.max(4, babyMaxHunger));
+                }
+
+                this.io.to(playerId).emit('playerStatUpdate', {
+                    id: playerId,
+                    hunger,
+                    maxHunger
+                });
+                break;
+            }
+        }
     };
   }
 
@@ -224,6 +252,10 @@ class GameEngine {
       );
       if (recipe) {
         world.setObject(hit.tileX, hit.tileY, recipe.result);
+        
+        // Remove the animal component so it's no longer treated as a live animal
+        this.animalSystem.removeAt(hit.tileX, hit.tileY);
+        
         this.io.emit("worldUpdate", { x: hit.tileX, y: hit.tileY, type: recipe.result });
 
         if (projComp?.ownerId) {
@@ -276,6 +308,26 @@ class GameEngine {
   }
 
   /**
+   * Scan world objects and create animal entities for them.
+   */
+  initializeAnimals(): void {
+    // Iterate all world objects to find animals
+    for (const key in world.objects) {
+        const type = world.objects[key];
+        // Check if this type is an animal
+        if (this.animalRegistry[type]) {
+            const [x, y] = key.split(',').map(Number);
+            
+            // Check if already exists to avoid duplicates
+            if (!this.animalSystem.getComponentAt(x, y)) {
+                this.animalSystem.createComponent(x, y, type, this.animalRegistry[type]);
+            }
+        }
+    }
+    console.log(`[Engine] Initialized animals from world map.`);
+  }
+
+  /**
    * Get an entity definition by ID - checks resources, items, and animals.
    */
   getEntityById(id: number): Resource | Item | Animal | undefined {
@@ -302,6 +354,28 @@ class GameEngine {
         itemDef.growsInto as string,
         (itemDef.growthTicks as number) || 3
       );
+    }
+  }
+
+  /**
+   * Register an animal when placed/dropped in the world.
+   */
+  registerAnimal(x: number, y: number, objectType: number, data?: any): void {
+    if (this.animalRegistry[objectType]) {
+        if (!this.animalSystem.getComponentAt(x, y)) {
+            this.animalSystem.createComponent(x, y, objectType, this.animalRegistry[objectType], data);
+        }
+    }
+  }
+
+  /**
+   * Unregister a planted crop from the growth system.
+   * Call this when a crop is picked up or destroyed.
+   */
+  unregisterPlantedCrop(x: number, y: number): void {
+    const comp = this.growthSystem.getComponentAt(x, y);
+    if (comp) {
+      comp.delete();
     }
   }
 
@@ -446,6 +520,44 @@ class GameEngine {
    */
   pickUpBaby(holderId: string, babyId: string): boolean {
     return this.playerManager.pickUpBaby(holderId, babyId);
+  }
+
+  /**
+   * Attempt to pick up an animal at the player's location.
+   */
+  pickUpAnimal(playerId: string): boolean {
+    const p = this.playerManager.getPlayerData(playerId);
+    if (!p || p.holding) return false;
+
+    const tx = Math.floor(p.x / CONSTANTS.TILE_SIZE);
+    const ty = Math.floor(p.y / CONSTANTS.TILE_SIZE);
+
+    // Check for animal at player's location
+    const animal = this.animalSystem.getComponentAt(tx, ty);
+    
+    if (animal) {
+       const holdType = animal.animalType;
+       // We can store age/hp in the item data if we want
+       const holdData = { 
+           age: animal.age,
+       }; 
+       
+       this.updatePlayerHolding(playerId, holdType, holdData);
+       
+       // Remove animal entity
+       animal.delete();
+       
+       // Clear from world grid so it doesn't persist as a block
+       world.removeObject(tx, ty);
+       this.io.emit("worldUpdate", { x: tx, y: ty, type: null });
+
+       // Notify player
+       const animalName = animal.animalDef.name;
+       this.io.to(playerId).emit('textMessage', { text: `You picked up a ${animalName}!` });
+
+       return true;
+    }
+    return false;
   }
 
   /**
@@ -703,6 +815,22 @@ class GameEngine {
     this.statisticsManager.resetWorldStats();
     
     // Notify all clients
+    this.io.emit("worldReset", world.getState());
+  }
+
+  /**
+   * Clear all objects from the world but keep terrain map methods.
+   */
+  clearWorldObjects(): void {
+    world.clearObjects();
+    
+    // Clear systems that manage world entities
+    this.animalSystem.clear();
+    this.growthSystem.clear();
+    this.projectileSystem.clear(); // Projectiles are transient but good to clear
+    
+    // Note: We do NOT clear current players
+    
     this.io.emit("worldReset", world.getState());
   }
 

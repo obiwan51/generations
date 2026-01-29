@@ -78,9 +78,13 @@ export class AnimalAISystem extends System<AnimalComponent> {
     x: number,
     y: number,
     animalType: number,
-    animalDef: Animal
+    animalDef: Animal,
+    data?: any
   ): AnimalComponent {
     const component = new AnimalComponent(x, y, animalType, animalDef);
+    if (data && typeof data.age === 'number') {
+      component.age = data.age;
+    }
     this.addComponent(component);
     return component;
   }
