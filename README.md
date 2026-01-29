@@ -2,6 +2,8 @@
 
 **Generations JS** is a multiplayer survival engine and sandbox platform inspired by *One Hour One Life*, built with **Node.js**, **Socket.io**, and **HTML5 Canvas**. 
 
+![Generations JS Gameplay](GenerationsJS.png)
+
 More than just a survival game, **Generations JS** is a data-driven platform designed to allow developers and designers to create their own unique survival adventures. The entire game world—from biology and crafting recipes to ecosystems and object properties—is defined dynamically, making it a powerful engine for emergent multiplayer storytelling.
 
 ## 🚀 Technologies
