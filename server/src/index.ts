@@ -71,7 +71,15 @@ app.get(/(.*)/, (req, res) => {
     if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
     } else {
-        res.status(404).send('Client build not found. Did you run npm run build?');
+        console.error(`[Server] Client build not found at: ${indexPath}`);
+        console.error(`[Server] Current directory: ${__dirname}`);
+        console.error(`[Server] Directory listing of CLIENT_DIST parent:`);
+        try {
+            const parent = path.dirname(CLIENT_DIST);
+            if (fs.existsSync(parent)) console.log(fs.readdirSync(parent));
+            else console.log("Parent does not exist");
+        } catch(e) { console.error(e); }
+        res.status(404).send('Client build not found. Did you run npm run build? Check server logs for path details.');
     }
 });
 
