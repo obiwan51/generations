@@ -1,28 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Swamp reeds -->
-  
-  <!-- Water/mud base -->
-  <ellipse cx="32" cy="60" rx="20" ry="5" fill="#4A6741" opacity="0.4"/>
-  
-  <!-- Reed stalks -->
-  <path d="M18 60 Q16 40 20 15" stroke="#6B8E23" stroke-width="3" fill="none"/>
-  <path d="M28 60 Q26 35 28 10" stroke="#556B2F" stroke-width="3" fill="none"/>
-  <path d="M36 60 Q38 38 34 12" stroke="#6B8E23" stroke-width="3" fill="none"/>
-  <path d="M46 60 Q48 42 44 18" stroke="#556B2F" stroke-width="3" fill="none"/>
-  
-  <!-- Reed heads (cattails) -->
-  <ellipse cx="20" cy="12" rx="3" ry="8" fill="#5D4037"/>
-  <ellipse cx="28" cy="8" rx="2.5" ry="7" fill="#4E342E"/>
-  <ellipse cx="34" cy="10" rx="3" ry="8" fill="#5D4037"/>
-  <ellipse cx="44" cy="15" rx="2.5" ry="7" fill="#4E342E"/>
-  
-  <!-- Tops of cattails -->
-  <line x1="20" y1="4" x2="20" y2="2" stroke="#6B8E23" stroke-width="1"/>
-  <line x1="28" y1="1" x2="28" y2="-1" stroke="#556B2F" stroke-width="1"/>
-  <line x1="34" y1="2" x2="34" y2="0" stroke="#6B8E23" stroke-width="1"/>
-  <line x1="44" y1="8" x2="44" y2="6" stroke="#556B2F" stroke-width="1"/>
-  
-  <!-- Small leaves at base -->
-  <path d="M22 55 Q26 50 24 45" stroke="#7CB342" stroke-width="2" fill="none"/>
-  <path d="M42 55 Q38 48 40 42" stroke="#7CB342" stroke-width="2" fill="none"/>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="reedStem" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#81C784;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#558B2F;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="reedHead" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#795548;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#4E342E;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+
+    <!-- Base / Water Shadow -->
+    <ellipse cx="32" cy="56" rx="14" ry="4" fill="rgba(0,0,0,0.2)" />
+
+    <!-- Reed 1 (Left) -->
+    <path d="M24 58 Q20 40 22 25" stroke="url(#reedStem)" stroke-width="2" fill="none" />
+    <ellipse cx="22" cy="20" rx="3" ry="8" fill="url(#reedHead)" />
+
+    <!-- Reed 2 (Center-Right) -->
+    <path d="M36 60 Q40 40 38 18" stroke="url(#reedStem)" stroke-width="2.5" fill="none" />
+    <ellipse cx="38" cy="12" rx="3.5" ry="9" fill="url(#reedHead)" />
+
+    <!-- Reed 3 (Right) -->
+    <path d="M42 58 Q46 45 44 30" stroke="url(#reedStem)" stroke-width="2" fill="none" />
+    <ellipse cx="44" cy="26" rx="2.5" ry="7" fill="url(#reedHead)" />
+    
+    <!-- Reed 4 (Back) -->
+    <path d="M30 55 Q28 40 30 28" stroke="url(#reedStem)" stroke-width="2" fill="none" opacity="0.8"/>
+    <ellipse cx="30" cy="22" rx="2.5" ry="7" fill="url(#reedHead)" opacity="0.8"/>
+
+    <!-- Leaves at Base -->
+    <path d="M24 58 Q15 50 15 45" stroke="#558B2F" stroke-width="1.5" fill="none"/>
+    <path d="M36 60 Q45 50 48 48" stroke="#558B2F" stroke-width="1.5" fill="none"/>
+    <path d="M30 58 Q32 45 28 45" stroke="#558B2F" stroke-width="1.5" fill="none"/>
 </svg>

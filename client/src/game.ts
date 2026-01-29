@@ -112,7 +112,7 @@ network.setCallbacks({
         if (players[data.id]) {
             if (data.age !== undefined) players[data.id].age = data.age;
             if (data.hunger !== undefined) players[data.id].hunger = data.hunger;
-            if (data.maxHunger !== undefined) players[data.id].maxHunger = data.hunger;
+            if (data.maxHunger !== undefined) players[data.id].maxHunger = data.maxHunger;
             if (data.holding !== undefined) players[data.id].holding = data.holding;
             if (data.holdingData !== undefined) players[data.id].holdingData = data.holdingData;
             if (data.heldBy !== undefined) players[data.id].heldBy = data.heldBy;

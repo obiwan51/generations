@@ -1,17 +1,36 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Lily pad - circular leaf floating on water -->
-  <ellipse cx="32" cy="36" rx="24" ry="18" fill="#4CAF50"/>
-  <!-- Darker green edge -->
-  <ellipse cx="32" cy="36" rx="24" ry="18" fill="none" stroke="#2E7D32" stroke-width="2"/>
-  <!-- Leaf veins -->
-  <path d="M32 22 L32 50" stroke="#388E3C" stroke-width="1.5" fill="none"/>
-  <path d="M32 36 L15 28" stroke="#388E3C" stroke-width="1" fill="none"/>
-  <path d="M32 36 L49 28" stroke="#388E3C" stroke-width="1" fill="none"/>
-  <path d="M32 36 L18 45" stroke="#388E3C" stroke-width="1" fill="none"/>
-  <path d="M32 36 L46 45" stroke="#388E3C" stroke-width="1" fill="none"/>
-  <!-- V-shaped notch -->
-  <path d="M32 22 L38 36 L32 36 L26 36 L32 22" fill="#2196F3"/>
-  <!-- Small flower -->
-  <circle cx="44" cy="24" r="5" fill="#FFEB3B"/>
-  <circle cx="44" cy="24" r="2" fill="#FFC107"/>
+    <defs>
+        <radialGradient id="lilyGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" style="stop-color:#9CCC65;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#558B2F;stop-opacity:1" />
+        </radialGradient>
+        <filter id="lilyShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/>
+            <feOffset dx="0" dy="1" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <!-- Water Surface Shadow -->
+    <ellipse cx="34" cy="34" rx="22" ry="12" fill="rgba(0,0,0,0.2)" />
+
+    <!-- Pad Body -->
+    <g filter="url(#lilyShadow)">
+        <path d="M54 32 A 22 12 0 1 1 32 20 L 32 32 L 54 32 Z" fill="url(#lilyGrad)" stroke="#33691E" stroke-width="0.5" />
+        
+        <!-- Veins -->
+        <path d="M32 32 L 20 28" stroke="#33691E" stroke-width="0.5" opacity="0.5"/>
+        <path d="M32 32 L 18 36" stroke="#33691E" stroke-width="0.5" opacity="0.5"/>
+        <path d="M32 32 L 24 40" stroke="#33691E" stroke-width="0.5" opacity="0.5"/>
+        <path d="M32 32 L 34 42" stroke="#33691E" stroke-width="0.5" opacity="0.5"/>
+        <path d="M32 32 L 44 40" stroke="#33691E" stroke-width="0.5" opacity="0.5"/>
+        
+        <!-- Flower -->
+        <circle cx="25" cy="25" r="5" fill="#F06292" opacity="0.9"/>
+        <circle cx="25" cy="25" r="2" fill="#FFEB3B" />
+        <path d="M25 20 L27 24 L29 22 L26 25 L29 28 L25 26 L21 28 L24 25 L21 22 L23 24 Z" fill="#F8BBD0" />
+    </g>
 </svg>

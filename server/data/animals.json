@@ -64,7 +64,7 @@
     "aggression": 0.8
   },
   "FISH": {
-    "id": 22,
+    "id": 15,
     "name": "Fish",
     "assets": {
       "alive": "fish.svg",

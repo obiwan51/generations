@@ -1,22 +1,23 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Main meat chunk -->
-  <path d="M18 30 Q16 26 20 22 L28 20 L38 22 L44 26 Q46 30 44 36 L40 42 L32 44 L24 42 L20 36 Z" 
-        fill="#C62828" stroke="#B71C1C" stroke-width="1.5"/>
-  <!-- Darker meat areas -->
-  <path d="M22 28 Q24 26 28 26 L34 28 L36 32 L34 36 L28 38 Z" fill="#B71C1C" opacity="0.6"/>
-  <!-- Fat marbling -->
-  <ellipse cx="26" cy="30" rx="3" ry="2" fill="#FFE0E0" opacity="0.8"/>
-  <ellipse cx="36" cy="28" rx="2.5" ry="1.8" fill="#FFE0E0" opacity="0.8"/>
-  <ellipse cx="30" cy="36" rx="2" ry="1.5" fill="#FFF0F0" opacity="0.7"/>
-  <path d="M24 34 Q28 34 30 32" stroke="#FFE0E0" stroke-width="1.5" fill="none" opacity="0.6"/>
-  <!-- Muscle fiber texture -->
-  <path d="M24 26 Q28 28 32 26 M26 30 Q30 32 34 30 M24 34 Q28 36 32 34" 
-        stroke="#A61818" stroke-width="0.8" opacity="0.4" fill="none"/>
-  <!-- Highlight/moisture -->
-  <ellipse cx="34" cy="24" rx="4" ry="3" fill="#E53935" opacity="0.5"/>
-  <!-- Blood/juice drops -->
-  <circle cx="28" cy="42" r="1.5" fill="#8B0000" opacity="0.7"/>
-  <circle cx="34" cy="40" r="1" fill="#8B0000" opacity="0.6"/>
-  <!-- Shadow -->
-  <ellipse cx="32" cy="46" rx="12" ry="3" fill="#000000" opacity="0.15"/>
+    <defs>
+        <radialGradient id="rawGrad" cx="30%" cy="30%" r="60%" fx="30%" fy="30%">
+            <stop offset="0%" style="stop-color:#FFCDD2;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#D32F2F;stop-opacity:1" />
+        </radialGradient>
+        <filter id="itemShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/>
+            <feOffset dx="1" dy="1" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <g filter="url(#itemShadow)">
+        <path d="M25 40 Q 20 30 25 25 Q 35 20 45 30 Q 50 40 40 45 Q 30 50 25 40" fill="url(#rawGrad)" stroke="#B71C1C" stroke-width="0.5" />
+        <!-- Marbling -->
+        <path d="M30 30 Q 35 32 32 38" stroke="#FFEBEE" stroke-width="1" fill="none" opacity="0.5"/>
+        <path d="M40 35 Q 42 38 38 40" stroke="#FFEBEE" stroke-width="1" fill="none" opacity="0.5"/>
+    </g>
 </svg>

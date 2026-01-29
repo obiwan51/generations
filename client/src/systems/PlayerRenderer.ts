@@ -24,13 +24,13 @@ export interface PlayerRenderData {
 
 export class PlayerRenderer {
     private ctx: CanvasRenderingContext2D;
-    private images: Record<string, HTMLImageElement>;
-    private getObjectImage: (type: number) => HTMLImageElement | null;
+    private images: Record<string, CanvasImageSource>;
+    private getObjectImage: (type: number) => CanvasImageSource | null;
 
     constructor(
         ctx: CanvasRenderingContext2D,
-        images: Record<string, HTMLImageElement>,
-        getObjectImage: (type: number) => HTMLImageElement | null
+        images: Record<string, CanvasImageSource>,
+        getObjectImage: (type: number) => CanvasImageSource | null
     ) {
         this.ctx = ctx;
         this.images = images;
@@ -78,26 +78,47 @@ export class PlayerRenderer {
     }
 
     private drawSprite(p: PlayerRenderData, px: number, py: number, size: number, isMe: boolean): void {
-        const playerImg = p.age < 5 ? this.images['baby'] : this.images['player'];
-        const bob = Math.sin(Date.now() * 0.01) * 2;
+        let playerImg;
+        if (p.age < 5) {
+            playerImg = this.images['baby'];
+        } else {
+            const gender = p.gender || 'female';
+            playerImg = this.images[`player_${gender}`] || this.images['player'];
+        }
+        
+        // Improved animation: Swaying + Bobbing
+        const time = Date.now() * 0.005;
+        const bob = Math.sin(time * 2) * 2;
+        const sway = Math.sin(time) * 0.05; // Slight rotation
 
-        if (playerImg?.complete) {
+        const isReady = playerImg instanceof HTMLCanvasElement || 
+            (playerImg instanceof HTMLImageElement && playerImg.complete && playerImg.naturalWidth > 0);
+
+        if (playerImg && isReady) {
             this.ctx.save();
+            
+            // Apply sway rotation around bottom center
+            this.ctx.translate(px, py + size/2);
+            this.ctx.rotate(sway);
+            this.ctx.translate(-px, -(py + size/2));
+
             if (isMe) {
                 this.ctx.shadowBlur = 10;
                 this.ctx.shadowColor = '#4caf50';
             }
+            // Draw slightly larger to account for new detail
             this.ctx.drawImage(playerImg, px - size / 2, py - size / 2 + bob, size, size);
 
-            if (p.age >= 40) {
+            if (p.age >= 40 && p.gender === 'male') {
                 const beardSize = Math.min((p.age - 40) / 30, 1.2);
                 const whiteness = Math.min(255, (p.age - 40) * 4);
                 this.ctx.fillStyle = `rgba(${whiteness},${whiteness},${whiteness}, 0.9)`;
                 this.ctx.beginPath();
-                this.ctx.moveTo(px - size / 4, py + size / 10 + bob);
-                this.ctx.lineTo(px + size / 4, py + size / 10 + bob);
-                this.ctx.lineTo(px + size / 8, py + size / 10 + (size / 2.5 * beardSize) + bob);
-                this.ctx.lineTo(px - size / 8, py + size / 10 + (size / 2.5 * beardSize) + bob);
+                // Adjusted beard coordinates for new face shape
+                this.ctx.moveTo(px - size / 6, py + size / 20 + bob);
+                this.ctx.lineTo(px + size / 6, py + size / 20 + bob);
+                this.ctx.lineTo(px + size / 10, py + size / 4 * beardSize + bob);
+                this.ctx.lineTo(px - size / 10, py + size / 4 * beardSize + bob);
                 this.ctx.closePath();
                 this.ctx.fill();
             }
@@ -126,7 +147,9 @@ export class PlayerRenderer {
     private drawHeldItem(p: PlayerRenderData, px: number, py: number, size: number, scale: number): void {
         if (!p.holding) return;
         const itemImg = this.getObjectImage(p.holding);
-        if (itemImg?.complete) {
+        const isReady = itemImg instanceof HTMLCanvasElement || 
+            (itemImg instanceof HTMLImageElement && itemImg.complete && itemImg.naturalWidth > 0);
+        if (itemImg && isReady) {
             const itemSize = size * 0.5;
             this.ctx.drawImage(itemImg, px + size / 4, py - size / 4, itemSize, itemSize);
             if (p.holdingData?.inventory?.length) {
@@ -140,7 +163,9 @@ export class PlayerRenderer {
     private drawBackpack(p: PlayerRenderData, px: number, py: number, size: number, scale: number): void {
         if (!p.backpack) return;
         const backpackImg = this.getObjectImage(p.backpack);
-        if (backpackImg?.complete) {
+        const isReady = backpackImg instanceof HTMLCanvasElement || 
+            (backpackImg instanceof HTMLImageElement && backpackImg.complete && backpackImg.naturalWidth > 0);
+        if (backpackImg && isReady) {
             const backpackSize = size * 0.45;
             // Draw behind and below player (on back)
             const bob = Math.sin(Date.now() * 0.01) * 2;

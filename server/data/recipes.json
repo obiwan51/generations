@@ -9,11 +9,27 @@
   },
   {
     "id": "log",
-    "name": "Log",
+    "name": "Log (Pine)",
     "tool": "SHARP_STONE",
     "target": "TREE",
     "result": "LOG",
-    "description": "Chop a tree with a sharp stone."
+    "description": "Chop a pine tree with a sharp stone."
+  },
+  {
+    "id": "log_oak",
+    "name": "Log (Oak)",
+    "tool": "SHARP_STONE",
+    "target": "TREE_OAK",
+    "result": "LOG",
+    "description": "Chop an oak tree with a sharp stone."
+  },
+  {
+    "id": "log_birch",
+    "name": "Log (Birch)",
+    "tool": "SHARP_STONE",
+    "target": "TREE_BIRCH",
+    "result": "LOG",
+    "description": "Chop a birch tree with a sharp stone."
   },
   {
     "id": "log_from_dead_tree",

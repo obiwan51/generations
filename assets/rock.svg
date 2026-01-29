@@ -1,16 +1,44 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-    <!-- Main rock body -->
-    <ellipse cx="32" cy="42" rx="20" ry="14" fill="#707070"/>
-    <path d="M18 38 Q15 32 18 26 L28 22 L38 20 L46 24 Q50 28 48 34 L42 40 Z" 
-          fill="#888888"/>
-    <!-- Lighter top facets -->
-    <path d="M22 30 L28 24 L36 23 L32 28 Z" fill="#A0A0A0" opacity="0.8"/>
-    <path d="M36 23 L42 26 L40 32 L36 30 Z" fill="#989898" opacity="0.8"/>
-    <!-- Shadow/darker areas -->
-    <path d="M18 36 L22 40 L28 38 L24 34 Z" fill="#606060" opacity="0.6"/>
-    <path d="M38 32 L44 34 L42 38 Z" fill="#606060" opacity="0.5"/>
-    <!-- Surface texture -->
-    <circle cx="26" cy="28" r="1.5" fill="#707070" opacity="0.5"/>
-    <circle cx="36" cy="26" r="1" fill="#606060" opacity="0.4"/>
-    <circle cx="40" cy="30" r="1.2" fill="#707070" opacity="0.5"/>
+    <defs>
+        <linearGradient id="rockGradFront" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#9E9E9E;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#616161;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="rockGradTop" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#E0E0E0;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#BDBDBD;stop-opacity:1" />
+        </linearGradient>
+        <filter id="rockShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/>
+            <feOffset dx="0" dy="1" result="offsetblur"/>
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.3"/>
+            </feComponentTransfer>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+    
+    <!-- Ground Shadow -->
+    <ellipse cx="32" cy="50" rx="18" ry="6" fill="rgba(0,0,0,0.3)" />
+
+    <g filter="url(#rockShadow)">
+        <!-- Main Body (Front/Darker Side) -->
+        <path d="M14 42 L16 30 L24 22 L44 20 L52 28 L50 44 L36 52 L22 48 Z" fill="url(#rockGradFront)" stroke="#424242" stroke-width="1" stroke-linejoin="round"/>
+        
+        <!-- Top Face (Lighter) -->
+        <path d="M16 30 L24 22 L44 20 L52 28 L40 32 L26 34 Z" fill="url(#rockGradTop)" stroke="#757575" stroke-width="0.5" stroke-linejoin="round"/>
+        
+        <!-- Surface Details -->
+        <!-- Cracks -->
+        <path d="M28 36 L32 40 L30 46" stroke="#424242" stroke-width="1" fill="none" opacity="0.6"/>
+        <path d="M42 28 L44 32" stroke="#757575" stroke-width="1" fill="none" opacity="0.4"/>
+        
+        <!-- Chips/Texture -->
+        <circle cx="20" cy="38" r="1.5" fill="#424242" opacity="0.3"/>
+        <circle cx="46" cy="36" r="1" fill="#424242" opacity="0.3"/>
+        <circle cx="34" cy="26" r="1.5" fill="#9E9E9E" opacity="0.5"/>
+    </g>
 </svg>

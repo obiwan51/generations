@@ -1,10 +1,49 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Soil -->
-  <ellipse cx="32" cy="55" rx="20" ry="8" fill="#5D4037"/>
-  <!-- Young sprouts -->
-  <path d="M28 55 L28 42" stroke="#4CAF50" stroke-width="2"/>
-  <path d="M28 45 L24 40" stroke="#4CAF50" stroke-width="1.5"/>
-  <path d="M28 48 L32 44" stroke="#4CAF50" stroke-width="1.5"/>
-  <path d="M36 55 L36 45" stroke="#4CAF50" stroke-width="2"/>
-  <path d="M36 48 L33 44" stroke="#4CAF50" stroke-width="1.5"/>
+    <defs>
+        <linearGradient id="stalkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#C0CA33;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#827717;stop-opacity:1" />
+        </linearGradient>
+        <radialGradient id="headGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" style="stop-color:#FFF59D;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#FBC02D;stop-opacity:1" />
+        </radialGradient>
+        <filter id="cropShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/>
+            <feOffset dx="0" dy="1" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+        <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#5D4037;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#3E2723;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+
+    <!-- Cultivated Soil Patch -->
+    <ellipse cx="32" cy="54" rx="20" ry="8" fill="url(#soilGrad)" />
+    
+    <g filter="url(#cropShadow)">
+         <!-- Stalk 1 -->
+        <path d="M22 54 L 20 25" stroke="url(#stalkGrad)" stroke-width="2" fill="none" />
+        <ellipse cx="20" cy="25" rx="3.5" ry="9" fill="url(#headGrad)" stroke="#F57F17" stroke-width="0.5" transform="rotate(-10 20 25)"/>
+
+        <!-- Stalk 2 -->
+        <path d="M42 54 L 44 28" stroke="url(#stalkGrad)" stroke-width="2" fill="none" />
+        <ellipse cx="44" cy="28" rx="3.5" ry="9" fill="url(#headGrad)" stroke="#F57F17" stroke-width="0.5" transform="rotate(10 44 28)"/>
+
+        <!-- Stalk 3 (Center) -->
+        <path d="M32 54 L 32 18" stroke="url(#stalkGrad)" stroke-width="2.5" fill="none" />
+        <ellipse cx="32" cy="18" rx="5" ry="12" fill="url(#headGrad)" stroke="#F57F17" stroke-width="0.5" />
+        
+         <!-- Stalk 4 (Back Left) -->
+        <path d="M28 50 L 26 22" stroke="url(#stalkGrad)" stroke-width="2" fill="none" />
+        <ellipse cx="26" cy="22" rx="3" ry="8" fill="url(#headGrad)" stroke="#F57F17" stroke-width="0.5" transform="rotate(-5 26 22)"/>
+
+         <!-- Stalk 5 (Back Right) -->
+        <path d="M36 50 L 38 24" stroke="url(#stalkGrad)" stroke-width="2" fill="none" />
+        <ellipse cx="38" cy="24" rx="3" ry="8" fill="url(#headGrad)" stroke="#F57F17" stroke-width="0.5" transform="rotate(5 38 24)"/>
+    </g>
 </svg>

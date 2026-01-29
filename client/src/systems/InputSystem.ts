@@ -291,9 +291,20 @@ export class InputSystem {
                 this.targetPosition = { x: objectGridX * 64 + 32, y: objectGridY * 64 + 32 };
             }
         } else if (holding && isPlayerCell) {
-            // Clicking on empty ground at player position while holding = drop
-            this.socket.emit('drop');
-            this.audio.play('drop');
+            // Check if there's a ground-target recipe for the held item
+            const hasGroundRecipe = this.recipes.some(r => r.tool === holding && r.target === null);
+
+            // Shift+Click with allowed tool on ground = Use (Dig)
+            // Regular Click = Drop
+            if (hasGroundRecipe && (isShiftHeld || e.shiftKey)) {
+                // Execute recipe (e.g. dig hole)
+                this.socket.emit('use');
+                this.audio.play('craft');
+            } else {
+                // Drop the item
+                this.socket.emit('drop');
+                this.audio.play('drop');
+            }
         } else {
             // Check if there's a baby at the clicked position we can pick up
             const babyAtPosition = this.getBabyAtPosition(worldX, worldY);

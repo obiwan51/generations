@@ -1,33 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 128">
-  <!-- Dead tree - leafless, withered -->
-  
-  <!-- Ground shadow -->
-  <ellipse cx="32" cy="124" rx="16" ry="4" fill="#3D2817" opacity="0.4"/>
-  
-  <!-- Trunk -->
-  <path d="M28 125 L26 80 Q24 60 28 40 L30 20" stroke="#5D4037" stroke-width="8" fill="none" stroke-linecap="round"/>
-  <path d="M36 125 L38 80 Q40 60 36 40 L34 20" stroke="#5D4037" stroke-width="8" fill="none" stroke-linecap="round"/>
-  
-  <!-- Connect trunk -->
-  <rect x="26" y="18" width="12" height="8" fill="#5D4037"/>
-  
-  <!-- Dead branches - left side -->
-  <path d="M26 70 Q16 60 8 65" stroke="#5D4037" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <path d="M24 50 Q14 45 6 50" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M6 50 Q4 45 2 48" stroke="#5D4037" stroke-width="2" fill="none" stroke-linecap="round"/>
-  
-  <!-- Dead branches - right side -->
-  <path d="M38 65 Q48 55 56 60" stroke="#5D4037" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <path d="M40 45 Q50 40 58 45" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M58 45 Q60 40 62 42" stroke="#5D4037" stroke-width="2" fill="none" stroke-linecap="round"/>
-  
-  <!-- Top branches -->
-  <path d="M30 20 Q25 10 20 5" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M34 20 Q39 8 44 4" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M32 18 Q32 8 36 2" stroke="#5D4037" stroke-width="2" fill="none" stroke-linecap="round"/>
-  
-  <!-- Bark texture -->
-  <line x1="28" y1="100" x2="30" y2="95" stroke="#4E342E" stroke-width="1"/>
-  <line x1="34" y1="90" x2="36" y2="85" stroke="#4E342E" stroke-width="1"/>
-  <line x1="29" y1="75" x2="31" y2="70" stroke="#4E342E" stroke-width="1"/>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="deadWood" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#616161;stop-opacity:1" />
+            <stop offset="20%" style="stop-color:#9E9E9E;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#BDBDBD;stop-opacity:1" />
+            <stop offset="80%" style="stop-color:#9E9E9E;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#616161;stop-opacity:1" />
+        </linearGradient>
+        <filter id="treeShadow">
+             <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+            <feOffset dx="1" dy="1" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+    
+    <!-- Stump Shadow -->
+    <ellipse cx="32" cy="58" rx="8" ry="3" fill="rgba(0,0,0,0.3)" />
+
+    <g filter="url(#treeShadow)">
+        <!-- Trunk -->
+        <path d="M28 60 L 30 10 L 34 10 L 36 60 Q 32 64 28 60" fill="url(#deadWood)" stroke="#424242" stroke-width="0.5"/>
+        
+        <!-- Roots -->
+        <path d="M28 60 Q 24 64 20 62" stroke="#616161" stroke-width="2" fill="none"/>
+        <path d="M36 60 Q 40 64 44 62" stroke="#616161" stroke-width="2" fill="none"/>
+        
+        <!-- Dead Branches -->
+        <path d="M30 40 L 15 30" stroke="url(#deadWood)" stroke-width="2" fill="none"/>
+        <path d="M15 30 L 10 32" stroke="url(#deadWood)" stroke-width="1.5" fill="none"/>
+        
+        <path d="M34 30 L 50 15" stroke="url(#deadWood)" stroke-width="2" fill="none"/>
+        <path d="M50 15 L 55 10" stroke="url(#deadWood)" stroke-width="1.5" fill="none"/>
+        <path d="M50 15 L 54 20" stroke="url(#deadWood)" stroke-width="1.5" fill="none"/>
+
+        <path d="M32 10 L 25 2" stroke="url(#deadWood)" stroke-width="1.5" fill="none"/>
+        
+        <!-- Wood Texture cracks -->
+        <path d="M30 50 L 30 40" stroke="#424242" stroke-width="0.5" opacity="0.5"/>
+        <path d="M33 55 L 34 45" stroke="#424242" stroke-width="0.5" opacity="0.5"/>
+    </g>
 </svg>

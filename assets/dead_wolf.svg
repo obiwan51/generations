@@ -1,38 +1,62 @@
-<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Dead wolf lying on its side -->
-  
-  <!-- Shadow -->
-  <ellipse cx="32" cy="50" rx="24" ry="7" fill="#000" opacity="0.2"/>
-  
-  <!-- Body -->
-  <ellipse cx="28" cy="36" rx="17" ry="11" fill="#696969" stroke="#2F2F2F" stroke-width="1.5"/>
-  <ellipse cx="28" cy="36" rx="13" ry="8" fill="#A9A9A9" opacity="0.5"/>
-  
-  <!-- Head -->
-  <ellipse cx="48" cy="30" rx="10" ry="8" fill="#808080" stroke="#2F2F2F" stroke-width="1.5"/>
-  
-  <!-- Snout -->
-  <ellipse cx="56" cy="32" rx="5" ry="4" fill="#696969" stroke="#2F2F2F" stroke-width="1.5"/>
-  <circle cx="58" cy="32" r="1.5" fill="#2F2F2F"/>
-  
-  <!-- Ear (lying flat) -->
-  <path d="M 50 22 L 54 18 L 52 24 Z" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
-  
-  <!-- Eye (X to show dead) -->
-  <line x1="48" y1="28" x2="51" y2="31" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="51" y1="28" x2="48" y2="31" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
-  
-  <!-- Teeth showing -->
-  <line x1="56" y1="34" x2="56" y2="36" stroke="#FFF" stroke-width="1" stroke-linecap="round"/>
-  <line x1="58" y1="34" x2="58" y2="36" stroke="#FFF" stroke-width="1" stroke-linecap="round"/>
-  
-  <!-- Legs (lying down) -->
-  <rect x="18" y="42" width="4" height="8" rx="2" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
-  <rect x="24" y="43" width="4" height="8" rx="2" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
-  <rect x="32" y="43" width="4" height="7" rx="2" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
-  <rect x="38" y="42" width="4" height="7" rx="2" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
-  
-  <!-- Tail -->
-  <path d="M 12 36 Q 8 34, 10 30" stroke="#696969" stroke-width="5" fill="none" stroke-linecap="round"/>
-  <path d="M 10 30 L 8 28" stroke="#D3D3D3" stroke-width="3" stroke-linecap="round"/>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Fur Texture -->
+    <filter id="furTexture">
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0.4 0" in="noise" result="coloredNoise" /> <!-- Darker/Greyer -->
+      <feComposite operator="in" in="coloredNoise" in2="SourceGraphic" result="composite" />
+      <feBlend mode="multiply" in="composite" in2="SourceGraphic" />
+    </filter>
+    
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="1" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.4"/>
+      </feComponentTransfer>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+
+    <linearGradient id="wolfBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#78909C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#455A64;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#dropShadow)" transform="rotate(90 64 64)">
+    <!-- Back Legs -->
+    <path d="M44,90 Q40,110 36,118 L46,118 Q50,110 54,90" fill="#37474F" />
+    <path d="M84,90 Q88,110 92,118 L82,118 Q78,110 74,90" fill="#37474F" />
+
+    <!-- Body -->
+    <ellipse cx="64" cy="75" rx="35" ry="28" fill="url(#wolfBody)" filter="url(#furTexture)" />
+    
+    <!-- Front Legs (Limber/Bent) -->
+    <path d="M50,90 Q46,115 50,122" stroke="#37474F" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <path d="M78,90 Q82,115 78,122" stroke="#37474F" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+    <!-- Head Main -->
+    <circle cx="64" cy="45" r="22" fill="#78909C" filter="url(#furTexture)" />
+    
+    <!-- Snout -->
+    <path d="M56,48 Q64,65 72,48 Z" fill="#B0BEC5" />
+    <ellipse cx="64" cy="58" rx="8" ry="6" fill="#263238" /> <!-- Nose -->
+
+    <!-- Ears -->
+    <path d="M46,35 L40,15 L58,30 Z" fill="#455A64" filter="url(#furTexture)" />
+    <path d="M82,35 L88,15 L70,30 Z" fill="#455A64" filter="url(#furTexture)" />
+
+    <!-- Dead Eyes (X) -->
+    <path d="M53,39 L59,45 M59,39 L53,45" stroke="#333" stroke-width="2" />
+    <path d="M69,39 L75,45 M75,39 L69,45" stroke="#333" stroke-width="2" />
+    
+    <!-- Tongue out -->
+    <path d="M62,60 Q64,70 70,68" stroke="#E57373" stroke-width="4" fill="none" stroke-linecap="round" />
+
+    <!-- Tail -->
+    <path d="M30,70 Q10,75 15,95 Q25,85 35,80" fill="#78909C" filter="url(#furTexture)" transform="rotate(20 30 80)" />
+  </g>
 </svg>

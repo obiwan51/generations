@@ -1,9 +1,74 @@
-<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-  <!-- Swaddle Body -->
-  <path d="M15 32 Q20 35 25 32 L28 18 Q20 15 12 18 Z" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
-  <!-- Head -->
-  <circle cx="20" cy="18" r="7" fill="#FFE0B2" stroke="#5D4037" stroke-width="1"/>
-  <!-- Eyes -->
-  <circle cx="18" cy="17" r="1" fill="#333"/>
-  <circle cx="22" cy="17" r="1" fill="#333"/>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <radialGradient id="skinGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="30%">
+            <stop offset="0%" style="stop-color:#FFE0B2;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#E65100;stop-opacity:1" />
+        </radialGradient>
+        <radialGradient id="diaperGrad" cx="50%" cy="20%" r="80%" fx="50%" fy="20%">
+            <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#EEEEEE;stop-opacity:1" />
+        </radialGradient>
+        <filter id="babyShadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+            <feOffset dx="0" dy="2" result="offsetblur"/>
+            <feMerge> 
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/> 
+            </feMerge>
+        </filter>
+    </defs>
+
+    <g filter="url(#babyShadow)">
+        <!-- Sitting Pose Body Group -->
+        <g transform="translate(0, 10)">
+            <!-- Left Leg (Crawling/Sitting forward) -->
+            <ellipse cx="40" cy="90" rx="12" ry="8" fill="url(#skinGrad)" transform="rotate(-20 40 90)"/>
+            <circle cx="32" cy="95" r="7" fill="url(#skinGrad)" /> <!-- Foot -->
+            
+            <!-- Right Leg -->
+            <ellipse cx="88" cy="90" rx="12" ry="8" fill="url(#skinGrad)" transform="rotate(20 88 90)"/>
+            <circle cx="96" cy="95" r="7" fill="url(#skinGrad)" /> <!-- Foot -->
+
+            <!-- Diaper/Bottom -->
+            <path d="M44 85 Q 64 100 84 85 L 80 65 L 48 65 Z" fill="url(#diaperGrad)" stroke="#E0E0E0" stroke-width="1"/>
+            
+            <!-- Torso -->
+            <circle cx="64" cy="65" r="20" fill="url(#skinGrad)" />
+
+            <!-- Left Arm -->
+            <path d="M48 60 Q 30 70 36 80" stroke="url(#skinGrad)" stroke-width="12" stroke-linecap="round" fill="none"/>
+            <circle cx="36" cy="80" r="7" fill="url(#skinGrad)"/> <!-- Hand -->
+
+            <!-- Right Arm (Waving?) -->
+            <path d="M80 60 Q 100 50 105 40" stroke="url(#skinGrad)" stroke-width="12" stroke-linecap="round" fill="none"/>
+            <circle cx="106" cy="38" r="7" fill="url(#skinGrad)"/> <!-- Hand -->
+        </g>
+
+        <!-- Head (Large, Cute) -->
+        <g transform="translate(0, -5)">
+            <circle cx="64" cy="45" r="32" fill="url(#skinGrad)" />
+            
+            <!-- Hair Wisp -->
+            <path d="M64 13 Q 75 0 80 5" stroke="#4E342E" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+            <!-- Big Cute Eyes -->
+            <ellipse cx="50" cy="45" rx="8" ry="10" fill="#3E2723" />
+            <circle cx="53" cy="42" r="3" fill="white" />
+            <circle cx="48" cy="50" r="1.5" fill="white" opacity="0.5"/>
+
+            <ellipse cx="78" cy="45" rx="8" ry="10" fill="#3E2723" />
+            <circle cx="81" cy="42" r="3" fill="white" />
+            <circle cx="76" cy="50" r="1.5" fill="white" opacity="0.5"/>
+            
+            <!-- Rosy Cheeks -->
+            <ellipse cx="44" cy="58" rx="6" ry="3" fill="#FF8A65" opacity="0.4"/>
+            <ellipse cx="84" cy="58" rx="6" ry="3" fill="#FF8A65" opacity="0.4"/>
+
+            <!-- Nose -->
+            <circle cx="64" cy="52" r="2" fill="#D84315" opacity="0.3"/>
+
+            <!-- Mouth (Pacifier or just circle) -->
+            <path d="M60 62 Q 64 66 68 62" stroke="#E65100" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+    </g>
 </svg>
