@@ -171,8 +171,11 @@ export class InputSystem {
             if (!playerData) return;
 
             const rect = this.canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
+            const scaleX = this.canvas.width / rect.width;
+            const scaleY = this.canvas.height / rect.height;
+
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top) * scaleY;
 
             const worldX = mouseX - this.canvas.width / 2 + playerData.x;
             const worldY = mouseY - this.canvas.height / 2 + playerData.y;
@@ -193,8 +196,11 @@ export class InputSystem {
      */
     private handleContextualClick(e: MouseEvent): void {
         const rect = this.canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+        const scaleX = this.canvas.width / rect.width;
+        const scaleY = this.canvas.height / rect.height;
+
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
 
         const playerData = this.getPlayerData();
         if (!playerData) return;

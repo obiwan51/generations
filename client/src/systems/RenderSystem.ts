@@ -49,10 +49,37 @@ export class RenderSystem {
     }
 
     private setupResize(): void {
-        window.addEventListener('resize', () => {
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight;
-        });
+        const resize = () => {
+            // Limit internal resolution for performance
+            const MAX_WIDTH = 1280;
+            const MAX_HEIGHT = 900;
+            
+            // Calculate aspect ratio to maintain square pixels or just fill?
+            // User just asked to force smaller size.
+            // Let's scale down if the window is larger than MAX dimensions
+            
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+            
+            // If we want to strictly cap at 1280x900 but keep aspect ratio...
+            // Or just cap the render buffer size.
+            
+            if (width > MAX_WIDTH) width = MAX_WIDTH;
+            if (height > MAX_HEIGHT) height = MAX_HEIGHT;
+
+            this.canvas.width = width;
+            this.canvas.height = height;
+            
+            // CSS handles stretching to fill screen
+            this.canvas.style.width = '100%';
+            this.canvas.style.height = '100%';
+            
+            // Re-disable smoothing for pixel art look if desired, though SVG assets are used essentially.
+            this.ctx.imageSmoothingEnabled = false; 
+        };
+
+        window.addEventListener('resize', resize);
+        resize(); // Initial sizing
     }
 
     private getAssetUrl(path: string): string {

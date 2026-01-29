@@ -39,8 +39,9 @@ function clearSessionToken(): void {
 // Initialize canvas
 const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Initial size (will be updated by RenderSystem)
+canvas.width = Math.min(window.innerWidth, 1280);
+canvas.height = Math.min(window.innerHeight, 900);
 
 // Initialize systems
 const network = new NetworkManager();
