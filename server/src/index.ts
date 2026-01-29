@@ -66,7 +66,7 @@ app.use('/shared', express.static(path.join(__dirname, '../../shared')));
 app.use('/assets', express.static(ASSETS_PATH));
 
 // 3. Fallback: Any unknown route serves the index.html (Standard for SPA)
-app.get('*', (req, res) => {
+app.get('/:any*', (req, res) => {
     const indexPath = path.join(CLIENT_DIST, 'index.html');
     if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
