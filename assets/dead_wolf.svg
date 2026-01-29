@@ -1,0 +1,38 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dead wolf lying on its side -->
+  
+  <!-- Shadow -->
+  <ellipse cx="32" cy="50" rx="24" ry="7" fill="#000" opacity="0.2"/>
+  
+  <!-- Body -->
+  <ellipse cx="28" cy="36" rx="17" ry="11" fill="#696969" stroke="#2F2F2F" stroke-width="1.5"/>
+  <ellipse cx="28" cy="36" rx="13" ry="8" fill="#A9A9A9" opacity="0.5"/>
+  
+  <!-- Head -->
+  <ellipse cx="48" cy="30" rx="10" ry="8" fill="#808080" stroke="#2F2F2F" stroke-width="1.5"/>
+  
+  <!-- Snout -->
+  <ellipse cx="56" cy="32" rx="5" ry="4" fill="#696969" stroke="#2F2F2F" stroke-width="1.5"/>
+  <circle cx="58" cy="32" r="1.5" fill="#2F2F2F"/>
+  
+  <!-- Ear (lying flat) -->
+  <path d="M 50 22 L 54 18 L 52 24 Z" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
+  
+  <!-- Eye (X to show dead) -->
+  <line x1="48" y1="28" x2="51" y2="31" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="51" y1="28" x2="48" y2="31" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Teeth showing -->
+  <line x1="56" y1="34" x2="56" y2="36" stroke="#FFF" stroke-width="1" stroke-linecap="round"/>
+  <line x1="58" y1="34" x2="58" y2="36" stroke="#FFF" stroke-width="1" stroke-linecap="round"/>
+  
+  <!-- Legs (lying down) -->
+  <rect x="18" y="42" width="4" height="8" rx="2" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
+  <rect x="24" y="43" width="4" height="8" rx="2" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
+  <rect x="32" y="43" width="4" height="7" rx="2" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
+  <rect x="38" y="42" width="4" height="7" rx="2" fill="#696969" stroke="#2F2F2F" stroke-width="1"/>
+  
+  <!-- Tail -->
+  <path d="M 12 36 Q 8 34, 10 30" stroke="#696969" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 10 30 L 8 28" stroke="#D3D3D3" stroke-width="3" stroke-linecap="round"/>
+</svg>

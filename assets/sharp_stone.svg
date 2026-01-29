@@ -1,0 +1,16 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <!-- Sharp stone tool with chipped edges -->
+    <path d="M25 48 L20 42 L22 35 L18 28 L24 18 L30 14 L38 15 L44 20 L48 28 L45 36 L42 42 L38 46 L32 48 Z" 
+          fill="#808080" stroke="#404040" stroke-width="1.5"/>
+    <!-- Lighter top surface -->
+    <path d="M30 18 L36 19 L42 24 L44 30 L38 22 L32 18 Z" fill="#A0A0A0" opacity="0.7"/>
+    <!-- Chipped edges -->
+    <path d="M22 36 L24 32 L28 34 Z" fill="#606060"/>
+    <path d="M40 40 L38 36 L42 38 Z" fill="#606060"/>
+    <path d="M28 22 L26 26 L30 24 Z" fill="#606060"/>
+    <!-- Sharp edge highlight -->
+    <path d="M25 48 L32 48 L38 46" stroke="#505050" stroke-width="2" fill="none"/>
+    <!-- Texture lines -->
+    <line x1="28" y1="26" x2="34" y2="38" stroke="#606060" stroke-width="0.5" opacity="0.4"/>
+    <line x1="34" y1="24" x2="38" y2="36" stroke="#606060" stroke-width="0.5" opacity="0.4"/>
+</svg>

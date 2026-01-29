@@ -1,0 +1,10 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Flour sack -->
+  <path d="M18 55 L18 30 Q18 25 25 25 L39 25 Q46 25 46 30 L46 55 Z" fill="#F5DEB3" stroke="#D2B48C" stroke-width="2"/>
+  <!-- Tie at top -->
+  <path d="M25 28 Q32 22 39 28" stroke="#8B4513" stroke-width="2" fill="none"/>
+  <!-- Flour texture -->
+  <circle cx="28" cy="40" r="2" fill="#FFF8DC" opacity="0.7"/>
+  <circle cx="36" cy="45" r="2" fill="#FFF8DC" opacity="0.7"/>
+  <circle cx="32" cy="38" r="1.5" fill="#FFF8DC" opacity="0.7"/>
+</svg>

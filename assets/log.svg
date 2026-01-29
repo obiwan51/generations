@@ -1,0 +1,26 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <!-- Log body -->
+    <rect x="8" y="24" width="48" height="16" rx="2" fill="#8B4513"/>
+    <!-- Top highlight -->
+    <rect x="8" y="24" width="48" height="4" rx="2" fill="#A0522D" opacity="0.6"/>
+    <!-- Bark texture -->
+    <path d="M12 26 L12 38 M18 25 L18 39 M25 26 L25 38 M32 25 L32 39 M39 26 L39 38 M46 25 L46 39 M52 26 L52 38" 
+          stroke="#654321" stroke-width="0.8" opacity="0.5"/>
+    <!-- Horizontal bark cracks -->
+    <path d="M10 28 L20 28 M30 30 L42 30 M15 34 L28 34 M38 36 L52 36" 
+          stroke="#654321" stroke-width="0.6" opacity="0.4"/>
+    <!-- Left end (cut surface) -->
+    <ellipse cx="10" cy="32" rx="5" ry="8" fill="#D2B48C"/>
+    <!-- Growth rings on left end -->
+    <ellipse cx="10" cy="32" rx="4" ry="6.5" fill="none" stroke="#A0522D" stroke-width="0.5"/>
+    <ellipse cx="10" cy="32" rx="2.5" ry="4.5" fill="none" stroke="#8B4513" stroke-width="0.5"/>
+    <ellipse cx="10" cy="32" rx="1" ry="2" fill="#8B4513"/>
+    <!-- Right end (cut surface) -->
+    <ellipse cx="54" cy="32" rx="5" ry="8" fill="#C19A6B"/>
+    <!-- Growth rings on right end -->
+    <ellipse cx="54" cy="32" rx="4" ry="6.5" fill="none" stroke="#A0522D" stroke-width="0.5"/>
+    <ellipse cx="54" cy="32" rx="2.5" ry="4.5" fill="none" stroke="#8B4513" stroke-width="0.5"/>
+    <ellipse cx="54" cy="32" rx="1" ry="2" fill="#8B4513"/>
+    <!-- Shadow underneath -->
+    <ellipse cx="32" cy="41" rx="20" ry="2" fill="#000000" opacity="0.15"/>
+</svg>

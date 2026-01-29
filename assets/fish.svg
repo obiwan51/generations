@@ -1,0 +1,22 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple fish swimming -->
+  <g transform="translate(32, 32)">
+    <!-- Fish body -->
+    <ellipse cx="0" cy="0" rx="18" ry="10" fill="#FF9800"/>
+    <!-- Darker belly -->
+    <ellipse cx="0" cy="3" rx="14" ry="5" fill="#FFB74D"/>
+    <!-- Tail fin -->
+    <path d="M16 0 L28 -10 L28 10 Z" fill="#F57C00"/>
+    <!-- Dorsal fin -->
+    <path d="M-5 -10 Q0 -16 8 -10" fill="#F57C00"/>
+    <!-- Pectoral fin -->
+    <ellipse cx="-2" cy="6" rx="5" ry="3" fill="#F57C00" transform="rotate(-20)"/>
+    <!-- Eye -->
+    <circle cx="-10" cy="-2" r="4" fill="white"/>
+    <circle cx="-11" cy="-2" r="2" fill="black"/>
+    <!-- Mouth -->
+    <ellipse cx="-17" cy="1" rx="2" ry="1" fill="#E65100"/>
+    <!-- Scales pattern -->
+    <path d="M-8 0 Q-6 -3 -4 0 Q-2 3 0 0 Q2 -3 4 0 Q6 3 8 0" stroke="#E65100" stroke-width="1" fill="none" opacity="0.5"/>
+  </g>
+</svg>

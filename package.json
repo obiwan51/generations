@@ -1,0 +1,34 @@
+{
+  "name": "one-life",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/server/src/index.js",
+    "dev": "tsx watch server/src/index.ts",
+    "dev:client": "vite client",
+    "build": "tsc && vite build client",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/multer": "^2.0.0",
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.1.0",
+    "@types/socket.io": "^3.0.1",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
+}

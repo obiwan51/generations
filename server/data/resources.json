@@ -1,0 +1,111 @@
+{
+  "BERRY_BUSH": {
+    "id": 1,
+    "name": "Berry Bush",
+    "asset": "berry_bush.svg",
+    "description": "A bush with ripe berries ready for harvest.",
+    "spawnRate": 0.04,
+    "biomes": ["grassland", "forest"]
+  },
+  "TREE": {
+    "id": 2,
+    "name": "Tree",
+    "asset": "tree.svg",
+    "description": "A tall tree that can be chopped for wood.",
+    "spawnRate": 0.06,
+    "isLarge": true,
+    "yOffset": 64,
+    "biomes": ["forest", "grassland"]
+  },
+  "ROCK": {
+    "id": 3,
+    "name": "Rock",
+    "asset": "rock.svg",
+    "description": "A solid rock useful for crafting tools.",
+    "spawnRate": 0.02,
+    "biomes": ["grassland", "desert", "forest", "swamp"]
+  },
+  "WILD_CARROT": {
+    "id": 4,
+    "name": "Wild Carrot",
+    "asset": "carrot.svg",
+    "description": "A wild carrot growing in the ground.",
+    "spawnRate": 0.01,
+    "isEdible": true,
+    "foodValue": 5,
+    "biomes": ["grassland", "forest"]
+  },
+  "RUINS": {
+    "id": 5,
+    "name": "Ruins",
+    "asset": "ruins.svg",
+    "description": "Ancient ruins from a forgotten civilization.",
+    "spawnRate": 0.001,
+    "isLarge": true,
+    "size": 2,
+    "yOffset": 64,
+    "biomes": ["desert", "grassland"]
+  },
+  "GRASS": {
+    "id": 6,
+    "name": "Tall Grass",
+    "asset": "tall_grass.svg",
+    "description": "Tall grass swaying in the wind.",
+    "spawnRate": 0.08,
+    "isFloor": false,
+    "biomes": ["grassland", "forest"]
+  },
+  "WILD_WHEAT": {
+    "id": 7,
+    "name": "Wild Wheat",
+    "asset": "wild_wheat.svg",
+    "description": "Wild wheat growing naturally.",
+    "spawnRate": 0.015,
+    "biomes": ["grassland"]
+  },
+  "CACTUS": {
+    "id": 8,
+    "name": "Cactus",
+    "asset": "cactus.svg",
+    "description": "A prickly desert cactus.",
+    "spawnRate": 0.04,
+    "biomes": ["desert"]
+  },
+  "DEAD_TREE": {
+    "id": 9,
+    "name": "Dead Tree",
+    "asset": "dead_tree.svg",
+    "description": "A withered dead tree.",
+    "spawnRate": 0.03,
+    "isLarge": true,
+    "yOffset": 64,
+    "biomes": ["swamp", "desert"]
+  },
+  "MUSHROOM": {
+    "id": 10,
+    "name": "Mushroom",
+    "asset": "mushroom.svg",
+    "description": "A wild mushroom growing in damp areas.",
+    "spawnRate": 0.03,
+    "isEdible": true,
+    "foodValue": 3,
+    "biomes": ["swamp", "forest"]
+  },
+  "REEDS": {
+    "id": 20,
+    "name": "Reeds",
+    "asset": "reeds.svg",
+    "description": "Tall reeds growing near water.",
+    "spawnRate": 0.08,
+    "biomes": ["swamp"]
+  },
+  "LILY_PAD": {
+    "id": 21,
+    "name": "Lily Pad",
+    "asset": "lily_pad.svg",
+    "description": "A floating lily pad on the water surface.",
+    "spawnRate": 0.03,
+    "isFloor": true,
+    "biomes": ["water"]
+  }
+}

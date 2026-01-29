@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <!-- Wooden handle -->
+    <rect x="29" y="6" width="6" height="36" rx="3" fill="#8D6E63"/>
+    <!-- Handle highlight -->
+    <rect x="30" y="6" width="2" height="36" fill="#A1887F" opacity="0.6"/>
+    <!-- Grip wrapping -->
+    <rect x="29" y="16" width="6" height="12" fill="#5D4037" opacity="0.7"/>
+    <path d="M29 18 L35 18 M29 20 L35 20 M29 22 L35 22 M29 24 L35 24 M29 26 L35 26" 
+          stroke="#4E342E" stroke-width="0.5"/>
+    <!-- Metal blade -->
+    <path d="M22 42 L42 42 L40 46 Q38 52 36 56 Q34 58 32 58 Q30 58 28 56 Q26 52 24 46 Z" 
+          fill="#757575" stroke="#424242" stroke-width="1.5"/>
+    <!-- Blade highlight -->
+    <path d="M26 42 L38 42 L36 46 Q34 50 33 54" fill="#9E9E9E" opacity="0.5"/>
+    <!-- Blade edge -->
+    <path d="M28 56 Q32 58 36 56" stroke="#BDBDBD" stroke-width="1" fill="none"/>
+    <!-- Connection rivet -->
+    <circle cx="32" cy="42" r="2" fill="#616161" stroke="#424242" stroke-width="0.5"/>
+    <circle cx="32" cy="42" r="0.8" fill="#424242"/>
+</svg>

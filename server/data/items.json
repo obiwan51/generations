@@ -1,0 +1,307 @@
+{
+  "SHARP_STONE": {
+    "id": 101,
+    "name": "Sharp Stone",
+    "asset": "sharp_stone.svg",
+    "category": "tool",
+    "description": "A rock with a sharp edge, useful for cutting and crafting.",
+    "uses": 5
+  },
+  "LOG": {
+    "id": 102,
+    "name": "Log",
+    "asset": "log.svg",
+    "category": "material",
+    "description": "A wooden log cut from a tree."
+  },
+  "KINDLING": {
+    "id": 103,
+    "name": "Kindling",
+    "asset": "kindling.svg",
+    "category": "material",
+    "description": "Small pieces of wood suitable for starting fires."
+  },
+  "FIRE": {
+    "id": 104,
+    "name": "Fire",
+    "asset": "fire.svg",
+    "category": "structure",
+    "description": "A burning fire that provides warmth and cooking.",
+    "isPlaceable": true
+  },
+  "BASKET": {
+    "id": 105,
+    "name": "Basket",
+    "asset": "basket.svg",
+    "category": "container",
+    "description": "A woven container for carrying items.",
+    "isContainer": true,
+    "capacity": 3
+  },
+  "RAW_MEAT": {
+    "id": 106,
+    "name": "Raw Meat",
+    "asset": "raw_meat.svg",
+    "category": "food",
+    "description": "Uncooked meat from an animal."
+  },
+  "COOKED_MEAT": {
+    "id": 107,
+    "name": "Cooked Meat",
+    "asset": "cooked_meat.svg",
+    "category": "food",
+    "description": "Delicious cooked meat.",
+    "isEdible": true,
+    "foodValue": 15
+  },
+  "FUR": {
+    "id": 108,
+    "name": "Fur",
+    "asset": "fur.svg",
+    "category": "material",
+    "description": "Animal fur, useful for crafting."
+  },
+  "BOW": {
+    "id": 109,
+    "name": "Bow",
+    "asset": "bow.svg",
+    "category": "weapon",
+    "description": "A ranged weapon for shooting arrows.",
+    "isWeapon": true,
+    "weaponType": "ranged",
+    "ammoType": "ARROW",
+    "weaponMaxDist": 300
+  },
+  "ARROW": {
+    "id": 110,
+    "name": "Arrow",
+    "asset": "arrow.svg",
+    "category": "ammo",
+    "description": "Ammunition for a bow.",
+    "weaponDamage": 15,
+    "isConsumable": true
+  },
+  "KITCHEN": {
+    "id": 111,
+    "name": "Kitchen",
+    "asset": "kitchen.svg",
+    "category": "structure",
+    "description": "A place to cook food more efficiently.",
+    "isPlaceable": true,
+    "isLarge": true
+  },
+  "SPEAR": {
+    "id": 112,
+    "name": "Spear",
+    "asset": "spear.svg",
+    "category": "weapon",
+    "description": "A throwable weapon for hunting.",
+    "isWeapon": true,
+    "weaponType": "throw",
+    "weaponDamage": 25,
+    "weaponMaxDist": 150
+  },
+  "BONES": {
+    "id": 113,
+    "name": "Bones",
+    "asset": "bones.svg",
+    "category": "material",
+    "description": "Animal bones."
+  },
+  "DEAD_RABBIT": {
+    "id": 114,
+    "name": "Dead Rabbit",
+    "asset": "dead_rabbit.svg",
+    "category": "carcass",
+    "description": "A dead rabbit ready for harvesting."
+  },
+  "DEAD_DEER": {
+    "id": 115,
+    "name": "Dead Deer",
+    "asset": "dead_deer.svg",
+    "category": "carcass",
+    "description": "A dead deer ready for harvesting."
+  },
+  "DEAD_WOLF": {
+    "id": 116,
+    "name": "Dead Wolf",
+    "asset": "dead_wolf.svg",
+    "category": "carcass",
+    "description": "A dead wolf ready for harvesting."
+  },
+  "DEAD_BOAR": {
+    "id": 117,
+    "name": "Dead Boar",
+    "asset": "dead_boar.svg",
+    "category": "carcass",
+    "description": "A dead boar ready for harvesting."
+  },
+  "DECAYED_ANIMAL": {
+    "id": 118,
+    "name": "Decayed Animal",
+    "asset": "decayed_animal.svg",
+    "category": "carcass",
+    "description": "A rotting animal carcass."
+  },
+  "DEAD_FISH": {
+    "id": 119,
+    "name": "Dead Fish",
+    "asset": "dead_fish.svg",
+    "category": "carcass",
+    "description": "A fresh caught fish."
+  },
+  "SHOVEL": {
+    "id": 120,
+    "name": "Shovel",
+    "asset": "shovel.svg",
+    "category": "tool",
+    "description": "A tool for digging holes."
+  },
+  "HOLE": {
+    "id": 121,
+    "name": "Hole",
+    "asset": "hole.svg",
+    "category": "structure",
+    "description": "A hole dug in the ground."
+  },
+  "GRAVE": {
+    "id": 122,
+    "name": "Grave",
+    "asset": "grave.svg",
+    "category": "structure",
+    "description": "A resting place for the deceased."
+  },
+  "GRAVE_STONE": {
+    "id": 123,
+    "name": "Grave Stone",
+    "asset": "grave_stone.svg",
+    "category": "structure",
+    "description": "A memorial for a departed soul."
+  },
+  "WHEAT_SEEDS": {
+    "id": 124,
+    "name": "Wheat Seeds",
+    "asset": "wheat_seeds.svg",
+    "category": "seed",
+    "description": "Seeds that can be planted to grow wheat."
+  },
+  "PLANTED_WHEAT": {
+    "id": 125,
+    "name": "Planted Wheat",
+    "asset": "planted_wheat.svg",
+    "category": "crop",
+    "description": "Young wheat growing in the soil.",
+    "growsInto": "WHEAT",
+    "growthTicks": 3
+  },
+  "WHEAT": {
+    "id": 126,
+    "name": "Wheat",
+    "asset": "wheat.svg",
+    "category": "crop",
+    "description": "Mature wheat ready for harvest."
+  },
+  "FLOUR": {
+    "id": 127,
+    "name": "Flour",
+    "asset": "flour.svg",
+    "category": "material",
+    "description": "Ground wheat, used for baking."
+  },
+  "BREAD": {
+    "id": 128,
+    "name": "Bread",
+    "asset": "bread.svg",
+    "category": "food",
+    "description": "A loaf of fresh bread.",
+    "isEdible": true,
+    "foodValue": 20
+  },
+  "CARROT_SEEDS": {
+    "id": 129,
+    "name": "Carrot Seeds",
+    "asset": "carrot_seeds.svg",
+    "category": "seed",
+    "description": "Seeds that can be planted to grow carrots."
+  },
+  "PLANTED_CARROT": {
+    "id": 130,
+    "name": "Planted Carrot",
+    "asset": "planted_carrot.svg",
+    "category": "crop",
+    "description": "A carrot growing in the soil.",
+    "growsInto": "CARROT",
+    "growthTicks": 2
+  },
+  "CARROT": {
+    "id": 131,
+    "name": "Carrot",
+    "asset": "carrot.svg",
+    "category": "food",
+    "description": "A fresh carrot.",
+    "isEdible": true,
+    "foodValue": 8
+  },
+  "BERRIES": {
+    "id": 132,
+    "name": "Berries",
+    "asset": "berries.svg",
+    "category": "food",
+    "description": "A handful of fresh berries.",
+    "isEdible": true,
+    "foodValue": 5
+  },
+  "BERRY_BUSH_EMPTY": {
+    "id": 133,
+    "name": "Empty Berry Bush",
+    "asset": "berry_bush_empty.svg",
+    "category": "crop",
+    "description": "A berry bush that has been harvested.",
+    "growsInto": "BERRY_BUSH",
+    "growthTicks": 3
+  },
+  "PLANTED_BERRY_BUSH": {
+    "id": 134,
+    "name": "Planted Berry Bush",
+    "asset": "planted_berry_bush.svg",
+    "category": "crop",
+    "description": "A young berry bush growing.",
+    "growsInto": "BERRY_BUSH",
+    "growthTicks": 4
+  },
+  "BOAT": {
+    "id": 135,
+    "name": "Boat",
+    "asset": "boat.svg",
+    "category": "tool",
+    "description": "A wooden boat for traveling across water."
+  },
+  "SKINNED_RABBIT": {
+    "id": 136,
+    "name": "Skinned Rabbit",
+    "asset": "skinned_rabbit.svg",
+    "category": "carcass",
+    "description": "A rabbit carcass ready for skinning."
+  },
+  "SKINNED_DEER": {
+    "id": 137,
+    "name": "Skinned Deer",
+    "asset": "skinned_deer.svg",
+    "category": "carcass",
+    "description": "A deer carcass ready for skinning."
+  },
+  "SKINNED_WOLF": {
+    "id": 138,
+    "name": "Skinned Wolf",
+    "asset": "skinned_wolf.svg",
+    "category": "carcass",
+    "description": "A wolf carcass ready for skinning."
+  },
+  "SKINNED_BOAR": {
+    "id": 139,
+    "name": "Skinned Boar",
+    "asset": "skinned_boar.svg",
+    "category": "carcass",
+    "description": "A boar carcass ready for skinning."
+  }
+}

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Handful of berries -->
+  
+  <!-- Berry 1 (center) -->
+  <circle cx="32" cy="32" r="10" fill="#8B2252"/>
+  <circle cx="29" cy="29" r="3" fill="#B8405E" opacity="0.7"/>
+  <circle cx="32" cy="26" r="1.5" fill="#4A1025"/>
+  
+  <!-- Berry 2 (left) -->
+  <circle cx="18" cy="36" r="8" fill="#9B2C5C"/>
+  <circle cx="16" cy="33" r="2.5" fill="#B8405E" opacity="0.7"/>
+  <circle cx="18" cy="31" r="1.2" fill="#4A1025"/>
+  
+  <!-- Berry 3 (right) -->
+  <circle cx="46" cy="34" r="9" fill="#7B1D42"/>
+  <circle cx="43" cy="31" r="2.5" fill="#B8405E" opacity="0.7"/>
+  <circle cx="46" cy="29" r="1.3" fill="#4A1025"/>
+  
+  <!-- Berry 4 (top) -->
+  <circle cx="38" cy="20" r="7" fill="#8B2252"/>
+  <circle cx="36" cy="18" r="2" fill="#B8405E" opacity="0.7"/>
+  <circle cx="38" cy="16" r="1" fill="#4A1025"/>
+  
+  <!-- Berry 5 (bottom) -->
+  <circle cx="26" cy="46" r="7" fill="#9B2C5C"/>
+  <circle cx="24" cy="44" r="2" fill="#B8405E" opacity="0.7"/>
+  <circle cx="26" cy="42" r="1" fill="#4A1025"/>
+  
+  <!-- Small leaf -->
+  <ellipse cx="40" cy="18" rx="4" ry="2" fill="#2E7D32" transform="rotate(-30 40 18)"/>
+</svg>

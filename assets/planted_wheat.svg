@@ -1,0 +1,10 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Soil -->
+  <ellipse cx="32" cy="55" rx="20" ry="8" fill="#5D4037"/>
+  <!-- Young sprouts -->
+  <path d="M28 55 L28 42" stroke="#4CAF50" stroke-width="2"/>
+  <path d="M28 45 L24 40" stroke="#4CAF50" stroke-width="1.5"/>
+  <path d="M28 48 L32 44" stroke="#4CAF50" stroke-width="1.5"/>
+  <path d="M36 55 L36 45" stroke="#4CAF50" stroke-width="2"/>
+  <path d="M36 48 L33 44" stroke="#4CAF50" stroke-width="1.5"/>
+</svg>

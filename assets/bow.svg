@@ -1,0 +1,16 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <!-- Bow limbs (wood) -->
+    <path d="M30 8 Q48 32 30 56" stroke="#6D4C41" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <!-- Wood highlight -->
+    <path d="M32 10 Q48 32 32 54" stroke="#8D6E63" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <!-- Wood grain -->
+    <path d="M31 14 Q42 32 31 50" stroke="#5D4037" stroke-width="0.8" fill="none" opacity="0.4"/>
+    <!-- Bowstring -->
+    <line x1="30" y1="8" x2="30" y2="56" stroke="#E0E0E0" stroke-width="1.2"/>
+    <!-- String attachment points -->
+    <circle cx="30" cy="8" r="2" fill="#795548"/>
+    <circle cx="30" cy="56" r="2" fill="#795548"/>
+    <!-- Grip in center -->
+    <rect x="28" y="28" width="4" height="8" rx="2" fill="#5D4037"/>
+    <path d="M28 30 L32 30 M28 32 L32 32 M28 34 L32 34" stroke="#4E342E" stroke-width="0.5"/>
+</svg>

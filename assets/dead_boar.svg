@@ -1,0 +1,47 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dead boar lying on its side -->
+  
+  <!-- Shadow -->
+  <ellipse cx="32" cy="50" rx="25" ry="7" fill="#000" opacity="0.2"/>
+  
+  <!-- Body -->
+  <ellipse cx="28" cy="36" rx="18" ry="12" fill="#654321" stroke="#3E2723" stroke-width="1.5"/>
+  <ellipse cx="28" cy="36" rx="14" ry="9" fill="#8B6F47" opacity="0.5"/>
+  
+  <!-- Head -->
+  <ellipse cx="48" cy="32" rx="10" ry="9" fill="#8B6F47" stroke="#3E2723" stroke-width="1.5"/>
+  
+  <!-- Snout -->
+  <ellipse cx="57" cy="34" rx="5" ry="4" fill="#D4A574" stroke="#3E2723" stroke-width="1.5"/>
+  <ellipse cx="57" cy="34" rx="2" ry="1.5" fill="#3E2723"/>
+  
+  <!-- Ear (lying flat) -->
+  <path d="M 50 24 L 52 20 L 48 26 Z" fill="#654321" stroke="#3E2723" stroke-width="1"/>
+  
+  <!-- Eye (X to show dead) -->
+  <line x1="48" y1="30" x2="51" y2="33" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="51" y1="30" x2="48" y2="33" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Tusk -->
+  <path d="M 56 36 L 60 38" stroke="#F5F5DC" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Bristles on back -->
+  <line x1="22" y1="28" x2="20" y2="24" stroke="#3E2723" stroke-width="1" stroke-linecap="round"/>
+  <line x1="26" y1="27" x2="25" y2="23" stroke="#3E2723" stroke-width="1" stroke-linecap="round"/>
+  <line x1="30" y1="27" x2="30" y2="23" stroke="#3E2723" stroke-width="1" stroke-linecap="round"/>
+  
+  <!-- Legs (lying down) -->
+  <rect x="18" y="42" width="5" height="8" rx="2" fill="#654321" stroke="#3E2723" stroke-width="1"/>
+  <rect x="25" y="43" width="5" height="8" rx="2" fill="#654321" stroke="#3E2723" stroke-width="1"/>
+  <rect x="32" y="43" width="5" height="7" rx="2" fill="#654321" stroke="#3E2723" stroke-width="1"/>
+  <rect x="39" y="42" width="5" height="7" rx="2" fill="#654321" stroke="#3E2723" stroke-width="1"/>
+  
+  <!-- Hooves (darker tips) -->
+  <rect x="18" y="48" width="5" height="2" fill="#3E2723"/>
+  <rect x="25" y="49" width="5" height="2" fill="#3E2723"/>
+  <rect x="32" y="48" width="5" height="2" fill="#3E2723"/>
+  <rect x="39" y="47" width="5" height="2" fill="#3E2723"/>
+  
+  <!-- Tail -->
+  <path d="M 12 36 Q 8 35, 10 32 L 8 30" stroke="#654321" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>

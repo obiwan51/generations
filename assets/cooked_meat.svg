@@ -1,0 +1,35 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main cooked meat chunk -->
+  <path d="M18 30 Q16 26 20 22 L28 20 L38 22 L44 26 Q46 30 44 36 L40 42 L32 44 L24 42 L20 36 Z" 
+        fill="#6D4C41" stroke="#4E342E" stroke-width="1.5"/>
+  
+  <!-- Darker cooked areas -->
+  <path d="M22 28 Q24 26 28 26 L34 28 L36 32 L34 36 L28 38 Z" fill="#5D4037" opacity="0.7"/>
+  
+  <!-- Char marks/grill lines -->
+  <path d="M22 28 Q32 28 42 28" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+  <path d="M20 32 Q32 32 44 32" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+  <path d="M22 36 Q32 36 42 36" stroke="#3E2723" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+  
+  <!-- Crispy edges (darker brown) -->
+  <path d="M20 22 L28 20 L24 24 Z" fill="#4E342E" opacity="0.6"/>
+  <path d="M38 22 L44 26 L40 24 Z" fill="#4E342E" opacity="0.6"/>
+  <path d="M24 42 L32 44 L28 40 Z" fill="#3E2723" opacity="0.7"/>
+  
+  <!-- Golden-brown highlights -->
+  <ellipse cx="26" cy="26" rx="4" ry="3" fill="#8D6E63" opacity="0.6"/>
+  <ellipse cx="36" cy="24" rx="3" ry="2" fill="#8D6E63" opacity="0.6"/>
+  <ellipse cx="30" cy="34" rx="3" ry="2.5" fill="#8D6E63" opacity="0.5"/>
+  
+  <!-- Fat rendering/juice spots -->
+  <circle cx="28" cy="30" r="1.5" fill="#FDD835" opacity="0.4"/>
+  <circle cx="34" cy="32" r="1" fill="#FDD835" opacity="0.4"/>
+  <circle cx="30" cy="36" r="1.2" fill="#FDD835" opacity="0.3"/>
+  
+  <!-- Texture details -->
+  <path d="M26 30 Q28 31 30 30 M32 34 Q34 35 36 34" 
+        stroke="#4E342E" stroke-width="0.6" opacity="0.3" fill="none"/>
+  
+  <!-- Shadow -->
+  <ellipse cx="32" cy="46" rx="12" ry="3" fill="#000000" opacity="0.2"/>
+</svg>

@@ -1,0 +1,28 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dead rabbit lying on its side -->
+  
+  <!-- Shadow -->
+  <ellipse cx="32" cy="48" rx="20" ry="6" fill="#000" opacity="0.2"/>
+  
+  <!-- Body -->
+  <ellipse cx="30" cy="36" rx="14" ry="10" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
+  
+  <!-- Head -->
+  <ellipse cx="46" cy="32" rx="8" ry="7" fill="#E0E0E0" stroke="#999" stroke-width="1.5"/>
+  
+  <!-- Ear (lying flat) -->
+  <ellipse cx="52" cy="26" rx="6" ry="3" fill="#E0E0E0" stroke="#999" stroke-width="1"/>
+  <ellipse cx="52" cy="26" rx="4" ry="2" fill="#F0F0F0"/>
+  
+  <!-- Eye (X to show dead) -->
+  <line x1="47" y1="30" x2="50" y2="33" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="50" y1="30" x2="47" y2="33" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Legs (lying down) -->
+  <ellipse cx="24" cy="42" rx="3" ry="6" fill="#E0E0E0" stroke="#999" stroke-width="1"/>
+  <ellipse cx="30" cy="43" rx="3" ry="6" fill="#E0E0E0" stroke="#999" stroke-width="1"/>
+  <ellipse cx="35" cy="42" rx="3" ry="5" fill="#E0E0E0" stroke="#999" stroke-width="1"/>
+  
+  <!-- Tail -->
+  <circle cx="17" cy="34" r="4" fill="#F5F5F5" stroke="#999" stroke-width="1"/>
+</svg>

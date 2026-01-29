@@ -1,0 +1,42 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Skinned boar - butchered, ready for fur harvest -->
+  
+  <!-- Shadow -->
+  <ellipse cx="32" cy="50" rx="25" ry="7" fill="#000" opacity="0.2"/>
+  
+  <!-- Body (red/pink exposed flesh) -->
+  <ellipse cx="28" cy="36" rx="18" ry="12" fill="#CC6666" stroke="#993333" stroke-width="1.5"/>
+  <ellipse cx="28" cy="36" rx="14" ry="9" fill="#DD8888" opacity="0.5"/>
+  
+  <!-- Head -->
+  <ellipse cx="48" cy="32" rx="10" ry="9" fill="#BB7777" stroke="#993333" stroke-width="1.5"/>
+  
+  <!-- Snout -->
+  <ellipse cx="57" cy="34" rx="5" ry="4" fill="#CC8888" stroke="#993333" stroke-width="1.5"/>
+  <ellipse cx="57" cy="34" rx="2" ry="1.5" fill="#660000"/>
+  
+  <!-- Ear (lying flat) -->
+  <path d="M 50 24 L 52 20 L 48 26 Z" fill="#CC6666" stroke="#993333" stroke-width="1"/>
+  
+  <!-- Eye (X to show dead) -->
+  <line x1="48" y1="30" x2="51" y2="33" stroke="#660000" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="51" y1="30" x2="48" y2="33" stroke="#660000" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Tusk -->
+  <path d="M 56 36 L 60 38" stroke="#F5F5DC" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Legs (lying down) -->
+  <rect x="18" y="42" width="5" height="8" rx="2" fill="#CC6666" stroke="#993333" stroke-width="1"/>
+  <rect x="25" y="43" width="5" height="8" rx="2" fill="#CC6666" stroke="#993333" stroke-width="1"/>
+  <rect x="32" y="43" width="5" height="7" rx="2" fill="#CC6666" stroke="#993333" stroke-width="1"/>
+  <rect x="39" y="42" width="5" height="7" rx="2" fill="#CC6666" stroke="#993333" stroke-width="1"/>
+  
+  <!-- Hooves (darker tips) -->
+  <rect x="18" y="48" width="5" height="2" fill="#660000"/>
+  <rect x="25" y="49" width="5" height="2" fill="#660000"/>
+  <rect x="32" y="48" width="5" height="2" fill="#660000"/>
+  <rect x="39" y="47" width="5" height="2" fill="#660000"/>
+  
+  <!-- Tail area -->
+  <path d="M 12 36 Q 8 35, 10 32 L 8 30" stroke="#993333" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>

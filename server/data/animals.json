@@ -1,0 +1,82 @@
+{
+  "RABBIT": {
+    "id": 11,
+    "name": "Rabbit",
+    "assets": {
+      "alive": "rabbit.svg",
+      "dead": "dead_rabbit.svg",
+      "decayed": "decayed_animal.svg",
+      "bones": "bones.svg"
+    },
+    "hp": 10,
+    "speed": 0.2,
+    "spawnRate": 0.005,
+    "biomes": ["grassland", "forest"],
+    "isCarnivore": false,
+    "aggression": 0
+  },
+  "DEER": {
+    "id": 12,
+    "name": "Deer",
+    "assets": {
+      "alive": "deer.svg",
+      "dead": "dead_deer.svg",
+      "decayed": "decayed_animal.svg",
+      "bones": "bones.svg"
+    },
+    "hp": 30,
+    "speed": 0.2,
+    "spawnRate": 0.003,
+    "biomes": ["grassland", "forest"],
+    "isCarnivore": false,
+    "aggression": 0
+  },
+  "WOLF": {
+    "id": 13,
+    "name": "Wolf",
+    "assets": {
+      "alive": "wolf.svg",
+      "dead": "dead_wolf.svg",
+      "decayed": "decayed_animal.svg",
+      "bones": "bones.svg"
+    },
+    "hp": 50,
+    "speed": 0.3,
+    "spawnRate": 0.001,
+    "biomes": ["forest"],
+    "isCarnivore": true,
+    "aggression": 0.5
+  },
+  "BOAR": {
+    "id": 14,
+    "name": "Boar",
+    "assets": {
+      "alive": "boar.svg",
+      "dead": "dead_boar.svg",
+      "decayed": "decayed_animal.svg",
+      "bones": "bones.svg"
+    },
+    "hp": 80,
+    "speed": 0.25,
+    "spawnRate": 0.001,
+    "biomes": ["forest", "swamp"],
+    "isCarnivore": true,
+    "aggression": 0.8
+  },
+  "FISH": {
+    "id": 22,
+    "name": "Fish",
+    "assets": {
+      "alive": "fish.svg",
+      "dead": "dead_fish.svg",
+      "decayed": "decayed_animal.svg",
+      "bones": "bones.svg"
+    },
+    "hp": 5,
+    "speed": 0.15,
+    "spawnRate": 0.02,
+    "biomes": ["water"],
+    "isCarnivore": false,
+    "aggression": 0
+  }
+}

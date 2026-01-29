@@ -1,0 +1,447 @@
+[
+  {
+    "id": "sharp_stone",
+    "name": "Sharp Stone",
+    "tool": "ROCK",
+    "target": "ROCK",
+    "result": "SHARP_STONE",
+    "description": "Strike two rocks together to make a sharp edge."
+  },
+  {
+    "id": "log",
+    "name": "Log",
+    "tool": "SHARP_STONE",
+    "target": "TREE",
+    "result": "LOG",
+    "description": "Chop a tree with a sharp stone."
+  },
+  {
+    "id": "log_from_dead_tree",
+    "name": "Log from Dead Tree",
+    "tool": "SHARP_STONE",
+    "target": "DEAD_TREE",
+    "result": "LOG",
+    "description": "Chop a dead tree for wood."
+  },
+  {
+    "id": "kindling",
+    "name": "Kindling",
+    "tool": "SHARP_STONE",
+    "target": "LOG",
+    "result": "KINDLING",
+    "description": "Cut a log into kindling with a sharp stone."
+  },
+  {
+    "id": "spear",
+    "name": "Spear",
+    "tool": "KINDLING",
+    "target": "SHARP_STONE",
+    "result": "SPEAR",
+    "description": "Attach a sharp stone to a wooden shaft to create a spear."
+  },
+  {
+    "id": "kindling_from_spear",
+    "name": "Kindling from Spear",
+    "tool": "SHARP_STONE",
+    "target": "SPEAR",
+    "result": "KINDLING",
+    "description": "Break down a spear shaft into kindling."
+  },
+  {
+    "id": "basket",
+    "name": "Basket",
+    "tool": "KINDLING",
+    "target": "KINDLING",
+    "result": "BASKET",
+    "description": "Weave two bundles of kindling into a basket."
+  },
+  {
+    "id": "basket_from_reeds",
+    "name": "Basket from Reeds",
+    "tool": "REEDS",
+    "target": "REEDS",
+    "result": "BASKET",
+    "description": "Weave reeds into a sturdy basket."
+  },
+  {
+    "id": "fire",
+    "name": "Fire",
+    "tool": "ROCK",
+    "target": "KINDLING",
+    "result": "FIRE",
+    "description": "Strike a rock against kindling to start a fire."
+  },
+  {
+    "id": "kitchen",
+    "name": "Kitchen",
+    "tool": "ROCK",
+    "target": "FIRE",
+    "result": "KITCHEN",
+    "description": "Build a kitchen using rocks around a fire."
+  },
+  {
+    "id": "cook_meat_fire",
+    "name": "Cook Meat (Fire)",
+    "tool": "RAW_MEAT",
+    "target": "FIRE",
+    "result": "COOKED_MEAT",
+    "targetPersists": true,
+    "description": "Roast raw meat over an open flame."
+  },
+  {
+    "id": "cook_meat_kitchen",
+    "name": "Cook Meat (Kitchen)",
+    "tool": "RAW_MEAT",
+    "target": "KITCHEN",
+    "result": "COOKED_MEAT",
+    "targetPersists": true,
+    "description": "Prepare a meal in the kitchen."
+  },
+  {
+    "id": "cook_fish_fire",
+    "name": "Cook Fish (Fire)",
+    "tool": "DEAD_FISH",
+    "target": "FIRE",
+    "result": "COOKED_MEAT",
+    "targetPersists": true,
+    "description": "Cook fresh fish over a fire."
+  },
+  {
+    "id": "cook_fish_kitchen",
+    "name": "Cook Fish (Kitchen)",
+    "tool": "DEAD_FISH",
+    "target": "KITCHEN",
+    "result": "COOKED_MEAT",
+    "targetPersists": true,
+    "description": "Prepare fish in the kitchen."
+  },
+  {
+    "id": "bow",
+    "name": "Bow",
+    "tool": "FUR",
+    "target": "KINDLING",
+    "result": "BOW",
+    "description": "String a wooden shaft with fur to make a bow."
+  },
+  {
+    "id": "arrow",
+    "name": "Arrow",
+    "tool": "SHARP_STONE",
+    "target": "KINDLING",
+    "result": "ARROW",
+    "description": "Whittle kindling into a sharp arrow."
+  },
+  {
+    "id": "boat",
+    "name": "Boat",
+    "tool": "SHOVEL",
+    "target": "LOG",
+    "result": "BOAT",
+    "description": "Carve a log into a simple boat using a shovel."
+  },
+  {
+    "id": "slaughter_rabbit_arrow",
+    "name": "Slaughter Rabbit (Arrow)",
+    "tool": "ARROW",
+    "target": "RABBIT",
+    "result": "DEAD_RABBIT",
+    "description": "Kill a rabbit directly with an arrow."
+  },
+  {
+    "id": "slaughter_rabbit_spear",
+    "name": "Slaughter Rabbit (Spear)",
+    "tool": "SPEAR",
+    "target": "RABBIT",
+    "result": "DEAD_RABBIT",
+    "description": "Kill a rabbit directly with a spear."
+  },
+  {
+    "id": "slaughter_deer_arrow",
+    "name": "Slaughter Deer (Arrow)",
+    "tool": "ARROW",
+    "target": "DEER",
+    "result": "DEAD_DEER",
+    "description": "Kill a deer directly with an arrow."
+  },
+  {
+    "id": "slaughter_deer_spear",
+    "name": "Slaughter Deer (Spear)",
+    "tool": "SPEAR",
+    "target": "DEER",
+    "result": "DEAD_DEER",
+    "description": "Kill a deer directly with a spear."
+  },
+  {
+    "id": "slaughter_wolf_arrow",
+    "name": "Slaughter Wolf (Arrow)",
+    "tool": "ARROW",
+    "target": "WOLF",
+    "result": "DEAD_WOLF",
+    "description": "Kill a wolf directly with an arrow."
+  },
+  {
+    "id": "slaughter_wolf_spear",
+    "name": "Slaughter Wolf (Spear)",
+    "tool": "SPEAR",
+    "target": "WOLF",
+    "result": "DEAD_WOLF",
+    "description": "Kill a wolf directly with a spear."
+  },
+  {
+    "id": "slaughter_boar_arrow",
+    "name": "Slaughter Boar (Arrow)",
+    "tool": "ARROW",
+    "target": "BOAR",
+    "result": "DEAD_BOAR",
+    "description": "Kill a boar directly with an arrow."
+  },
+  {
+    "id": "slaughter_boar_spear",
+    "name": "Slaughter Boar (Spear)",
+    "tool": "SPEAR",
+    "target": "BOAR",
+    "result": "DEAD_BOAR",
+    "description": "Kill a boar directly with a spear."
+  },
+  {
+    "id": "catch_fish_spear",
+    "name": "Catch Fish (Spear)",
+    "tool": "SPEAR",
+    "target": "FISH",
+    "result": "DEAD_FISH",
+    "description": "Spear a fish in the water."
+  },
+  {
+    "id": "butcher_rabbit",
+    "name": "Butcher Rabbit",
+    "tool": "SHARP_STONE",
+    "target": "DEAD_RABBIT",
+    "result": "RAW_MEAT",
+    "targetBecomesType": "SKINNED_RABBIT",
+    "description": "Butcher a rabbit for meat."
+  },
+  {
+    "id": "skin_rabbit",
+    "name": "Skin Rabbit",
+    "tool": "SHARP_STONE",
+    "target": "SKINNED_RABBIT",
+    "result": "FUR",
+    "description": "Skin a rabbit for its fur."
+  },
+  {
+    "id": "butcher_deer",
+    "name": "Butcher Deer",
+    "tool": "SHARP_STONE",
+    "target": "DEAD_DEER",
+    "result": "RAW_MEAT",
+    "targetBecomesType": "SKINNED_DEER",
+    "description": "Butcher a deer for meat."
+  },
+  {
+    "id": "skin_deer",
+    "name": "Skin Deer",
+    "tool": "SHARP_STONE",
+    "target": "SKINNED_DEER",
+    "result": "FUR",
+    "description": "Skin a deer for its fur."
+  },
+  {
+    "id": "butcher_wolf",
+    "name": "Butcher Wolf",
+    "tool": "SHARP_STONE",
+    "target": "DEAD_WOLF",
+    "result": "RAW_MEAT",
+    "targetBecomesType": "SKINNED_WOLF",
+    "description": "Butcher a wolf for meat."
+  },
+  {
+    "id": "skin_wolf",
+    "name": "Skin Wolf",
+    "tool": "SHARP_STONE",
+    "target": "SKINNED_WOLF",
+    "result": "FUR",
+    "description": "Skin a wolf for its fur."
+  },
+  {
+    "id": "butcher_boar",
+    "name": "Butcher Boar",
+    "tool": "SHARP_STONE",
+    "target": "DEAD_BOAR",
+    "result": "RAW_MEAT",
+    "targetBecomesType": "SKINNED_BOAR",
+    "description": "Butcher a boar for meat."
+  },
+  {
+    "id": "skin_boar",
+    "name": "Skin Boar",
+    "tool": "SHARP_STONE",
+    "target": "SKINNED_BOAR",
+    "result": "FUR",
+    "description": "Skin a boar for its fur."
+  },
+  {
+    "id": "harvest_bones",
+    "name": "Harvest Bones",
+    "tool": "SHARP_STONE",
+    "target": "DECAYED_ANIMAL",
+    "result": "BONES",
+    "description": "Extract bones from a decayed carcass."
+  },
+  {
+    "id": "shovel",
+    "name": "Shovel",
+    "tool": "ROCK",
+    "target": "LOG",
+    "result": "SHOVEL",
+    "description": "Lash a flat stone to a log to make a shovel."
+  },
+  {
+    "id": "dig_hole",
+    "name": "Dig Hole",
+    "tool": "SHOVEL",
+    "target": null,
+    "result": "HOLE",
+    "description": "Dig a hole in the ground."
+  },
+  {
+    "id": "grave",
+    "name": "Grave",
+    "tool": "BONES",
+    "target": "HOLE",
+    "result": "GRAVE",
+    "description": "Lay the bones to rest in the hole."
+  },
+  {
+    "id": "grave_stone",
+    "name": "Grave Stone",
+    "tool": "ROCK",
+    "target": "GRAVE",
+    "result": "GRAVE_STONE",
+    "description": "Place a memorial stone on the grave."
+  },
+  {
+    "id": "wheat_seeds",
+    "name": "Wheat Seeds",
+    "tool": "SHARP_STONE",
+    "target": "WILD_WHEAT",
+    "result": "WHEAT_SEEDS",
+    "description": "Harvest wild wheat for seeds."
+  },
+  {
+    "id": "plant_wheat",
+    "name": "Plant Wheat",
+    "tool": "WHEAT_SEEDS",
+    "target": "HOLE",
+    "result": "PLANTED_WHEAT",
+    "description": "Plant wheat seeds in the soil."
+  },
+  {
+    "id": "harvest_wheat",
+    "name": "Harvest Wheat",
+    "tool": "SHARP_STONE",
+    "target": "WHEAT",
+    "result": "WHEAT_SEEDS",
+    "description": "Harvest mature wheat for more seeds."
+  },
+  {
+    "id": "flour",
+    "name": "Flour",
+    "tool": "WHEAT",
+    "target": "ROCK",
+    "result": "FLOUR",
+    "description": "Grind wheat into flour using a rock."
+  },
+  {
+    "id": "bread_fire",
+    "name": "Bread (Fire)",
+    "tool": "FLOUR",
+    "target": "FIRE",
+    "result": "BREAD",
+    "targetPersists": true,
+    "description": "Bake flour into bread over a fire."
+  },
+  {
+    "id": "bread_kitchen",
+    "name": "Bread (Kitchen)",
+    "tool": "FLOUR",
+    "target": "KITCHEN",
+    "result": "BREAD",
+    "targetPersists": true,
+    "description": "Bake bread in the kitchen."
+  },
+  {
+    "id": "carrot_seeds",
+    "name": "Carrot Seeds",
+    "tool": "SHARP_STONE",
+    "target": "WILD_CARROT",
+    "result": "CARROT_SEEDS",
+    "description": "Harvest wild carrot for seeds."
+  },
+  {
+    "id": "plant_carrot",
+    "name": "Plant Carrot",
+    "tool": "CARROT_SEEDS",
+    "target": "HOLE",
+    "result": "PLANTED_CARROT",
+    "description": "Plant carrot seeds in the soil."
+  },
+  {
+    "id": "collect_berries",
+    "name": "Collect Berries",
+    "tool": null,
+    "target": "BERRY_BUSH",
+    "result": "BERRIES",
+    "targetBecomesType": "BERRY_BUSH_EMPTY",
+    "description": "Pick berries from the bush."
+  },
+  {
+    "id": "plant_berry_bush",
+    "name": "Plant Berry Bush",
+    "tool": "BERRIES",
+    "target": "HOLE",
+    "result": "PLANTED_BERRY_BUSH",
+    "description": "Plant berries to grow a new berry bush."
+  },
+  {
+    "id": "collect_mushroom",
+    "name": "Collect Mushroom",
+    "tool": null,
+    "target": "MUSHROOM",
+    "result": "MUSHROOM",
+    "description": "Pick a wild mushroom."
+  },
+  {
+    "id": "collect_wild_carrot",
+    "name": "Collect Wild Carrot",
+    "tool": null,
+    "target": "WILD_CARROT",
+    "result": "WILD_CARROT",
+    "description": "Pick a wild carrot."
+  },
+  {
+    "id": "collect_reeds",
+    "name": "Collect Reeds",
+    "tool": "SHARP_STONE",
+    "target": "REEDS",
+    "result": "REEDS",
+    "description": "Cut reeds from the swamp."
+  },
+  {
+    "id": "cook_mushroom_fire",
+    "name": "Cook Mushroom (Fire)",
+    "tool": "MUSHROOM",
+    "target": "FIRE",
+    "result": "COOKED_MEAT",
+    "targetPersists": true,
+    "description": "Cook mushrooms over a fire."
+  },
+  {
+    "id": "cook_mushroom_kitchen",
+    "name": "Cook Mushroom (Kitchen)",
+    "tool": "MUSHROOM",
+    "target": "KITCHEN",
+    "result": "COOKED_MEAT",
+    "targetPersists": true,
+    "description": "Cook mushrooms in the kitchen."
+  }
+]

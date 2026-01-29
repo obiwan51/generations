@@ -1,0 +1,34 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <!-- Basket body -->
+    <path d="M14 40 Q12 35 14 30 L18 26 L28 24 L36 24 L46 26 L50 30 Q52 35 50 40 L46 50 Q44 54 40 56 L24 56 Q20 54 18 50 Z" 
+          fill="#D2B48C" stroke="#8B4513" stroke-width="1.5"/>
+    <!-- Basket rim -->
+    <ellipse cx="32" cy="25" rx="18" ry="4" fill="#C19A6B" stroke="#8B4513" stroke-width="1"/>
+    <ellipse cx="32" cy="25" rx="17" ry="3" fill="#D2B48C" opacity="0.6"/>
+    
+    <!-- Vertical weave strands -->
+    <path d="M20 28 Q19 40 20 52 M24 26 Q23 40 24 54 M28 25 Q27 40 28 55 M32 24 Q31 40 32 56 M36 25 Q37 40 36 55 M40 26 Q41 40 40 54 M44 28 Q45 40 44 52" 
+          stroke="#8B4513" stroke-width="1.2" opacity="0.7" fill="none"/>
+    
+    <!-- Horizontal weave strands -->
+    <path d="M16 30 Q32 32 48 30 M15 34 Q32 36 49 34 M15 38 Q32 40 49 38 M15 42 Q32 44 49 42 M16 46 Q32 48 48 46 M18 50 Q32 52 46 50 M20 54 Q32 56 44 54" 
+          stroke="#A0826D" stroke-width="1" opacity="0.8" fill="none"/>
+    
+    <!-- Handle attachment points -->
+    <ellipse cx="18" cy="28" rx="2" ry="3" fill="#8B4513"/>
+    <ellipse cx="46" cy="28" rx="2" ry="3" fill="#8B4513"/>
+    
+    <!-- Handle -->
+    <path d="M18 28 Q32 12 46 28" stroke="#8B4513" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M18 28 Q32 14 46 28" stroke="#A0826D" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Weave details on handle -->
+    <path d="M22 24 L24 26 M26 20 L28 22 M30 18 L32 16 M34 18 L36 16 M38 20 L40 22 M42 24 L44 26" 
+          stroke="#8B4513" stroke-width="0.8" opacity="0.6"/>
+    
+    <!-- Shadow inside basket -->
+    <ellipse cx="32" cy="26" rx="15" ry="3" fill="#000000" opacity="0.15"/>
+    
+    <!-- Shadow underneath -->
+    <ellipse cx="32" cy="58" rx="16" ry="3" fill="#000000" opacity="0.2"/>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Swamp reeds -->
+  
+  <!-- Water/mud base -->
+  <ellipse cx="32" cy="60" rx="20" ry="5" fill="#4A6741" opacity="0.4"/>
+  
+  <!-- Reed stalks -->
+  <path d="M18 60 Q16 40 20 15" stroke="#6B8E23" stroke-width="3" fill="none"/>
+  <path d="M28 60 Q26 35 28 10" stroke="#556B2F" stroke-width="3" fill="none"/>
+  <path d="M36 60 Q38 38 34 12" stroke="#6B8E23" stroke-width="3" fill="none"/>
+  <path d="M46 60 Q48 42 44 18" stroke="#556B2F" stroke-width="3" fill="none"/>
+  
+  <!-- Reed heads (cattails) -->
+  <ellipse cx="20" cy="12" rx="3" ry="8" fill="#5D4037"/>
+  <ellipse cx="28" cy="8" rx="2.5" ry="7" fill="#4E342E"/>
+  <ellipse cx="34" cy="10" rx="3" ry="8" fill="#5D4037"/>
+  <ellipse cx="44" cy="15" rx="2.5" ry="7" fill="#4E342E"/>
+  
+  <!-- Tops of cattails -->
+  <line x1="20" y1="4" x2="20" y2="2" stroke="#6B8E23" stroke-width="1"/>
+  <line x1="28" y1="1" x2="28" y2="-1" stroke="#556B2F" stroke-width="1"/>
+  <line x1="34" y1="2" x2="34" y2="0" stroke="#6B8E23" stroke-width="1"/>
+  <line x1="44" y1="8" x2="44" y2="6" stroke="#556B2F" stroke-width="1"/>
+  
+  <!-- Small leaves at base -->
+  <path d="M22 55 Q26 50 24 45" stroke="#7CB342" stroke-width="2" fill="none"/>
+  <path d="M42 55 Q38 48 40 42" stroke="#7CB342" stroke-width="2" fill="none"/>
+</svg>

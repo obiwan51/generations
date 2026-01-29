@@ -1,0 +1,36 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <!-- Bundle of small sticks -->
+    <!-- Stick 1 -->
+    <rect x="18" y="28" width="28" height="3" rx="1.5" fill="#8B4513" transform="rotate(-15 32 30)"/>
+    <path d="M20 28 L44 26" stroke="#654321" stroke-width="0.5" opacity="0.5" transform="rotate(-15 32 30)"/>
+    
+    <!-- Stick 2 -->
+    <rect x="16" y="32" width="32" height="3" rx="1.5" fill="#A0522D" transform="rotate(8 32 34)"/>
+    <path d="M18 32 L46 34" stroke="#8B4513" stroke-width="0.5" opacity="0.5" transform="rotate(8 32 34)"/>
+    
+    <!-- Stick 3 -->
+    <rect x="20" y="36" width="26" height="3" rx="1.5" fill="#6D4C41" transform="rotate(-25 32 38)"/>
+    <path d="M22 36 L44 36" stroke="#5D4037" stroke-width="0.5" opacity="0.5" transform="rotate(-25 32 38)"/>
+    
+    <!-- Stick 4 -->
+    <rect x="22" y="30" width="24" height="3" rx="1.5" fill="#795548" transform="rotate(18 32 32)"/>
+    <path d="M24 30 L44 32" stroke="#6D4C41" stroke-width="0.5" opacity="0.5" transform="rotate(18 32 32)"/>
+    
+    <!-- Stick 5 -->
+    <rect x="24" y="34" width="20" height="3" rx="1.5" fill="#8D6E63" transform="rotate(-8 32 36)"/>
+    <path d="M26 34 L42 35" stroke="#6D4C41" stroke-width="0.5" opacity="0.5" transform="rotate(-8 32 36)"/>
+    
+    <!-- Small twigs -->
+    <line x1="28" y1="26" x2="30" y2="22" stroke="#8B4513" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="36" y1="28" x2="38" y2="24" stroke="#795548" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="40" y1="38" x2="44" y2="40" stroke="#6D4C41" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="24" y1="40" x2="20" y2="42" stroke="#8D6E63" stroke-width="1.5" stroke-linecap="round"/>
+    
+    <!-- Binding/twine -->
+    <ellipse cx="32" cy="34" rx="8" ry="5" fill="none" stroke="#D4A574" stroke-width="1.5" opacity="0.8"/>
+    <path d="M24 32 Q28 34 32 32 Q36 34 40 32" stroke="#C19A6B" stroke-width="1.2" fill="none" opacity="0.7"/>
+    <path d="M24 36 Q28 34 32 36 Q36 34 40 36" stroke="#C19A6B" stroke-width="1.2" fill="none" opacity="0.7"/>
+    
+    <!-- Shadow -->
+    <ellipse cx="32" cy="44" rx="12" ry="3" fill="#000000" opacity="0.15"/>
+</svg>

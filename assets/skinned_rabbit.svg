@@ -1,0 +1,27 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Skinned rabbit - butchered, ready for fur harvest -->
+  
+  <!-- Shadow -->
+  <ellipse cx="32" cy="48" rx="20" ry="6" fill="#000" opacity="0.2"/>
+  
+  <!-- Body (red/pink exposed flesh) -->
+  <ellipse cx="30" cy="36" rx="14" ry="10" fill="#CC6666" stroke="#993333" stroke-width="1.5"/>
+  
+  <!-- Head -->
+  <ellipse cx="46" cy="32" rx="8" ry="7" fill="#CC6666" stroke="#993333" stroke-width="1.5"/>
+  
+  <!-- Ear (lying flat) -->
+  <ellipse cx="52" cy="26" rx="6" ry="3" fill="#CC6666" stroke="#993333" stroke-width="1"/>
+  
+  <!-- Eye (X to show dead) -->
+  <line x1="47" y1="30" x2="50" y2="33" stroke="#660000" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="50" y1="30" x2="47" y2="33" stroke="#660000" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Legs (lying down) -->
+  <ellipse cx="24" cy="42" rx="3" ry="6" fill="#CC6666" stroke="#993333" stroke-width="1"/>
+  <ellipse cx="30" cy="43" rx="3" ry="6" fill="#CC6666" stroke="#993333" stroke-width="1"/>
+  <ellipse cx="35" cy="42" rx="3" ry="5" fill="#CC6666" stroke="#993333" stroke-width="1"/>
+  
+  <!-- Tail area -->
+  <circle cx="17" cy="34" r="4" fill="#B85555" stroke="#993333" stroke-width="1"/>
+</svg>

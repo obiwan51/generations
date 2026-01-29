@@ -1,0 +1,11 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Soil -->
+  <ellipse cx="32" cy="55" rx="18" ry="7" fill="#5D4037"/>
+  <!-- Carrot greens poking out -->
+  <path d="M28 50 L25 35" stroke="#228B22" stroke-width="2"/>
+  <path d="M32 50 L32 30" stroke="#228B22" stroke-width="2"/>
+  <path d="M36 50 L39 35" stroke="#228B22" stroke-width="2"/>
+  <!-- Feathery leaves -->
+  <path d="M25 35 L20 30 M25 35 L28 28" stroke="#32CD32" stroke-width="1.5"/>
+  <path d="M32 30 L28 22 M32 30 L36 22" stroke="#32CD32" stroke-width="1.5"/>
+</svg>

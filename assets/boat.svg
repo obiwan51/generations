@@ -1,0 +1,30 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple wooden boat -->
+  <!-- Hull bottom -->
+  <ellipse cx="32" cy="45" rx="26" ry="8" fill="#8B4513" stroke="#5C2E0A" stroke-width="1.5"/>
+  
+  <!-- Hull sides -->
+  <path d="M 10 40 Q 10 35, 15 33 L 49 33 Q 54 35, 54 40 L 50 45 Q 50 43, 45 42 L 19 42 Q 14 43, 14 45 Z" 
+        fill="#A0522D" stroke="#5C2E0A" stroke-width="1.5"/>
+  
+  <!-- Boat interior (shadow) -->
+  <ellipse cx="32" cy="38" rx="18" ry="4" fill="#6B3410" opacity="0.5"/>
+  
+  <!-- Wooden planks detail -->
+  <line x1="20" y1="35" x2="20" y2="42" stroke="#5C2E0A" stroke-width="0.5"/>
+  <line x1="28" y1="33" x2="28" y2="42" stroke="#5C2E0A" stroke-width="0.5"/>
+  <line x1="36" y1="33" x2="36" y2="42" stroke="#5C2E0A" stroke-width="0.5"/>
+  <line x1="44" y1="35" x2="44" y2="42" stroke="#5C2E0A" stroke-width="0.5"/>
+  
+  <!-- Rowing oar (left) -->
+  <line x1="16" y1="40" x2="6" y2="35" stroke="#8B4513" stroke-width="2" stroke-linecap="round"/>
+  <ellipse cx="6" cy="35" rx="4" ry="2" fill="#654321"/>
+  
+  <!-- Rowing oar (right) -->
+  <line x1="48" y1="40" x2="58" y2="35" stroke="#8B4513" stroke-width="2" stroke-linecap="round"/>
+  <ellipse cx="58" cy="35" rx="4" ry="2" fill="#654321"/>
+  
+  <!-- Highlight on hull -->
+  <path d="M 15 34 Q 20 32, 32 32 Q 44 32, 49 34" 
+        fill="none" stroke="#D2691E" stroke-width="1" opacity="0.6"/>
+</svg>

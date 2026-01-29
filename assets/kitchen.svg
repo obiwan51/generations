@@ -1,0 +1,58 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Stone base/foundation -->
+  <rect x="12" y="38" width="40" height="20" rx="2" fill="#757575" stroke="#424242" stroke-width="1"/>
+  <!-- Stone texture -->
+  <rect x="14" y="40" width="12" height="8" fill="#616161" opacity="0.5"/>
+  <rect x="28" y="40" width="10" height="8" fill="#616161" opacity="0.5"/>
+  <rect x="40" y="40" width="10" height="8" fill="#616161" opacity="0.5"/>
+  <rect x="14" y="50" width="10" height="6" fill="#616161" opacity="0.5"/>
+  <rect x="26" y="50" width="14" height="6" fill="#616161" opacity="0.5"/>
+  <rect x="42" y="50" width="8" height="6" fill="#616161" opacity="0.5"/>
+  
+  <!-- Mortar lines -->
+  <path d="M14 48 L50 48 M26 40 L26 58 M40 40 L40 58" stroke="#424242" stroke-width="0.5" opacity="0.7"/>
+  
+  <!-- Main fire chamber/oven opening -->
+  <rect x="20" y="42" width="24" height="14" rx="1" fill="#212121"/>
+  <rect x="22" y="44" width="20" height="10" rx="1" fill="#000000"/>
+  
+  <!-- Fire glow inside chamber -->
+  <ellipse cx="32" cy="49" rx="8" ry="3" fill="#FF6F00" opacity="0.6"/>
+  <ellipse cx="32" cy="49" rx="5" ry="2" fill="#FFB300" opacity="0.7"/>
+  <ellipse cx="32" cy="49" rx="3" ry="1.5" fill="#FFEA00" opacity="0.8"/>
+  
+  <!-- Primitive burner top/opening -->
+  <ellipse cx="32" cy="38" rx="12" ry="4" fill="#616161" stroke="#424242" stroke-width="1"/>
+  <ellipse cx="32" cy="38" rx="10" ry="3" fill="#424242"/>
+  <ellipse cx="32" cy="38" rx="8" ry="2.5" fill="#212121"/>
+  
+  <!-- Heat glow from burner top -->
+  <ellipse cx="32" cy="38" rx="7" ry="2" fill="#FF6F00" opacity="0.4"/>
+  <ellipse cx="32" cy="38" rx="5" ry="1.5" fill="#FFB300" opacity="0.5"/>
+  
+  <!-- Support bars/grate over burner -->
+  <rect x="24" y="36" width="2" height="4" fill="#9E9E9E"/>
+  <rect x="30" y="36" width="2" height="4" fill="#9E9E9E"/>
+  <rect x="36" y="36" width="2" height="4" fill="#9E9E9E"/>
+  <rect x="42" y="36" width="2" height="4" fill="#9E9E9E"/>
+  
+  <!-- Side vents for air flow -->
+  <rect x="16" y="44" width="2" height="8" rx="1" fill="#000000" opacity="0.6"/>
+  <rect x="46" y="44" width="2" height="8" rx="1" fill="#000000" opacity="0.6"/>
+  
+  <!-- Chimney/smoke opening at top -->
+  <rect x="28" y="24" width="8" height="14" fill="#757575" stroke="#424242" stroke-width="1"/>
+  <rect x="29" y="25" width="6" height="13" fill="#616161"/>
+  <ellipse cx="32" cy="24" rx="4" ry="2" fill="#616161"/>
+  
+  <!-- Smoke rising from chimney -->
+  <path d="M30 20 Q28 16 30 12" stroke="#9E9E9E" stroke-width="2" opacity="0.3" fill="none" stroke-linecap="round"/>
+  <path d="M32 18 Q30 14 32 10" stroke="#9E9E9E" stroke-width="2" opacity="0.3" fill="none" stroke-linecap="round"/>
+  <path d="M34 20 Q36 16 34 12" stroke="#9E9E9E" stroke-width="2" opacity="0.3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Soot stains on chimney -->
+  <ellipse cx="32" cy="28" rx="3" ry="2" fill="#212121" opacity="0.3"/>
+  
+  <!-- Shadow -->
+  <ellipse cx="32" cy="60" rx="18" ry="2" fill="#000000" opacity="0.2"/>
+</svg>
