@@ -7,7 +7,7 @@
     "start": "node dist/server/src/index.js",
     "dev": "tsx watch server/src/index.ts",
     "dev:client": "vite client",
-    "build": "tsc && vite build client",
+    "build": "tsc && vite build client && node scripts/postbuild.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
