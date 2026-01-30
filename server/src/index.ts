@@ -1111,6 +1111,12 @@ io.on('connection', (socket) => {
                 // Regular recipe with tool - result goes on ground, tool stays in hand (with durability)
                 world.removeObject(tx, ty);
                 engine.unregisterPlantedCrop(tx, ty);
+                
+                // If the target was a live animal, unregister it from the AI system
+                if (engine.isLiveAnimal(targetObj!)) {
+                    engine.unregisterAnimal(tx, ty);
+                }
+                
                 world.setObject(tx, ty, recipe.result);
                 io.emit('worldUpdate', { x: tx, y: ty, type: recipe.result });
                 

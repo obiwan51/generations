@@ -196,6 +196,74 @@ export class AnimalAISystem extends System<AnimalComponent> {
       component.delete();
     }
   }
+
+  /**
+   * Make animal flee from a threat (move away from attacker position).
+   * Returns true if the animal successfully moved.
+   */
+  fleeFrom(animalX: number, animalY: number, threatX: number, threatY: number): boolean {
+    if (!this.isTileEmpty || !this.onAnimalMove) return false;
+
+    const component = this.getComponentAt(animalX, animalY);
+    if (!component) return false;
+
+    // Calculate direction away from threat
+    const dx = animalX - threatX;
+    const dy = animalY - threatY;
+
+    // Normalize and pick primary direction
+    const directions: [number, number][] = [];
+    
+    // Add directions sorted by how much they move away from threat
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      // Prioritize horizontal movement
+      if (dx !== 0) directions.push([Math.sign(dx), 0]);
+      if (dy !== 0) directions.push([0, Math.sign(dy)]);
+      if (dx !== 0) directions.push([0, -Math.sign(dy) || 1]); // perpendicular
+      if (dx !== 0) directions.push([-Math.sign(dx), 0]); // opposite (last resort)
+    } else {
+      // Prioritize vertical movement
+      if (dy !== 0) directions.push([0, Math.sign(dy)]);
+      if (dx !== 0) directions.push([Math.sign(dx), 0]);
+      if (dy !== 0) directions.push([-Math.sign(dx) || 1, 0]); // perpendicular
+      if (dy !== 0) directions.push([0, -Math.sign(dy)]); // opposite (last resort)
+    }
+
+    // Also add random perpendicular directions as fallback
+    directions.push([1, 0], [-1, 0], [0, 1], [0, -1]);
+
+    for (const [dirX, dirY] of directions) {
+      const nx = animalX + dirX;
+      const ny = animalY + dirY;
+
+      // Check bounds
+      if (nx < 0 || nx >= CONSTANTS.MAP_SIZE || ny < 0 || ny >= CONSTANTS.MAP_SIZE) {
+        continue;
+      }
+
+      // Check if destination is empty
+      if (!this.isTileEmpty(nx, ny)) {
+        continue;
+      }
+
+      // Move the animal
+      component.x = nx;
+      component.y = ny;
+
+      this.onAnimalMove({
+        fromX: animalX,
+        fromY: animalY,
+        toX: nx,
+        toY: ny,
+        type: component.animalType,
+        data: { age: component.age },
+      });
+
+      return true;
+    }
+
+    return false;
+  }
 }
 
 export default AnimalAISystem;

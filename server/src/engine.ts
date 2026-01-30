@@ -264,9 +264,89 @@ class GameEngine {
         }
       }
     } else {
+      // Animal survived - update HP and make it flee
       world.objectsData[`${hit.tileX},${hit.tileY}`] = data;
-      this.io.emit("worldUpdate", { x: hit.tileX, y: hit.tileY, type: hit.targetType, data });
+      
+      // Get shooter position to flee from
+      let shooterX = hit.tileX;
+      let shooterY = hit.tileY;
+      if (projComp?.ownerId) {
+        const shooterData = this.playerManager.getPlayerData(projComp.ownerId);
+        if (shooterData) {
+          shooterX = Math.floor(shooterData.x / CONSTANTS.TILE_SIZE);
+          shooterY = Math.floor(shooterData.y / CONSTANTS.TILE_SIZE);
+        }
+      }
+      
+      // Make the animal flee (this handles the worldUpdate internally)
+      this.animalSystem.fleeFrom(hit.tileX, hit.tileY, shooterX, shooterY);
+      
+      // Drop the projectile on the ground where the animal was
+      this.dropProjectileOnGround(hit.tileX, hit.tileY, projComp?.type);
     }
+  }
+
+  /**
+   * Drop a projectile item on the ground, respecting uses/consumable properties.
+   */
+  private dropProjectileOnGround(x: number, y: number, projectileType: number | undefined): void {
+    if (!projectileType) return;
+    
+    const itemDef = this.itemRegistry[projectileType];
+    if (!itemDef) return;
+    
+    // Consumable items (like arrows) are destroyed on hit
+    if (itemDef.isConsumable) {
+      return;
+    }
+    
+    // Find an empty tile near the hit location to drop the projectile
+    const dropTile = this.findEmptyTileNear(x, y);
+    if (!dropTile) return;
+    
+    // Handle durability (uses property)
+    let itemData: any = {};
+    if (itemDef.uses !== undefined) {
+      // Get existing uses or start with max
+      itemData.uses = (itemDef.uses || 1) - 1;
+      
+      // If no uses left, item breaks and we don't drop it
+      if (itemData.uses <= 0) {
+        return;
+      }
+    }
+    
+    world.setObject(dropTile.x, dropTile.y, projectileType, Object.keys(itemData).length > 0 ? itemData : undefined);
+    this.io.emit("worldUpdate", {
+      x: dropTile.x,
+      y: dropTile.y,
+      type: projectileType,
+      data: Object.keys(itemData).length > 0 ? itemData : undefined,
+    });
+  }
+
+  /**
+   * Find an empty tile near the given coordinates.
+   */
+  private findEmptyTileNear(x: number, y: number): { x: number; y: number } | null {
+    // First check the exact tile
+    if (!world.getObject(x, y)) {
+      return { x, y };
+    }
+    
+    // Check adjacent tiles
+    const offsets = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]];
+    for (const [dx, dy] of offsets) {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (nx >= 0 && nx < CONSTANTS.MAP_SIZE && ny >= 0 && ny < CONSTANTS.MAP_SIZE) {
+        if (!world.getObject(nx, ny)) {
+          return { x: nx, y: ny };
+        }
+      }
+    }
+    
+    return null;
   }
 
   reloadRegistry(): void {
@@ -377,6 +457,21 @@ class GameEngine {
     if (comp) {
       comp.delete();
     }
+  }
+
+  /**
+   * Unregister an animal from the AI system.
+   * Call this when an animal is killed or picked up.
+   */
+  unregisterAnimal(x: number, y: number): void {
+    this.animalSystem.removeAt(x, y);
+  }
+
+  /**
+   * Check if a type ID belongs to a live animal in the registry.
+   */
+  isLiveAnimal(typeId: number): boolean {
+    return !!this.animalRegistry[typeId];
   }
 
   // Public API
