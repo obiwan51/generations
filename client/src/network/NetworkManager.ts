@@ -39,9 +39,11 @@ export interface NetworkCallbacks {
     onPlayerDisconnected?: (id: string) => void;
     onSeasonChange?: (season: Season) => void;
     onProjectileUpdate?: (projectiles: ProjectileData[]) => void;
+    onAnimalUpdate?: (animals: Array<{ id: string; type: number; x: number; y: number; hp?: number }>) => void;
     onChatMsg?: (data: { id: string; name: string; text: string }) => void;
     onDeathScreen?: (stats: { name: string; age: number; experience: number; cause: string; mother: string }) => void;
     onTextMessage?: (data: { text: string }) => void;
+    onAnimalAttack?: (data: { animalName: string; damage: number; animalX: number; animalY: number }) => void;
     onNameBaby?: (data: { babyId: string; gender: 'male' | 'female'; message: string }) => void;
     onNameError?: (data: { message: string }) => void;
     onNameSuccess?: (data: { babyId: string; name: string }) => void;
@@ -107,6 +109,10 @@ export class NetworkManager {
             this.callbacks.onProjectileUpdate?.(projectiles);
         });
 
+        this.socket.on('animalUpdate', (animals) => {
+            this.callbacks.onAnimalUpdate?.(animals);
+        });
+
         this.socket.on('chatMsg', (data) => {
             this.callbacks.onChatMsg?.(data);
         });
@@ -117,6 +123,10 @@ export class NetworkManager {
 
         this.socket.on('textMessage', (data) => {
             this.callbacks.onTextMessage?.(data);
+        });
+
+        this.socket.on('animalAttack', (data) => {
+            this.callbacks.onAnimalAttack?.(data);
         });
 
         this.socket.on('nameBaby', (data) => {

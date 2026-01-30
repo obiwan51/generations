@@ -62,7 +62,7 @@ class GameEngine {
     this.decaySystem = new DecaySystem(60);
     this.seasonSystem = new SeasonSystem();
     this.projectileSystem = new ProjectileSystem();
-    this.animalSystem = new AnimalAISystem(5);
+    this.animalSystem = new AnimalAISystem();
     this.growthSystem = new GrowthSystem(60);
 
     // Initialize manager
@@ -90,6 +90,14 @@ class GameEngine {
     this.setupProjectileCallbacks();
     this.setupAnimalCallbacks();
     this.setupGrowthCallbacks();
+    this.setupWorldCallbacks();
+  }
+
+  private setupWorldCallbacks(): void {
+    // Sync animals to world objects before saving
+    world.onBeforeSave = () => {
+      this.syncAnimalsToWorld();
+    };
   }
 
   private setupPlayerCallbacks(): void {
@@ -172,55 +180,121 @@ class GameEngine {
   }
 
   private setupProjectileCallbacks(): void {
-    this.projectileSystem.getObjectAt = (x, y) => world.getObject(x, y);
-    this.projectileSystem.isTileEmpty = (x, y) => !world.getObject(x, y);
+    // Check for objects OR animals at a tile
+    this.projectileSystem.getObjectAt = (x, y) => {
+      // First check world objects
+      const worldObj = world.getObject(x, y);
+      if (worldObj) return worldObj;
+      
+      // Then check for live animals (they're not in world.objects anymore)
+      const animal = this.animalSystem.getComponentAt(x, y);
+      if (animal) return animal.animalType;
+      
+      return null;
+    };
+    this.projectileSystem.isTileEmpty = (x, y) => {
+      return !world.getObject(x, y) && !this.animalSystem.getComponentAt(x, y);
+    };
 
     this.projectileSystem.onHit = (hit) => {
       this.handleProjectileHit(hit);
     };
 
     this.projectileSystem.onLand = (landed) => {
-      world.setObject(landed.tileX, landed.tileY, landed.projectileType);
+      const projComp = landed.projectile.getComponent(ProjectileComponent);
+      const itemDef = this.itemRegistry[landed.projectileType];
+      
+      // Consumable items (like arrows) are destroyed on land
+      if (itemDef?.isConsumable) {
+        return;
+      }
+      
+      // Handle durability (uses property)
+      let itemData: any = undefined;
+      if (projComp?.remainingUses !== undefined) {
+        itemData = { uses: projComp.remainingUses };
+      }
+      
+      world.setObject(landed.tileX, landed.tileY, landed.projectileType, itemData);
       this.io.emit("worldUpdate", {
         x: landed.tileX,
         y: landed.tileY,
         type: landed.projectileType,
+        data: itemData,
       });
     };
   }
 
   private setupAnimalCallbacks(): void {
-    this.animalSystem.isTileEmpty = (x, y) => !world.getObject(x, y) && world.isPassable(x, y);
+    // Check if a tile is passable for animals (no objects blocking)
+    this.animalSystem.isTilePassable = (tileX, tileY) => {
+      return !world.getObject(tileX, tileY) && world.isPassable(tileX, tileY);
+    };
 
-    this.animalSystem.getPlayersInRange = (x, y, range) => {
-      const result: string[] = [];
+    // Get nearby players with their pixel positions
+    this.animalSystem.getPlayersInRange = (tileX, tileY, range) => {
+      const result: Array<{ id: string; x: number; y: number }> = [];
+      const centerX = tileX * CONSTANTS.TILE_SIZE + CONSTANTS.TILE_SIZE / 2;
+      const centerY = tileY * CONSTANTS.TILE_SIZE + CONSTANTS.TILE_SIZE / 2;
+      const rangePixels = range * CONSTANTS.TILE_SIZE;
+      
       for (const playerId of this.playerManager.getPlayerIds()) {
         const data = this.playerManager.getPlayerData(playerId);
-        if (!data) continue;
+        if (!data || data.isDead) continue;
+        
         const dist = Math.sqrt(
-          Math.pow(x - data.x / CONSTANTS.TILE_SIZE, 2) +
-          Math.pow(y - data.y / CONSTANTS.TILE_SIZE, 2)
+          Math.pow(centerX - data.x, 2) +
+          Math.pow(centerY - data.y, 2)
         );
-        if (dist < range) result.push(playerId);
+        if (dist < rangePixels) {
+          result.push({ id: playerId, x: data.x, y: data.y });
+        }
       }
+      // Sort by distance (nearest first)
+      result.sort((a, b) => {
+        const distA = Math.pow(centerX - a.x, 2) + Math.pow(centerY - a.y, 2);
+        const distB = Math.pow(centerX - b.x, 2) + Math.pow(centerY - b.y, 2);
+        return distA - distB;
+      });
       return result;
     };
 
-    this.animalSystem.onAnimalMove = (move) => {
-      world.removeObject(move.fromX, move.fromY);
-      world.setObject(move.toX, move.toY, move.type, move.data);
-      this.io.emit("worldUpdate", { x: move.fromX, y: move.fromY, type: null });
-      this.io.emit("worldUpdate", { x: move.toX, y: move.toY, type: move.type, data: move.data });
+    // Handle tile changes (for logging/debugging, world objects are NOT updated)
+    // Animals are tracked by AnimalAISystem and rendered via animalUpdate events
+    this.animalSystem.onAnimalTileChange = (_component, _fromTileX, _fromTileY) => {
+      // Animals are no longer stored in world.objects while alive
+      // They will be saved to world objects only when the world is saved
     };
 
     this.animalSystem.onAnimalAttack = (attack) => {
       const comps = this.playerComponents.get(attack.playerId);
       if (comps) {
         comps.hunger.decreaseHunger(attack.damage);
+        
+        // Check if player died from this attack
+        if (comps.hunger.isStarving()) {
+          this.killPlayer(attack.playerId, `Killed by ${attack.animalName}`);
+          return;
+        }
       }
-      this.io.to(attack.playerId).emit("textMessage", {
-        text: `Attacked by a ${attack.animalName}!`,
+      
+      // Emit attack event with knockback info (coordinates already in pixels)
+      this.io.to(attack.playerId).emit("animalAttack", {
+        animalName: attack.animalName,
+        damage: attack.damage,
+        animalX: attack.animalX,
+        animalY: attack.animalY,
       });
+    };
+
+    // Handle carnivore hunting herbivores
+    this.animalSystem.onAnimalHunt = (predator, prey) => {
+      // Remove prey from world
+      world.removeObject(prey.tileX, prey.tileY);
+      this.io.emit("worldUpdate", { x: prey.tileX, y: prey.tileY, type: null });
+      
+      // Log the hunt (could add more effects here)
+      //console.log(`[Hunt] ${predator.animalDef.name} caught a ${prey.animalDef.name}`);
     };
   }
 
@@ -236,37 +310,171 @@ class GameEngine {
   }
 
   private handleProjectileHit(hit: any): void {
-    const animalDef = this.animalRegistry[hit.targetType];
-    if (!animalDef) return;
-
-    let data = world.objectsData[`${hit.tileX},${hit.tileY}`] || {};
-    if (data.hp === undefined) data.hp = animalDef.hp;
-
     const projComp = hit.projectile.getComponent(ProjectileComponent);
-    const dmg = projComp?.damage ?? 5;
-    data.hp -= dmg;
+    const animalDef = this.animalRegistry[hit.targetType];
+    
+    // If it's not an animal (hit a tree, bush, etc.), return weapon to player
+    if (!animalDef) {
+      this.returnProjectileToPlayer(projComp);
+      return;
+    }
 
-    if (data.hp <= 0) {
+    // Get the animal component to read/write HP
+    const animalComp = this.animalSystem.getComponentAt(hit.tileX, hit.tileY);
+    if (!animalComp) {
+      // Animal not found at this tile (may have moved), return weapon
+      this.returnProjectileToPlayer(projComp);
+      return;
+    }
+
+    // Initialize HP if not set
+    if (animalComp.hp === undefined) {
+      animalComp.hp = animalDef.hp;
+    }
+
+    const dmg = projComp?.damage ?? 5;
+    animalComp.hp -= dmg;
+
+    if (animalComp.hp <= 0) {
       const recipe = this.recipes.find(
         (r) => r.tool === projComp?.type && r.target === hit.targetType
       );
       if (recipe) {
-        world.setObject(hit.tileX, hit.tileY, recipe.result);
-        
-        // Remove the animal component so it's no longer treated as a live animal
+        // Remove the animal component first
         this.animalSystem.removeAt(hit.tileX, hit.tileY);
         
+        // Place the result (meat, etc.)
+        world.setObject(hit.tileX, hit.tileY, recipe.result);
         this.io.emit("worldUpdate", { x: hit.tileX, y: hit.tileY, type: recipe.result });
 
         if (projComp?.ownerId) {
           const player = this.playerManager.getPlayer(projComp.ownerId);
           player?.getComponent(ExperienceComponent)?.addExperience(config.get("xpPerHunt"));
+          
+          // Return weapon to player's hand if it still has uses
+          this.returnProjectileToPlayer(projComp);
         }
       }
     } else {
-      world.objectsData[`${hit.tileX},${hit.tileY}`] = data;
-      this.io.emit("worldUpdate", { x: hit.tileX, y: hit.tileY, type: hit.targetType, data });
+      // Animal survived - make it flee
+      // Get shooter position to flee from
+      let shooterX = hit.tileX;
+      let shooterY = hit.tileY;
+      if (projComp?.ownerId) {
+        const shooterData = this.playerManager.getPlayerData(projComp.ownerId);
+        if (shooterData) {
+          shooterX = Math.floor(shooterData.x / CONSTANTS.TILE_SIZE);
+          shooterY = Math.floor(shooterData.y / CONSTANTS.TILE_SIZE);
+        }
+      }
+      
+      // Make the animal flee (HP is already updated on the component)
+      this.animalSystem.fleeFrom(hit.tileX, hit.tileY, shooterX, shooterY);
+      
+      // Return the projectile to the player's hand (after hitting but not killing)
+      this.returnProjectileToPlayer(projComp);
     }
+  }
+
+  /**
+   * Return a projectile to the player's hand if it still has uses.
+   */
+  private returnProjectileToPlayer(projComp: ProjectileComponent | undefined): void {
+    if (!projComp || !projComp.ownerId) return;
+    
+    const projectileType = projComp.type;
+    const itemDef = this.itemRegistry[projectileType];
+    if (!itemDef) return;
+    
+    // Consumable items (like arrows) are destroyed
+    if (itemDef.isConsumable) return;
+    
+    // Calculate remaining uses after this hit
+    let newUses: number | undefined = undefined;
+    if (projComp.remainingUses !== undefined) {
+      newUses = projComp.remainingUses - 1;
+      if (newUses <= 0) {
+        // Item broke, don't return it
+        this.io.to(projComp.ownerId).emit("textMessage", { text: `${itemDef.name} broke!` });
+        return;
+      }
+    }
+    
+    // Return to player's hand
+    const player = this.playerManager.getPlayer(projComp.ownerId);
+    const inv = player?.getComponent(InventoryComponent);
+    if (inv) {
+      inv.setHolding(projectileType, newUses !== undefined ? { uses: newUses } : undefined);
+      this.io.emit("playerStatUpdate", { 
+        id: projComp.ownerId, 
+        holding: projectileType, 
+        holdingData: newUses !== undefined ? { uses: newUses } : null 
+      });
+    }
+  }
+
+  /**
+   * Drop a projectile item on the ground, respecting uses/consumable properties.
+   */
+  private dropProjectileOnGround(x: number, y: number, projComp: ProjectileComponent | undefined): void {
+    if (!projComp) return;
+    
+    const projectileType = projComp.type;
+    const itemDef = this.itemRegistry[projectileType];
+    if (!itemDef) return;
+    
+    // Consumable items (like arrows) are destroyed on hit
+    if (itemDef.isConsumable) {
+      return;
+    }
+    
+    // Find an empty tile near the hit location to drop the projectile
+    const dropTile = this.findEmptyTileNear(x, y);
+    if (!dropTile) return;
+    
+    // Handle durability (uses property)
+    let itemData: any = {};
+    if (projComp.remainingUses !== undefined) {
+      // Decrement remaining uses
+      itemData.uses = projComp.remainingUses - 1;
+      
+      // If no uses left, item breaks and we don't drop it
+      if (itemData.uses <= 0) {
+        return;
+      }
+    }
+    
+    world.setObject(dropTile.x, dropTile.y, projectileType, Object.keys(itemData).length > 0 ? itemData : undefined);
+    this.io.emit("worldUpdate", {
+      x: dropTile.x,
+      y: dropTile.y,
+      type: projectileType,
+      data: Object.keys(itemData).length > 0 ? itemData : undefined,
+    });
+  }
+
+  /**
+   * Find an empty tile near the given coordinates.
+   */
+  private findEmptyTileNear(x: number, y: number): { x: number; y: number } | null {
+    // First check the exact tile
+    if (!world.getObject(x, y)) {
+      return { x, y };
+    }
+    
+    // Check adjacent tiles
+    const offsets = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]];
+    for (const [dx, dy] of offsets) {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (nx >= 0 && nx < CONSTANTS.MAP_SIZE && ny >= 0 && ny < CONSTANTS.MAP_SIZE) {
+        if (!world.getObject(nx, ny)) {
+          return { x: nx, y: ny };
+        }
+      }
+    }
+    
+    return null;
   }
 
   reloadRegistry(): void {
@@ -309,8 +517,11 @@ class GameEngine {
 
   /**
    * Scan world objects and create animal entities for them.
+   * Animals are removed from world objects after creating their components.
    */
   initializeAnimals(): void {
+    const animalsToRemove: string[] = [];
+    
     // Iterate all world objects to find animals
     for (const key in world.objects) {
         const type = world.objects[key];
@@ -322,9 +533,140 @@ class GameEngine {
             if (!this.animalSystem.getComponentAt(x, y)) {
                 this.animalSystem.createComponent(x, y, type, this.animalRegistry[type]);
             }
+            // Mark for removal from world objects (animals are tracked by AnimalAISystem)
+            animalsToRemove.push(key);
         }
     }
-    console.log(`[Engine] Initialized animals from world map.`);
+    
+    // Remove animals from world objects - they're now managed by AnimalAISystem
+    for (const key of animalsToRemove) {
+        const [x, y] = key.split(',').map(Number);
+        world.removeObject(x, y);
+    }
+    
+    console.log(`[Engine] Initialized ${animalsToRemove.length} animals from world map.`);
+  }
+
+  /**
+   * Sync all animals from AnimalAISystem back to world objects for persistence.
+   * Called before saving the world.
+   */
+  private syncAnimalsToWorld(): void {
+    // First, remove ALL existing animals from world.objects
+    // This prevents duplicates when animals have moved since last save
+    const keysToRemove: string[] = [];
+    for (const key in world.objects) {
+      const type = world.objects[key];
+      if (this.animalRegistry[type]) {
+        keysToRemove.push(key);
+      }
+    }
+    for (const key of keysToRemove) {
+      const [x, y] = key.split(',').map(Number);
+      world.removeObject(x, y);
+    }
+    
+    // Now add current animals at their current positions
+    const animals = this.animalSystem.getAnimalsForSync();
+    for (const animal of animals) {
+      const tileX = Math.floor(animal.x / CONSTANTS.TILE_SIZE);
+      const tileY = Math.floor(animal.y / CONSTANTS.TILE_SIZE);
+      world.setObject(tileX, tileY, animal.type, {
+        hp: animal.hp
+      });
+    }
+    console.log(`[Engine] Synced ${animals.length} animals to world for save (cleared ${keysToRemove.length} old entries).`);
+  }
+
+  /**
+   * Try to respawn animals based on population and biomes.
+   */
+  private tryRespawnAnimals(): void {
+    const maxPopulation = config.get("animalMaxPopulation") || 200;
+    const minDistance = config.get("animalMinDistance") || 10;
+    
+    // Count current animals by type AND total
+    const animalCounts: Record<number, number> = {};
+    let totalAnimals = 0;
+    for (const animal of this.animalSystem.getAnimalsForSync()) {
+      animalCounts[animal.type] = (animalCounts[animal.type] || 0) + 1;
+      totalAnimals++;
+    }
+    
+    // Skip if total population is at max
+    if (totalAnimals >= maxPopulation) return;
+    
+    // Get player positions for distance check
+    const playerPositions: Array<{ x: number; y: number }> = [];
+    for (const playerId of this.playerManager.getPlayerIds()) {
+      const data = this.playerManager.getPlayerData(playerId);
+      if (data && !data.isDead) {
+        playerPositions.push({
+          x: Math.floor(data.x / CONSTANTS.TILE_SIZE),
+          y: Math.floor(data.y / CONSTANTS.TILE_SIZE)
+        });
+      }
+    }
+    
+    // Pick a random animal type to try to spawn (weighted by spawnRate)
+    const animalTypes = Object.entries(this.animalRegistry);
+    const totalSpawnRate = animalTypes.reduce((sum, [, def]) => sum + (def.spawnRate || 0.001), 0);
+    let random = Math.random() * totalSpawnRate;
+    
+    let selectedType: number | null = null;
+    let selectedDef: Animal | null = null;
+    
+    for (const [typeIdStr, animalDef] of animalTypes) {
+      random -= animalDef.spawnRate || 0.001;
+      if (random <= 0) {
+        selectedType = parseInt(typeIdStr);
+        selectedDef = animalDef;
+        break;
+      }
+    }
+    
+    if (!selectedType || !selectedDef) return;
+    
+    // Calculate per-type soft cap (maxPopulation / number of types)
+    const perTypeMax = Math.ceil(maxPopulation / animalTypes.length);
+    const currentCount = animalCounts[selectedType] || 0;
+    
+    // Skip if this type is at its soft cap
+    if (currentCount >= perTypeMax) return;
+    
+    // Try to find a valid spawn location (limited attempts)
+    for (let i = 0; i < 10; i++) {
+        // Random position
+        const x = Math.floor(Math.random() * CONSTANTS.MAP_SIZE);
+        const y = Math.floor(Math.random() * CONSTANTS.MAP_SIZE);
+        
+        // Check biome
+        const biome = world.getBiomeAt(x, y);
+        if (!selectedDef.biomes || !selectedDef.biomes.includes(biome)) continue;
+        
+        // Check if tile is empty
+        if (world.getObject(x, y)) continue;
+        if (this.animalSystem.getComponentAt(x, y)) continue;
+        
+        // Check distance from players
+        let tooCloseToPlayer = false;
+        for (const playerPos of playerPositions) {
+          const dist = Math.abs(x - playerPos.x) + Math.abs(y - playerPos.y);
+          if (dist < minDistance) {
+            tooCloseToPlayer = true;
+            break;
+          }
+        }
+        if (tooCloseToPlayer) continue;
+        
+        // Check if tile is passable
+        if (!world.isPassable(x, y)) continue;
+        
+        // Spawn the animal!
+        this.animalSystem.createComponent(x, y, selectedType, selectedDef);
+        console.log(`[Respawn] Spawned ${selectedDef.name} at (${x}, ${y}) - Total: ${totalAnimals + 1}/${maxPopulation}`);
+        return; // Only spawn one animal per cycle
+    }
   }
 
   /**
@@ -377,6 +719,21 @@ class GameEngine {
     if (comp) {
       comp.delete();
     }
+  }
+
+  /**
+   * Unregister an animal from the AI system.
+   * Call this when an animal is killed or picked up.
+   */
+  unregisterAnimal(x: number, y: number): void {
+    this.animalSystem.removeAt(x, y);
+  }
+
+  /**
+   * Check if a type ID belongs to a live animal in the registry.
+   */
+  isLiveAnimal(typeId: number): boolean {
+    return !!this.animalRegistry[typeId];
   }
 
   // Public API
@@ -655,6 +1012,9 @@ class GameEngine {
     return success;
   }
 
+  // Animal respawn tracking
+  private respawnTickCounter: number = 0;
+
   update(): void {
     this.hungerSystem.update(1);
     this.agingSystem.update(1);
@@ -669,6 +1029,17 @@ class GameEngine {
 
     this.decaySystem.update(1);
     this.growthSystem.update(1);
+    
+    // Animal respawn check
+    if (config.get("animalRespawn")) {
+      this.respawnTickCounter++;
+      const respawnInterval = config.get("animalRespawnInterval") || 30;
+      if (this.respawnTickCounter >= respawnInterval) {
+        this.respawnTickCounter = 0;
+        this.tryRespawnAnimals();
+      }
+    }
+    
     this.syncPlayerStats();
     this.cleanupSystems();
   }
@@ -680,6 +1051,15 @@ class GameEngine {
     const projectiles = this.projectileSystem.getProjectilesForSync();
     if (projectiles.length > 0) {
       this.io.emit("projectileUpdate", projectiles);
+    }
+    
+    // Update animals (smooth movement) on the fast loop
+    this.animalSystem.update(0.05);
+    
+    // Broadcast animal positions
+    const animals = this.animalSystem.getAnimalsForSync();
+    if (animals.length > 0) {
+      this.io.emit("animalUpdate", animals);
     }
   }
 
@@ -732,6 +1112,7 @@ class GameEngine {
     if (!weaponDef?.isWeapon) return;
 
     const projType = data.holding; // The weapon itself becomes projectile for throw
+    let remainingUses: number | undefined = undefined;
 
     if (weaponDef.weaponType === "ranged") {
       const player = this.playerManager.getPlayer(socketId);
@@ -762,6 +1143,14 @@ class GameEngine {
         return;
       }
     } else {
+      // Thrown weapon - get remaining uses before dropping
+      const holdingData = this.getPlayerHoldingData(socketId);
+      if (holdingData?.holdingData?.uses !== undefined) {
+        remainingUses = holdingData.holdingData.uses;
+      } else if (weaponDef.uses !== undefined) {
+        remainingUses = weaponDef.uses;
+      }
+      
       const player = this.playerManager.getPlayer(socketId);
       player?.getComponent(InventoryComponent)?.drop();
       this.io.emit("playerStatUpdate", { id: socketId, holding: null, holdingData: null });
@@ -771,14 +1160,16 @@ class GameEngine {
     const age = comps?.age.age ?? 30;
     const exp = data.experience;
 
-    const ageFactor = Math.max(0.2, 1 - Math.abs(age - 30) / 30);
+    const ageFactor = Math.max(0.5, 1 - Math.abs(age - 30) / 50);
     const expFactor = 1 + exp / 500;
-    const maxDist = (weaponDef.weaponMaxDist || 200) * ageFactor * expFactor;
+    // Minimum 3 tiles (96px) for thrown weapons
+    const baseMaxDist = Math.max(weaponDef.weaponMaxDist || 200, 96);
+    const maxDist = baseMaxDist * ageFactor * expFactor;
     const accuracy = (0.2 * (1 - ageFactor)) / expFactor;
     const finalAngle = angle + (Math.random() - 0.5) * accuracy;
 
     this.projectileSystem.createProjectile(
-      socketId, data.x, data.y, finalAngle, projType, maxDist, weaponDef.weaponDamage || 5
+      socketId, data.x, data.y, finalAngle, projType, maxDist, weaponDef.weaponDamage || 5, remainingUses
     );
   }
 
@@ -807,8 +1198,16 @@ class GameEngine {
    * Reinitialize the world - regenerates terrain and objects.
    */
   reinitializeWorld(): void {
+    // Clear existing animals
+    this.animalSystem.clear();
+    
     // Regenerate world with new seed
     world.regenerate();
+    
+    // Initialize animals from the new world
+    this.initializeAnimals();
+    
+    // Save the world (this will sync animals back to world objects)
     world.saveWorld();
     
     // Reset statistics
@@ -841,15 +1240,39 @@ class GameEngine {
     return {
       animalMovement: config.get("animalMovement"),
       carnivoreAggression: config.get("carnivoreAggression"),
-      weatherEnabled: config.get("weatherEnabled")
+      weatherEnabled: config.get("weatherEnabled"),
+      animalRespawn: config.get("animalRespawn")
     };
+  }
+
+  /**
+   * Get respawn settings for admin.
+   */
+  getRespawnSettings(): Record<string, number> {
+    return {
+      animalRespawnInterval: config.get("animalRespawnInterval"),
+      animalMaxPopulation: config.get("animalMaxPopulation"),
+      animalMinDistance: config.get("animalMinDistance")
+    };
+  }
+
+  /**
+   * Set respawn settings.
+   */
+  setRespawnSetting(setting: string, value: number): boolean {
+    const validSettings = ["animalRespawnInterval", "animalMaxPopulation", "animalMinDistance"];
+    if (!validSettings.includes(setting)) return false;
+    
+    config.set(setting, value);
+    this.io.emit("configUpdate", config.getAll());
+    return true;
   }
 
   /**
    * Set a module state.
    */
   setModuleState(module: string, enabled: boolean): boolean {
-    const validModules = ["animalMovement", "carnivoreAggression", "weatherEnabled"];
+    const validModules = ["animalMovement", "carnivoreAggression", "weatherEnabled", "animalRespawn"];
     if (!validModules.includes(module)) return false;
     
     config.set(module, enabled);

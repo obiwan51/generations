@@ -42,6 +42,14 @@ export class InventoryComponent extends Component {
   }
 
   /**
+   * Set the currently held item directly (e.g., when weapon returns to hand).
+   */
+  setHolding(itemId: number | null, itemData?: any): void {
+    this.holding = itemId;
+    this.holdingData = itemData ?? null;
+  }
+
+  /**
    * Add item to container inventory. Returns false if full.
    */
   addToInventory(itemId: number): boolean {

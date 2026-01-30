@@ -248,6 +248,21 @@ app.post('/admin-api/modules/:module', express.json(), (req, res) => {
     }
 });
 
+// Respawn settings management
+app.get('/admin-api/respawn-settings', (req, res) => {
+    res.json(engine.getRespawnSettings());
+});
+
+app.post('/admin-api/respawn-settings/:setting', express.json(), (req, res) => {
+    const { value } = req.body;
+    const success = engine.setRespawnSetting(req.params.setting, value);
+    if (success) {
+        res.json({ success: true });
+    } else {
+        res.status(400).json({ success: false, message: 'Invalid setting name' });
+    }
+});
+
 // Player Management APIs
 app.get('/admin-api/players', (req, res) => {
     const playersList = [];
@@ -1089,7 +1104,7 @@ io.on('connection', (socket) => {
                 engine.updatePlayerHolding(socket.id, null, null);
                 io.emit('playerStatUpdate', { id: socket.id, holding: null, holdingData: null });
             } else if (recipe.targetBecomesType !== undefined) {
-                // Target transforms (e.g., berry bush -> empty bush) and result goes to hand
+                // Target transforms (e.g., deer -> skinned deer) 
                 world.setObject(tx, ty, recipe.targetBecomesType);
                 io.emit('worldUpdate', { x: tx, y: ty, type: recipe.targetBecomesType });
                 
@@ -1099,9 +1114,45 @@ io.on('connection', (socket) => {
                     engine.registerPlantedCrop(tx, ty, recipe.targetBecomesType);
                 }
                 
-                // Result goes to player's hand (bare hands recipe - no tool to handle)
-                engine.updatePlayerHolding(socket.id, recipe.result, null);
-                io.emit('playerStatUpdate', { id: socket.id, holding: recipe.result, holdingData: null });
+                // If there's a tool involved, handle its durability and place result on adjacent tile
+                if (toolObj !== null) {
+                    // Find an adjacent empty tile for the result
+                    const adjacentOffsets = [
+                        { dx: 0, dy: -1 }, // up
+                        { dx: 1, dy: 0 },  // right
+                        { dx: 0, dy: 1 },  // down
+                        { dx: -1, dy: 0 }, // left
+                        { dx: 1, dy: -1 }, // up-right
+                        { dx: 1, dy: 1 },  // down-right
+                        { dx: -1, dy: 1 }, // down-left
+                        { dx: -1, dy: -1 } // up-left
+                    ];
+                    
+                    let placed = false;
+                    for (const offset of adjacentOffsets) {
+                        const adjX = tx + offset.dx;
+                        const adjY = ty + offset.dy;
+                        if (!world.getObject(adjX, adjY) && world.isPassable(adjX, adjY)) {
+                            world.setObject(adjX, adjY, recipe.result);
+                            io.emit('worldUpdate', { x: adjX, y: adjY, type: recipe.result });
+                            placed = true;
+                            break;
+                        }
+                    }
+                    
+                    // If no adjacent tile found, drop at player's feet (on transformed target)
+                    if (!placed) {
+                        io.to(socket.id).emit('textMessage', { text: 'No space for result - it fell on the ground!' });
+                        // Result is lost if no space (target already transformed)
+                    }
+                    
+                    // Handle tool durability
+                    handleToolDurability();
+                } else {
+                    // Bare hands recipe - result goes to player's hand
+                    engine.updatePlayerHolding(socket.id, recipe.result, null);
+                    io.emit('playerStatUpdate', { id: socket.id, holding: recipe.result, holdingData: null });
+                }
             } else if (recipe.targetPersists) {
                 // Target stays in place, result goes to hand (e.g., cooking on fire)
                 // Tool is consumed and replaced by result
@@ -1111,6 +1162,12 @@ io.on('connection', (socket) => {
                 // Regular recipe with tool - result goes on ground, tool stays in hand (with durability)
                 world.removeObject(tx, ty);
                 engine.unregisterPlantedCrop(tx, ty);
+                
+                // If the target was a live animal, unregister it from the AI system
+                if (engine.isLiveAnimal(targetObj!)) {
+                    engine.unregisterAnimal(tx, ty);
+                }
+                
                 world.setObject(tx, ty, recipe.result);
                 io.emit('worldUpdate', { x: tx, y: ty, type: recipe.result });
                 
