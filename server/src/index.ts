@@ -1146,11 +1146,19 @@ io.on('connection', (socket) => {
     });
 });
 
+// Serve admin panel at /admin
+app.get('/admin', (req, res) => {
+    const adminPath = path.join(CLIENT_DIST, 'admin.html');
+    if (fs.existsSync(adminPath)) {
+        res.sendFile(adminPath);
+    } else {
+        res.status(404).send('Admin panel not found.');
+    }
+});
+
 // 3. Fallback: Any unknown route serves the index.html (Standard for SPA)
 // MUST BE REGISTERED LAST!
-app.get(/(.*)/, (req, res) => {
-    // Determine path again inside closure or use the global const if still available
-    const CLIENT_DIST = path.join(__dirname, '../../client');
+app.get('*', (req, res) => {
     const indexPath = path.join(CLIENT_DIST, 'index.html');
     if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
