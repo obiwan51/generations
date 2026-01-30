@@ -62,7 +62,7 @@ class GameEngine {
     this.decaySystem = new DecaySystem(60);
     this.seasonSystem = new SeasonSystem();
     this.projectileSystem = new ProjectileSystem();
-    this.animalSystem = new AnimalAISystem(5);
+    this.animalSystem = new AnimalAISystem();
     this.growthSystem = new GrowthSystem(60);
 
     // Initialize manager
@@ -190,27 +190,48 @@ class GameEngine {
   }
 
   private setupAnimalCallbacks(): void {
-    this.animalSystem.isTileEmpty = (x, y) => !world.getObject(x, y) && world.isPassable(x, y);
+    // Check if a tile is passable for animals (no objects blocking)
+    this.animalSystem.isTilePassable = (tileX, tileY) => {
+      return !world.getObject(tileX, tileY) && world.isPassable(tileX, tileY);
+    };
 
-    this.animalSystem.getPlayersInRange = (x, y, range) => {
-      const result: string[] = [];
+    // Get nearby players with their pixel positions
+    this.animalSystem.getPlayersInRange = (tileX, tileY, range) => {
+      const result: Array<{ id: string; x: number; y: number }> = [];
+      const centerX = tileX * CONSTANTS.TILE_SIZE + CONSTANTS.TILE_SIZE / 2;
+      const centerY = tileY * CONSTANTS.TILE_SIZE + CONSTANTS.TILE_SIZE / 2;
+      const rangePixels = range * CONSTANTS.TILE_SIZE;
+      
       for (const playerId of this.playerManager.getPlayerIds()) {
         const data = this.playerManager.getPlayerData(playerId);
-        if (!data) continue;
+        if (!data || data.isDead) continue;
+        
         const dist = Math.sqrt(
-          Math.pow(x - data.x / CONSTANTS.TILE_SIZE, 2) +
-          Math.pow(y - data.y / CONSTANTS.TILE_SIZE, 2)
+          Math.pow(centerX - data.x, 2) +
+          Math.pow(centerY - data.y, 2)
         );
-        if (dist < range) result.push(playerId);
+        if (dist < rangePixels) {
+          result.push({ id: playerId, x: data.x, y: data.y });
+        }
       }
+      // Sort by distance (nearest first)
+      result.sort((a, b) => {
+        const distA = Math.pow(centerX - a.x, 2) + Math.pow(centerY - a.y, 2);
+        const distB = Math.pow(centerX - b.x, 2) + Math.pow(centerY - b.y, 2);
+        return distA - distB;
+      });
       return result;
     };
 
-    this.animalSystem.onAnimalMove = (move) => {
-      world.removeObject(move.fromX, move.fromY);
-      world.setObject(move.toX, move.toY, move.type, move.data);
-      this.io.emit("worldUpdate", { x: move.fromX, y: move.fromY, type: null });
-      this.io.emit("worldUpdate", { x: move.toX, y: move.toY, type: move.type, data: move.data });
+    // Handle tile changes (sync with world objects)
+    this.animalSystem.onAnimalTileChange = (component, fromTileX, fromTileY) => {
+      // Remove from old tile
+      world.removeObject(fromTileX, fromTileY);
+      // Add to new tile
+      world.setObject(component.tileX, component.tileY, component.animalType, { 
+        age: component.age, 
+        hp: component.hp < component.maxHp ? component.hp : undefined 
+      });
     };
 
     this.animalSystem.onAnimalAttack = (attack) => {
@@ -225,12 +246,12 @@ class GameEngine {
         }
       }
       
-      // Emit attack event with knockback info
+      // Emit attack event with knockback info (coordinates already in pixels)
       this.io.to(attack.playerId).emit("animalAttack", {
         animalName: attack.animalName,
         damage: attack.damage,
-        animalX: attack.animalX * CONSTANTS.TILE_SIZE + CONSTANTS.TILE_SIZE / 2,
-        animalY: attack.animalY * CONSTANTS.TILE_SIZE + CONSTANTS.TILE_SIZE / 2,
+        animalX: attack.animalX,
+        animalY: attack.animalY,
       });
     };
   }
@@ -786,6 +807,15 @@ class GameEngine {
     const projectiles = this.projectileSystem.getProjectilesForSync();
     if (projectiles.length > 0) {
       this.io.emit("projectileUpdate", projectiles);
+    }
+    
+    // Update animals (smooth movement) on the fast loop
+    this.animalSystem.update(0.05);
+    
+    // Broadcast animal positions
+    const animals = this.animalSystem.getAnimalsForSync();
+    if (animals.length > 0) {
+      this.io.emit("animalUpdate", animals);
     }
   }
 

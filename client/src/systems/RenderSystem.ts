@@ -192,6 +192,7 @@ export class RenderSystem {
         world: WorldData | null,
         players: Record<string, PlayerRenderData>,
         projectiles: ProjectileData[],
+        animals: Array<{ id: string; type: number; x: number; y: number; hp?: number }>,
         myId: string | null,
         season: Season
     ): void {
@@ -207,7 +208,7 @@ export class RenderSystem {
         this.drawTiles(world, offsetX, offsetY, TILE_SIZE);
         
         // Collect all drawable entities and sort by Y for proper depth
-        const drawables = this.collectDrawables(world, players, offsetX, offsetY, TILE_SIZE, myId);
+        const drawables = this.collectDrawables(world, players, animals, offsetX, offsetY, TILE_SIZE, myId);
         drawables.sort((a, b) => a.sortY - b.sortY);
         
         // Draw all entities in sorted order
@@ -223,6 +224,7 @@ export class RenderSystem {
     private collectDrawables(
         world: WorldData,
         players: Record<string, PlayerRenderData>,
+        animals: Array<{ id: string; type: number; x: number; y: number; hp?: number }>,
         offsetX: number,
         offsetY: number,
         TILE_SIZE: number,
@@ -230,7 +232,7 @@ export class RenderSystem {
     ): { sortY: number; draw: () => void }[] {
         const drawables: { sortY: number; draw: () => void }[] = [];
 
-        // Collect world objects (skip floor objects - they're drawn with tiles)
+        // Collect world objects (skip floor objects and animals - animals rendered separately)
         for (const key in world.objects) {
             const [xStr, yStr] = key.split(',');
             const x = parseInt(xStr), y = parseInt(yStr);
@@ -248,6 +250,18 @@ export class RenderSystem {
             // Skip floor objects - they're rendered below players with tiles
             if (meta && (meta as any).isFloor) continue;
             
+            // Skip live animals - they're rendered separately with smooth positions
+            // Dead animals (carcasses) are still rendered as world objects
+            if (meta && meta.category === 'animal') {
+                // If there's a live animal at this tile, skip rendering the world object
+                const isLiveAnimal = animals.some(a => {
+                    const aTileX = Math.floor(a.x / TILE_SIZE);
+                    const aTileY = Math.floor(a.y / TILE_SIZE);
+                    return aTileX === x && aTileY === y && a.type === obj;
+                });
+                if (isLiveAnimal) continue;
+            }
+            
             // Calculate the "foot" Y position for sorting (bottom of the object)
             let sortY = screenY + TILE_SIZE;
             if (meta && (meta as any).isLarge) {
@@ -258,6 +272,21 @@ export class RenderSystem {
             drawables.push({
                 sortY,
                 draw: () => this.drawObject(obj, screenX, screenY, TILE_SIZE, data)
+            });
+        }
+
+        // Collect live animals (smooth pixel positions)
+        for (const animal of animals) {
+            const screenX = animal.x + offsetX - TILE_SIZE / 2;
+            const screenY = animal.y + offsetY - TILE_SIZE / 2;
+            
+            // Culling
+            if (screenX + TILE_SIZE * 2 < 0 || screenX > this.canvas.width ||
+                screenY + TILE_SIZE * 2 < 0 || screenY > this.canvas.height) continue;
+            
+            drawables.push({
+                sortY: screenY + TILE_SIZE,
+                draw: () => this.drawAnimal(animal, screenX, screenY, TILE_SIZE)
             });
         }
 
@@ -275,6 +304,38 @@ export class RenderSystem {
         }
 
         return drawables;
+    }
+
+    private drawAnimal(
+        animal: { id: string; type: number; x: number; y: number; hp?: number },
+        screenX: number,
+        screenY: number,
+        TILE_SIZE: number
+    ): void {
+        const meta = this.getObjectMetadata(animal.type) as Animal | null;
+        if (!meta) return;
+        
+        const img = this.images[`/assets/${meta.assets.alive}`];
+        const isReady = img instanceof HTMLCanvasElement || 
+            (img instanceof HTMLImageElement && img.complete && img.naturalWidth > 0);
+        
+        if (img && isReady) {
+            const w = TILE_SIZE * 1.2;
+            const h = TILE_SIZE * 1.2;
+            const yOffset = TILE_SIZE * 0.2;
+            this.ctx.drawImage(img, screenX, screenY - yOffset, w, h);
+            
+            // Draw health bar if damaged
+            if (animal.hp !== undefined) {
+                this.drawHealthBar(screenX, screenY - yOffset - 5, TILE_SIZE, animal.hp, meta.hp || 100);
+            }
+        } else {
+            // Fallback circle
+            this.ctx.fillStyle = '#E91E63';
+            this.ctx.beginPath();
+            this.ctx.arc(screenX + TILE_SIZE / 2, screenY + TILE_SIZE / 2, 10, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     // Biome color definitions with texture colors

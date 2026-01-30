@@ -39,6 +39,7 @@ export interface NetworkCallbacks {
     onPlayerDisconnected?: (id: string) => void;
     onSeasonChange?: (season: Season) => void;
     onProjectileUpdate?: (projectiles: ProjectileData[]) => void;
+    onAnimalUpdate?: (animals: Array<{ id: string; type: number; x: number; y: number; hp?: number }>) => void;
     onChatMsg?: (data: { id: string; name: string; text: string }) => void;
     onDeathScreen?: (stats: { name: string; age: number; experience: number; cause: string; mother: string }) => void;
     onTextMessage?: (data: { text: string }) => void;
@@ -106,6 +107,10 @@ export class NetworkManager {
 
         this.socket.on('projectileUpdate', (projectiles: ProjectileData[]) => {
             this.callbacks.onProjectileUpdate?.(projectiles);
+        });
+
+        this.socket.on('animalUpdate', (animals) => {
+            this.callbacks.onAnimalUpdate?.(animals);
         });
 
         this.socket.on('chatMsg', (data) => {

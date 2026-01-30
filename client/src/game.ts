@@ -10,6 +10,7 @@ let myId: string | null = null;
 let players: Record<string, PlayerData> = {};
 let world: WorldData | null = null;
 let projectiles: ProjectileData[] = [];
+let animals: Array<{ id: string; type: number; x: number; y: number; hp?: number }> = [];
 let currentSeason: Season = 'spring';
 let serverRecipes: RuntimeRecipe[] = [];
 let isAlive = false;
@@ -158,6 +159,7 @@ network.setCallbacks({
     onPlayerDisconnected: (id) => { delete players[id]; },
     onSeasonChange: (season) => { currentSeason = season; ui.updateSeason(season); },
     onProjectileUpdate: (data) => { projectiles = data; },
+    onAnimalUpdate: (data) => { animals = data; },
     onChatMsg: (data) => {
         if (players[data.id]) {
             players[data.id].lastMsg = data.text;
@@ -242,7 +244,7 @@ function loop(): void {
             });
         }
 
-        render.draw(world, players, projectiles, myId, currentSeason);
+        render.draw(world, players, projectiles, animals, myId, currentSeason);
     } catch (e) {
         console.error("Game loop error:", e);
     }
