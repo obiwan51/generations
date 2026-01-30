@@ -16,6 +16,12 @@ export interface ProjectileData {
     type: number;
 }
 
+export interface AimData {
+    angle: number;
+    maxDistance: number;
+    weaponType: 'bow' | 'spear' | 'thrown';
+}
+
 // Re-export for backwards compatibility
 export type { PlayerRenderData as PlayerData };
 
@@ -194,7 +200,8 @@ export class RenderSystem {
         projectiles: ProjectileData[],
         animals: Array<{ id: string; type: number; x: number; y: number; hp?: number }>,
         myId: string | null,
-        season: Season
+        season: Season,
+        aimData?: AimData | null
     ): void {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (!world) return;
@@ -214,6 +221,11 @@ export class RenderSystem {
         // Draw all entities in sorted order
         for (const drawable of drawables) {
             drawable.draw();
+        }
+        
+        // Draw aim indicator before weather effects
+        if (aimData && myPlayer) {
+            this.drawAimIndicator(myPlayer.x, myPlayer.y, aimData, offsetX, offsetY);
         }
         
         this.weatherSystem.applySeasonEffects(season);
@@ -549,5 +561,53 @@ export class RenderSystem {
                 this.ctx.restore();
             }
         });
+    }
+
+    private drawAimIndicator(playerX: number, playerY: number, aimData: AimData, offsetX: number, offsetY: number): void {
+        const ctx = this.ctx;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+        
+        const { angle, weaponType } = aimData;
+        
+        // Arrow orbits at fixed distance from player
+        const orbitRadius = 50;
+        const arrowX = centerX + Math.cos(angle) * orbitRadius;
+        const arrowY = centerY + Math.sin(angle) * orbitRadius;
+        
+        // Color based on weapon type
+        const colors = {
+            bow: { fill: '#FFC107', stroke: '#FF8F00' },
+            spear: { fill: '#8B4513', stroke: '#5D2E0C' },
+            thrown: { fill: '#9C27B0', stroke: '#6A1B9A' }
+        };
+        const color = colors[weaponType] || colors.thrown;
+        
+        ctx.save();
+        ctx.translate(arrowX, arrowY);
+        ctx.rotate(angle);
+        
+        // Draw arrowhead/chevron pointing in aim direction
+        const size = 16;
+        
+        // Outer glow
+        ctx.shadowColor = color.fill;
+        ctx.shadowBlur = 8;
+        
+        // Arrow shape (chevron pointing right, will be rotated)
+        ctx.beginPath();
+        ctx.moveTo(size, 0);           // Tip
+        ctx.lineTo(-size * 0.5, -size * 0.6);  // Top back
+        ctx.lineTo(-size * 0.2, 0);    // Inner notch
+        ctx.lineTo(-size * 0.5, size * 0.6);   // Bottom back
+        ctx.closePath();
+        
+        ctx.fillStyle = color.fill;
+        ctx.fill();
+        ctx.strokeStyle = color.stroke;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        ctx.restore();
     }
 }

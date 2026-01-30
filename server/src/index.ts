@@ -61,7 +61,12 @@ app.use((req, res, next) => {
 const CLIENT_DIST = path.join(__dirname, '../../client');
 const ASSETS_PATH = path.join(__dirname, '../../assets');
 
-// Serve static files
+// Game at /game
+app.get('/game', (req, res) => {
+    res.sendFile(path.join(CLIENT_DIST, 'game.html'));
+});
+
+// Serve static files (index.html will be served at / automatically)
 app.use(express.static(CLIENT_DIST));
 app.use('/shared', express.static(path.join(__dirname, '../../shared')));
 app.use('/assets', express.static(ASSETS_PATH));

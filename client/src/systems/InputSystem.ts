@@ -169,18 +169,23 @@ export class InputSystem {
             const touch = e.touches[0];
             if (!touch) return;
             
-            // Check if touch is in mobile controls area (bottom of screen)
-            if (touch.clientY > window.innerHeight - 160) return;
-            
-            // Check if touch is in UI area
-            const ui = document.getElementById('ui');
-            if (ui) {
-                const uiRect = ui.getBoundingClientRect();
-                if (touch.clientX >= uiRect.left && touch.clientX <= uiRect.right &&
-                    touch.clientY >= uiRect.top && touch.clientY <= uiRect.bottom) {
+            // Check if touch is on any UI button or interactive element
+            const touchedElement = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (touchedElement) {
+                // Ignore touches on buttons, inputs, or UI elements
+                const tagName = touchedElement.tagName.toLowerCase();
+                if (tagName === 'button' || tagName === 'input' || 
+                    touchedElement.closest('#ui') || 
+                    touchedElement.closest('#mobile-controls') ||
+                    touchedElement.closest('#chat-container') ||
+                    touchedElement.id === 'ui-toggle' ||
+                    touchedElement.id === 'chat-toggle') {
                     return;
                 }
             }
+            
+            // Check if touch is in mobile controls area (bottom of screen)
+            if (touch.clientY > window.innerHeight - 160) return;
             
             if (this.isChatting) return;
             
@@ -609,11 +614,12 @@ export class InputSystem {
                         const spearId = this.getItemIdByKey('SPEAR');
                         
                         if (holding === bowId || holding === spearId) {
-                            // Shoot forward (could be enhanced to use joystick direction)
+                            // Shoot in joystick direction, or last known direction
                             const mobileJoystick = (window as any).mobileJoystick;
-                            let angle = 0;
+                            let angle = (window as any).lastMobileAimAngle || 0;
                             if (mobileJoystick && (Math.abs(mobileJoystick.dx) > 0.1 || Math.abs(mobileJoystick.dy) > 0.1)) {
                                 angle = Math.atan2(mobileJoystick.dy, mobileJoystick.dx);
+                                (window as any).lastMobileAimAngle = angle;
                             }
                             this.socket.emit('shoot', { angle });
                             this.audio.play('shoot');
@@ -622,8 +628,8 @@ export class InputSystem {
                     break;
                     
                 case 'use':
-                    this.socket.emit('use');
-                    this.audio.play('craft');
+                    // Contextual USE - same logic as desktop click on same tile
+                    this.handleMobileUse();
                     break;
                     
                 case 'eat':
@@ -645,5 +651,51 @@ export class InputSystem {
                     break;
             }
         }) as EventListener);
+    }
+    
+    /**
+     * Handle contextual USE action for mobile - same logic as desktop click on same tile
+     */
+    private handleMobileUse(): void {
+        const playerData = this.getPlayerData();
+        if (!playerData) return;
+        
+        const holding = this.getPlayerHolding();
+        const playerObject = this.getObjectAtPosition(playerData.x, playerData.y);
+        
+        if (playerObject) {
+            // There's an object at player's feet
+            if (holding) {
+                // Holding something - check for recipe or use
+                this.socket.emit('use');
+                this.audio.play('craft');
+            } else {
+                // Empty hands - check for bare-hands recipe or pick up
+                const hasBareHandsRecipe = this.hasBareHandsRecipe(playerObject);
+                
+                if (hasBareHandsRecipe) {
+                    // There's a bare-hands recipe (e.g., berry bush -> berries)
+                    this.socket.emit('use');
+                    this.audio.play('craft');
+                } else {
+                    // No recipe, try to pick it up
+                    this.socket.emit('pickUp');
+                    this.audio.play('pick');
+                }
+            }
+        } else if (holding) {
+            // Standing on empty ground with item in hand
+            // Check if there's a ground-target recipe (like shovel -> hole)
+            const hasGroundRecipe = this.recipes.some(r => r.tool === holding && r.target === null);
+            
+            if (hasGroundRecipe) {
+                this.socket.emit('use');
+                this.audio.play('craft');
+            } else {
+                // No ground recipe - drop the item
+                this.socket.emit('drop');
+                this.audio.play('drop');
+            }
+        }
     }
 }
