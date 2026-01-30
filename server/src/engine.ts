@@ -254,6 +254,16 @@ class GameEngine {
         animalY: attack.animalY,
       });
     };
+
+    // Handle carnivore hunting herbivores
+    this.animalSystem.onAnimalHunt = (predator, prey) => {
+      // Remove prey from world
+      world.removeObject(prey.tileX, prey.tileY);
+      this.io.emit("worldUpdate", { x: prey.tileX, y: prey.tileY, type: null });
+      
+      // Log the hunt (could add more effects here)
+      console.log(`[Hunt] ${predator.animalDef.name} caught a ${prey.animalDef.name}`);
+    };
   }
 
   private setupGrowthCallbacks(): void {

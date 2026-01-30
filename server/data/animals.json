@@ -47,8 +47,8 @@
       "bones": "bones.svg"
     },
     "hp": 50,
-    "speed": 0.9,
-    "spawnRate": 0.02,
+    "speed": 0.35,
+    "spawnRate": 0.002,
     "biomes": [
       "forest",
       "grassland"
@@ -66,8 +66,8 @@
       "bones": "bones.svg"
     },
     "hp": 80,
-    "speed": 0.75,
-    "spawnRate": 0.03,
+    "speed": 0.25,
+    "spawnRate": 0.003,
     "biomes": [
       "forest",
       "swamp"

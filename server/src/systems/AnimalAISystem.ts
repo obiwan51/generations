@@ -82,6 +82,9 @@ export class AnimalAISystem extends System<AnimalComponent> {
   /** Callback when carnivore attacks player */
   public onAnimalAttack?: (attack: AnimalAttack) => void;
   
+  /** Callback when carnivore kills and eats a herbivore */
+  public onAnimalHunt?: (predator: AnimalComponent, prey: AnimalComponent) => void;
+  
   /** Callback when animal changes tiles (for world object sync) */
   public onAnimalTileChange?: (component: AnimalComponent, fromTileX: number, fromTileY: number) => void;
   
@@ -196,26 +199,117 @@ export class AnimalAISystem extends System<AnimalComponent> {
       5 // Detection range in tiles
     ) || [];
 
-    if (component.animalDef.isCarnivore && nearbyPlayers.length > 0) {
-      // Carnivore: chase nearest player
-      this.chaseTarget(component, nearbyPlayers[0]);
-    } else if (!component.animalDef.isCarnivore && nearbyPlayers.length > 0) {
-      // Herbivore: flee from nearest player if too close
-      const nearest = nearbyPlayers[0];
-      const distToPlayer = Math.sqrt(
-        Math.pow(component.x - nearest.x, 2) +
-        Math.pow(component.y - nearest.y, 2)
-      ) / TILE_SIZE;
+    if (component.animalDef.isCarnivore) {
+      // Carnivore behavior: prioritize players, then hunt herbivores
+      if (nearbyPlayers.length > 0) {
+        // Chase nearest player
+        this.chaseTarget(component, nearbyPlayers[0]);
+      } else {
+        // No players nearby - look for herbivores to hunt
+        const prey = this.findNearbyPrey(component, 6);
+        if (prey) {
+          this.chaseAnimal(component, prey);
+        } else {
+          this.wander(component);
+        }
+      }
+    } else {
+      // Herbivore behavior: flee from threats
+      const nearbyPredator = this.findNearbyPredator(component, 4);
       
-      if (distToPlayer < 3) {
-        this.fleeFromPixel(component, nearest.x, nearest.y);
+      if (nearbyPredator) {
+        // Flee from predator (higher priority than players)
+        this.fleeFromPixel(component, nearbyPredator.x, nearbyPredator.y);
+      } else if (nearbyPlayers.length > 0) {
+        // Flee from nearest player if too close
+        const nearest = nearbyPlayers[0];
+        const distToPlayer = Math.sqrt(
+          Math.pow(component.x - nearest.x, 2) +
+          Math.pow(component.y - nearest.y, 2)
+        ) / TILE_SIZE;
+        
+        if (distToPlayer < 3) {
+          this.fleeFromPixel(component, nearest.x, nearest.y);
+        } else {
+          this.wander(component);
+        }
       } else {
         this.wander(component);
       }
-    } else {
-      // No players nearby - wander randomly
-      this.wander(component);
     }
+  }
+
+  /**
+   * Find nearby herbivores for carnivores to hunt.
+   */
+  private findNearbyPrey(predator: AnimalComponent, range: number): AnimalComponent | null {
+    let closest: AnimalComponent | null = null;
+    let closestDist = range * TILE_SIZE;
+
+    for (const animal of this.components) {
+      if (animal.isDeleted || animal === predator) continue;
+      if (animal.animalDef.isCarnivore) continue; // Don't hunt other carnivores
+
+      const dist = Math.sqrt(
+        Math.pow(predator.x - animal.x, 2) +
+        Math.pow(predator.y - animal.y, 2)
+      );
+
+      if (dist < closestDist) {
+        closestDist = dist;
+        closest = animal;
+      }
+    }
+
+    return closest;
+  }
+
+  /**
+   * Find nearby carnivores that might be hunting this herbivore.
+   */
+  private findNearbyPredator(herbivore: AnimalComponent, range: number): AnimalComponent | null {
+    let closest: AnimalComponent | null = null;
+    let closestDist = range * TILE_SIZE;
+
+    for (const animal of this.components) {
+      if (animal.isDeleted || animal === herbivore) continue;
+      if (!animal.animalDef.isCarnivore) continue; // Only fear carnivores
+
+      const dist = Math.sqrt(
+        Math.pow(herbivore.x - animal.x, 2) +
+        Math.pow(herbivore.y - animal.y, 2)
+      );
+
+      if (dist < closestDist) {
+        closestDist = dist;
+        closest = animal;
+      }
+    }
+
+    return closest;
+  }
+
+  /**
+   * Chase another animal (for hunting).
+   */
+  private chaseAnimal(predator: AnimalComponent, prey: AnimalComponent): void {
+    if (!this.isTilePassable) return;
+
+    // Check if close enough to catch
+    const dist = Math.sqrt(
+      Math.pow(predator.x - prey.x, 2) +
+      Math.pow(predator.y - prey.y, 2)
+    );
+
+    if (dist < TILE_SIZE * 0.8) {
+      // Caught the prey! Kill and eat it
+      this.onAnimalHunt?.(predator, prey);
+      prey.delete();
+      return;
+    }
+
+    // Chase towards prey
+    this.chaseTarget(predator, { x: prey.x, y: prey.y });
   }
 
   /**
