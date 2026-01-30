@@ -31,6 +31,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: 'client/index.html',
+        game: 'client/game.html',
         admin: 'client/admin.html',
       },
     },
