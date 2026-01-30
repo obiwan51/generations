@@ -11,7 +11,7 @@ export class AudioSystem {
     /**
      * Play a synthesized sound effect
      */
-    play(type: 'pick' | 'drop' | 'eat' | 'craft' | 'shoot'): void {
+    play(type: 'pick' | 'drop' | 'eat' | 'craft' | 'shoot' | 'hurt'): void {
         const osc = this.audioCtx.createOscillator();
         const gain = this.audioCtx.createGain();
         osc.connect(gain);
@@ -59,6 +59,17 @@ export class AudioSystem {
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
                 osc.start(now);
                 osc.stop(now + 0.1);
+                break;
+
+            case 'hurt':
+                // Low harsh sound for taking damage
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(80, now + 0.15);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
                 break;
         }
     }

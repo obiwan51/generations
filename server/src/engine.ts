@@ -218,8 +218,13 @@ class GameEngine {
       if (comps) {
         comps.hunger.decreaseHunger(attack.damage);
       }
-      this.io.to(attack.playerId).emit("textMessage", {
-        text: `Attacked by a ${attack.animalName}!`,
+      
+      // Emit attack event with knockback info
+      this.io.to(attack.playerId).emit("animalAttack", {
+        animalName: attack.animalName,
+        damage: attack.damage,
+        animalX: attack.animalX * CONSTANTS.TILE_SIZE + CONSTANTS.TILE_SIZE / 2,
+        animalY: attack.animalY * CONSTANTS.TILE_SIZE + CONSTANTS.TILE_SIZE / 2,
       });
     };
   }

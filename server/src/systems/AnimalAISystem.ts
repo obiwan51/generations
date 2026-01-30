@@ -32,6 +32,8 @@ interface AnimalAttack {
   animalName: string;
   playerId: string;
   damage: number;
+  animalX: number;
+  animalY: number;
 }
 
 interface AnimalDeath {
@@ -125,10 +127,14 @@ export class AnimalAISystem extends System<AnimalComponent> {
     const playersInRange = this.getPlayersInRange(component.x, component.y, 1.5);
     
     for (const playerId of playersInRange) {
+      // Use aggression stat for damage (default 5)
+      const baseDamage = Math.round((component.animalDef.aggression || 0.5) * 10);
       this.onAnimalAttack({
         animalName: component.animalDef.name,
         playerId,
-        damage: 5,
+        damage: baseDamage,
+        animalX: component.x,
+        animalY: component.y,
       });
     }
   }

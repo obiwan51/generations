@@ -14,6 +14,17 @@ let currentSeason: Season = 'spring';
 let serverRecipes: RuntimeRecipe[] = [];
 let isAlive = false;
 
+// Knockback state for animal attacks
+let knockbackState: {
+    active: boolean;
+    startX: number;
+    startY: number;
+    targetX: number;
+    targetY: number;
+    progress: number;
+    duration: number;
+} | null = null;
+
 // Session management
 const SESSION_TOKEN_KEY = 'onelife_session_token';
 
@@ -159,6 +170,32 @@ network.setCallbacks({
         ui.showDeathScreen(stats);
     },
     onTextMessage: (data) => ui.showNotification(data.text),
+    onAnimalAttack: (data) => {
+        // Show attack notification
+        ui.showNotification(`Attacked by a ${data.animalName}! (-${data.damage} hunger)`);
+        
+        // Apply knockback effect - bounce away from animal
+        if (myId && players[myId]) {
+            const player = players[myId];
+            const dx = player.x - data.animalX;
+            const dy = player.y - data.animalY;
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            const knockbackDist = 30; // pixels to knock back
+            
+            knockbackState = {
+                active: true,
+                startX: player.x,
+                startY: player.y,
+                targetX: player.x + (dx / dist) * knockbackDist,
+                targetY: player.y + (dy / dist) * knockbackDist,
+                progress: 0,
+                duration: 10 // frames
+            };
+            
+            // Play hurt sound if available
+            audio.play('hurt');
+        }
+    },
     onNameBaby: (data) => ui.showNamingModal(data),
     onNameError: (data) => ui.showNameError(data.message),
     onNameSuccess: () => ui.hideNamingModal()
@@ -168,6 +205,25 @@ network.setCallbacks({
 function loop(): void {
     try {
         input.update();
+        
+        // Handle knockback animation
+        if (knockbackState && knockbackState.active && myId && players[myId]) {
+            knockbackState.progress++;
+            const t = knockbackState.progress / knockbackState.duration;
+            
+            if (t >= 1) {
+                // Knockback complete - snap back partway (bounce effect)
+                const bounceBackT = 0.5; // Bounce back 50%
+                players[myId].x = knockbackState.startX + (knockbackState.targetX - knockbackState.startX) * bounceBackT;
+                players[myId].y = knockbackState.startY + (knockbackState.targetY - knockbackState.startY) * bounceBackT;
+                knockbackState = null;
+            } else {
+                // Ease out - fast at start, slow at end
+                const easeT = 1 - Math.pow(1 - t, 3);
+                players[myId].x = knockbackState.startX + (knockbackState.targetX - knockbackState.startX) * easeT;
+                players[myId].y = knockbackState.startY + (knockbackState.targetY - knockbackState.startY) * easeT;
+            }
+        }
 
         // Update HUD
         if (myId && players[myId]) {

@@ -42,6 +42,7 @@ export interface NetworkCallbacks {
     onChatMsg?: (data: { id: string; name: string; text: string }) => void;
     onDeathScreen?: (stats: { name: string; age: number; experience: number; cause: string; mother: string }) => void;
     onTextMessage?: (data: { text: string }) => void;
+    onAnimalAttack?: (data: { animalName: string; damage: number; animalX: number; animalY: number }) => void;
     onNameBaby?: (data: { babyId: string; gender: 'male' | 'female'; message: string }) => void;
     onNameError?: (data: { message: string }) => void;
     onNameSuccess?: (data: { babyId: string; name: string }) => void;
@@ -117,6 +118,10 @@ export class NetworkManager {
 
         this.socket.on('textMessage', (data) => {
             this.callbacks.onTextMessage?.(data);
+        });
+
+        this.socket.on('animalAttack', (data) => {
+            this.callbacks.onAnimalAttack?.(data);
         });
 
         this.socket.on('nameBaby', (data) => {
