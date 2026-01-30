@@ -1,9 +1,9 @@
 /**
  * Game Client - Thin orchestrator that wires together all systems
  */
-import { RuntimeRecipe } from '../../shared/types.js';
+import { RuntimeRecipe, RegistryData } from '../../shared/types.js';
 import { NetworkManager } from './network/NetworkManager.js';
-import { AudioSystem, InputSystem, UISystem, RenderSystem, PlayerData, WorldData, ProjectileData, Season } from './systems/index.js';
+import { AudioSystem, InputSystem, UISystem, RenderSystem, PlayerData, WorldData, ProjectileData, Season, AimData } from './systems/index.js';
 
 // Game state
 let myId: string | null = null;
@@ -14,6 +14,13 @@ let animals: Array<{ id: string; type: number; x: number; y: number; hp?: number
 let currentSeason: Season = 'spring';
 let serverRecipes: RuntimeRecipe[] = [];
 let isAlive = false;
+let registry: RegistryData | null = null;
+
+// Aim data for ranged weapons
+let aimAngle = 0;
+let mouseX = 0;
+let mouseY = 0;
+let lastMobileAimAngle = 0; // Remember last joystick direction
 
 // Knockback state for animal attacks
 let knockbackState: {
@@ -54,6 +61,20 @@ const ctx = canvas.getContext('2d')!;
 // Initial size (will be updated by RenderSystem)
 canvas.width = Math.min(window.innerWidth, 1280);
 canvas.height = Math.min(window.innerHeight, 900);
+
+// Track mouse position for aim indicator
+canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    mouseX = (e.clientX - rect.left) * scaleX;
+    mouseY = (e.clientY - rect.top) * scaleY;
+    
+    // Calculate aim angle from center of screen
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    aimAngle = Math.atan2(mouseY - centerY, mouseX - centerX);
+});
 
 // Initialize systems
 const network = new NetworkManager();
@@ -99,6 +120,7 @@ network.setCallbacks({
         currentSeason = data.season;
         myId = data.myId;
         serverRecipes = data.recipes;
+        registry = data.registry;
         render.setRegistry(data.registry);
         input.setRegistry(data.registry);
         input.setRecipes(data.recipes);
@@ -247,7 +269,51 @@ function loop(): void {
             });
         }
 
-        render.draw(world, players, projectiles, animals, myId, currentSeason);
+        // Compute aim data if holding a ranged weapon
+        let aimData: AimData | null = null;
+        if (myId && players[myId] && registry) {
+            const holding = players[myId].holding;
+            if (holding !== null) {
+                // Find the item in registry
+                const items = registry.items as Record<string, any>;
+                for (const key in items) {
+                    const item = items[key];
+                    if (item.id === holding && item.weaponType) {
+                        // This is a ranged weapon
+                        const isMobile = 'ontouchstart' in window || window.innerWidth <= 768;
+                        const mobileJoystick = (window as any).mobileJoystick;
+                        
+                        // Use joystick direction on mobile, mouse direction on desktop
+                        let angle = aimAngle;
+                        if (isMobile && mobileJoystick) {
+                            if (Math.abs(mobileJoystick.dx) > 0.1 || Math.abs(mobileJoystick.dy) > 0.1) {
+                                // Joystick active - update angle and remember it
+                                angle = Math.atan2(mobileJoystick.dy, mobileJoystick.dx);
+                                lastMobileAimAngle = angle;
+                                (window as any).lastMobileAimAngle = angle; // Sync with InputSystem
+                            } else {
+                                // Joystick released - use last known direction
+                                angle = lastMobileAimAngle;
+                            }
+                        }
+                        
+                        const weaponType: 'bow' | 'spear' | 'thrown' = 
+                            item.weaponType === 'ranged' ? 'bow' : 
+                            (item.weaponType === 'throw' || item.weaponType === 'thrown') ? 
+                                (key === 'SPEAR' ? 'spear' : 'thrown') : 'thrown';
+                        
+                        aimData = {
+                            angle,
+                            maxDistance: item.weaponMaxDist || 200,
+                            weaponType
+                        };
+                        break;
+                    }
+                }
+            }
+        }
+
+        render.draw(world, players, projectiles, animals, myId, currentSeason, aimData);
     } catch (e) {
         console.error("Game loop error:", e);
     }

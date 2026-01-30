@@ -45,6 +45,7 @@ export class UISystem {
     private actionContent!: HTMLElement;
     private hideTimer: number | null = null;
     private availableRecipes: RuntimeRecipe[] = [];
+    private isMobilePopup = false;
 
     constructor(
         socket: Socket,
@@ -307,6 +308,35 @@ export class UISystem {
             z-index: 1000;
         `;
         
+        // Adjust position on mobile - fixed status bar at bottom
+        this.isMobilePopup = window.innerWidth <= 768 || 'ontouchstart' in window;
+        if (this.isMobilePopup) {
+            this.actionPopup.style.cssText = `
+                position: fixed;
+                bottom: 15px;
+                left: 134px;
+                right: 137px;
+                background: rgba(0, 0, 0, 0.85);
+                color: #fff;
+                padding: 8px 8px;
+                border-top: 2px solid #8b7355;
+                border-left: 2px solid #8b7355;
+                border-right: 2px solid #8b7355;
+                font-family: Arial, sans-serif;
+                font-size: 11px;
+                pointer-events: none;
+                min-height: 105px;
+                max-height: 120px;
+                z-index: 1000;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 5px 5px 0 0;
+                opacity: 1;
+            `;
+        }
+        
         this.actionContent = document.createElement('div');
         this.actionPopup.appendChild(this.actionContent);
         document.body.appendChild(this.actionPopup);
@@ -359,13 +389,20 @@ export class UISystem {
 
         requestAnimationFrame(() => {
             this.actionPopup.style.opacity = '1';
-            this.actionPopup.style.transform = 'translateY(0)';
+            if (!this.isMobilePopup) {
+                this.actionPopup.style.transform = 'translateY(0)';
+            }
         });
     }
 
     hideActionPopup(): void {
-        this.actionPopup.style.opacity = '0';
-        this.actionPopup.style.transform = 'translateY(20px)';
+        if (this.isMobilePopup) {
+            // On mobile, just clear the content but keep the bar visible
+            this.actionContent.innerHTML = '<span style="color: #666;">No object selected</span>';
+        } else {
+            this.actionPopup.style.opacity = '0';
+            this.actionPopup.style.transform = 'translateY(20px)';
+        }
     }
 
     private findMatchingRecipes(targetId: number, toolId: number | null): RuntimeRecipe[] {
