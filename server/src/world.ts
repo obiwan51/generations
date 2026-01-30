@@ -69,6 +69,9 @@ class World {
     private lastSaveTime: number = 0;
     private minSaveInterval = 15000; // Minimum 15 seconds between saves
     
+    // Callback called before saving to sync external state (e.g., animals)
+    public onBeforeSave?: () => void;
+    
     // World generation parameters (exposed for admin control)
     public params = {
         noiseScale: 80,
@@ -256,18 +259,24 @@ class World {
                 }
                 
                 // Spawn objects based on seeded random for consistency
-                const spawnables = biomeSpawnables[biome] || [];
-                const rand = noise2D(worldX, worldY, this.seed + 99999);
-                let cumulativeRate = 0;
-                
-                for (const spawn of spawnables) {
-                    cumulativeRate += spawn.rate;
-                    if (rand < cumulativeRate) {
-                        const objKey = `${worldX},${worldY}`;
-                        chunk.objects[objKey] = spawn.type;
-                        this.objects[objKey] = spawn.type;
-                        break;
+                // BUT only if there's no existing object (from save or previous generation)
+                const objKey = `${worldX},${worldY}`;
+                if (this.objects[objKey] === undefined) {
+                    const spawnables = biomeSpawnables[biome] || [];
+                    const rand = noise2D(worldX, worldY, this.seed + 99999);
+                    let cumulativeRate = 0;
+                    
+                    for (const spawn of spawnables) {
+                        cumulativeRate += spawn.rate;
+                        if (rand < cumulativeRate) {
+                            chunk.objects[objKey] = spawn.type;
+                            this.objects[objKey] = spawn.type;
+                            break;
+                        }
                     }
+                } else {
+                    // Copy existing object to chunk
+                    chunk.objects[objKey] = this.objects[objKey];
                 }
             }
         }
@@ -487,6 +496,9 @@ class World {
         this.isSaving = true;
         
         try {
+            // Call before-save callback to sync external state (e.g., animals)
+            this.onBeforeSave?.();
+            
             const worldDir = path.join(__dirname, '../data');
             if (!fs.existsSync(worldDir)) {
                 fs.mkdirSync(worldDir, { recursive: true });

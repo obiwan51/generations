@@ -1068,6 +1068,44 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="registry-item">
+                        <div class="registry-item-header">
+                            <div>
+                                <div class="registry-item-title">Animal Respawn</div>
+                                <div class="registry-item-id">Automatically respawn animals when population is low</div>
+                            </div>
+                            <div class="toggle-switch">
+                                <label class="toggle">
+                                    <input type="checkbox" id="module-animalRespawn">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Animal Respawn Settings</h3>
+                    <p style="color:#888;margin-bottom:20px;">Configure how animals respawn in the world.</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Respawn Interval: <span id="val-respawnInterval">30</span>s</label>
+                            <input type="range" id="slider-respawnInterval" min="10" max="120" value="30" step="5" style="width: 100%;">
+                            <small style="color: #888;">How often to check for respawns</small>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Max Population: <span id="val-maxPopulation">200</span></label>
+                            <input type="range" id="slider-maxPopulation" min="50" max="500" value="200" step="10" style="width: 100%;">
+                            <small style="color: #888;">Max animals per type</small>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-size: 0.9rem;">Min Player Distance: <span id="val-minDistance">10</span> tiles</label>
+                            <input type="range" id="slider-minDistance" min="5" max="30" value="10" step="1" style="width: 100%;">
+                            <small style="color: #888;">Won't spawn closer to players</small>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1768,13 +1806,62 @@
         }
 
         // Module toggle handlers
-        ['animalMovement', 'carnivoreAggression', 'weatherEnabled'].forEach(mod => {
+        ['animalMovement', 'carnivoreAggression', 'weatherEnabled', 'animalRespawn'].forEach(mod => {
             document.getElementById('module-' + mod)?.addEventListener('change', async (e) => {
                 await fetch(API_BASE + '/modules/' + mod, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ enabled: e.target.checked })
                 });
+            });
+        });
+
+        // Respawn settings handlers
+        async function loadRespawnSettings() {
+            const res = await fetch(API_BASE + '/respawn-settings');
+            const settings = await res.json();
+            
+            document.getElementById('slider-respawnInterval').value = settings.animalRespawnInterval || 30;
+            document.getElementById('val-respawnInterval').textContent = settings.animalRespawnInterval || 30;
+            
+            document.getElementById('slider-maxPopulation').value = settings.animalMaxPopulation || 200;
+            document.getElementById('val-maxPopulation').textContent = settings.animalMaxPopulation || 200;
+            
+            document.getElementById('slider-minDistance').value = settings.animalMinDistance || 10;
+            document.getElementById('val-minDistance').textContent = settings.animalMinDistance || 10;
+        }
+
+        // Respawn slider handlers
+        document.getElementById('slider-respawnInterval')?.addEventListener('input', (e) => {
+            document.getElementById('val-respawnInterval').textContent = e.target.value;
+        });
+        document.getElementById('slider-respawnInterval')?.addEventListener('change', async (e) => {
+            await fetch(API_BASE + '/respawn-settings/animalRespawnInterval', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value: parseInt(e.target.value) })
+            });
+        });
+
+        document.getElementById('slider-maxPopulation')?.addEventListener('input', (e) => {
+            document.getElementById('val-maxPopulation').textContent = e.target.value;
+        });
+        document.getElementById('slider-maxPopulation')?.addEventListener('change', async (e) => {
+            await fetch(API_BASE + '/respawn-settings/animalMaxPopulation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value: parseInt(e.target.value) })
+            });
+        });
+
+        document.getElementById('slider-minDistance')?.addEventListener('input', (e) => {
+            document.getElementById('val-minDistance').textContent = e.target.value;
+        });
+        document.getElementById('slider-minDistance')?.addEventListener('change', async (e) => {
+            await fetch(API_BASE + '/respawn-settings/animalMinDistance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value: parseInt(e.target.value) })
             });
         });
 
@@ -2772,6 +2859,7 @@
             await loadSprites();
             await loadRegistry();
             await loadModules();
+            await loadRespawnSettings();
             await loadStats();
             initRecipeSlots();
             

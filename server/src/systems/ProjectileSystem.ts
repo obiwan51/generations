@@ -52,7 +52,8 @@ export class ProjectileSystem extends System<ProjectileComponent> {
     angle: number,
     projectileType: number,
     maxDist: number,
-    damage: number = 5
+    damage: number = 5,
+    remainingUses?: number
   ): Entity {
     const entity = new Entity();
     
@@ -65,8 +66,13 @@ export class ProjectileSystem extends System<ProjectileComponent> {
       projectileType,
       maxDist,
       angle,
-      damage
+      damage,
+      remainingUses
     );
+    
+    // Track starting tile to ignore collision there
+    projectile.startTileX = Math.floor(startX / CONSTANTS.TILE_SIZE);
+    projectile.startTileY = Math.floor(startY / CONSTANTS.TILE_SIZE);
     
     entity.attachComponents(position, velocity, projectile);
     
@@ -100,7 +106,10 @@ export class ProjectileSystem extends System<ProjectileComponent> {
       const tileX = Math.floor(position.x / CONSTANTS.TILE_SIZE);
       const tileY = Math.floor(position.y / CONSTANTS.TILE_SIZE);
       
-      const targetType = this.getObjectAt?.(tileX, tileY) ?? null;
+      // Skip collision check at starting tile (so you can throw past objects you're standing on)
+      const isAtStartTile = tileX === component.startTileX && tileY === component.startTileY;
+      
+      const targetType = isAtStartTile ? null : (this.getObjectAt?.(tileX, tileY) ?? null);
       
       if (targetType !== null && this.onHit) {
         // Hit something

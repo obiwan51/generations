@@ -13,7 +13,11 @@ class Config {
             animalMovement: true,
             carnivoreAggression: true,
             weatherEnabled: true,
-            xpPerHunt: 10
+            xpPerHunt: 10,
+            animalRespawn: true,
+            animalRespawnInterval: 60,  // Check every 60 seconds
+            animalMaxPopulation: 100,   // Max total animals on the map
+            animalMinDistance: 15       // Min tiles from players to spawn
         };
     }
 

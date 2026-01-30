@@ -6,13 +6,16 @@ import { Component } from '../ecs/Component.js';
  */
 export class ProjectileComponent extends Component {
   public distance: number = 0;
+  public startTileX: number = 0;
+  public startTileY: number = 0;
 
   constructor(
     public ownerId: string,
     public type: number,
     public maxDist: number,
     public angle: number,
-    public damage: number = 5
+    public damage: number = 5,
+    public remainingUses: number | undefined = undefined
   ) {
     super();
   }

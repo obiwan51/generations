@@ -474,6 +474,16 @@ export class AnimalAISystem extends System<AnimalComponent> {
   }
 
   /**
+   * Update animal HP at tile coordinates.
+   */
+  updateAnimalHp(tileX: number, tileY: number, hp: number): void {
+    const component = this.getComponentAt(tileX, tileY);
+    if (component) {
+      component.hp = hp;
+    }
+  }
+
+  /**
    * Make animal flee from a threat (tile coordinates - for projectile hits).
    */
   fleeFrom(animalTileX: number, animalTileY: number, threatTileX: number, threatTileY: number): boolean {
