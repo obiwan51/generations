@@ -62,6 +62,9 @@ const render = new RenderSystem(canvas, ctx);
 const ui = new UISystem(network.getSocket(), (type) => render.getObjectName(type));
 const input = new InputSystem(canvas, network.getSocket(), audio);
 
+// Setup mobile controls
+input.setupMobileActions();
+
 // Send session token to attempt reconnection (only if we have one)
 const sessionToken = getSessionToken();
 if (sessionToken) {
