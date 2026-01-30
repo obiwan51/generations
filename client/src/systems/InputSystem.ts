@@ -162,6 +162,31 @@ export class InputSystem {
 
             this.handleContextualClick(e);
         });
+        
+        // Touch tap handling for canvas (tap to move/interact)
+        this.canvas.addEventListener('touchstart', (e) => {
+            // Ignore if touching mobile controls area
+            const touch = e.touches[0];
+            if (!touch) return;
+            
+            // Check if touch is in mobile controls area (bottom of screen)
+            if (touch.clientY > window.innerHeight - 160) return;
+            
+            // Check if touch is in UI area
+            const ui = document.getElementById('ui');
+            if (ui) {
+                const uiRect = ui.getBoundingClientRect();
+                if (touch.clientX >= uiRect.left && touch.clientX <= uiRect.right &&
+                    touch.clientY >= uiRect.top && touch.clientY <= uiRect.bottom) {
+                    return;
+                }
+            }
+            
+            if (this.isChatting) return;
+            
+            // Create a synthetic mouse event for tap-to-move
+            this.handleTouchTap(touch);
+        }, { passive: true });
 
         // Hover detection for action popup
         this.canvas.addEventListener('mousemove', (e) => {
@@ -323,6 +348,36 @@ export class InputSystem {
                 this.targetPosition = { x: worldX, y: worldY };
             }
         }
+    }
+    
+    /**
+     * Handle touch tap on canvas - simplified interaction for mobile
+     */
+    private handleTouchTap(touch: Touch): void {
+        const rect = this.canvas.getBoundingClientRect();
+        const scaleX = this.canvas.width / rect.width;
+        const scaleY = this.canvas.height / rect.height;
+
+        const touchX = (touch.clientX - rect.left) * scaleX;
+        const touchY = (touch.clientY - rect.top) * scaleY;
+
+        const playerData = this.getPlayerData();
+        if (!playerData) return;
+
+        const screenCenterX = this.canvas.width / 2;
+        const screenCenterY = this.canvas.height / 2;
+
+        // Convert screen to world coords
+        const worldX = playerData.x + (touchX - screenCenterX);
+        const worldY = playerData.y + (touchY - screenCenterY);
+
+        // Get clicked object grid position
+        const objectGridX = Math.floor(worldX / 64);
+        const objectGridY = Math.floor(worldY / 64);
+        
+        // On mobile, just move to tap location
+        // The USE button handles interactions
+        this.targetPosition = { x: objectGridX * 64 + 32, y: objectGridY * 64 + 32 };
     }
 
     /**
@@ -504,6 +559,18 @@ export class InputSystem {
             this.targetPosition = null;
             this.bounceState = null;
         }
+        
+        // Mobile joystick input
+        const mobileJoystick = (window as any).mobileJoystick;
+        if (mobileJoystick && mobileJoystick.active) {
+            const threshold = 0.2; // Dead zone
+            if (Math.abs(mobileJoystick.dx) > threshold || Math.abs(mobileJoystick.dy) > threshold) {
+                dx = mobileJoystick.dx * 2;
+                dy = mobileJoystick.dy * 2;
+                this.targetPosition = null;
+                this.bounceState = null;
+            }
+        }
 
         if (dx !== 0 || dy !== 0) {
             this.socket.emit('move', { dx, dy });
@@ -521,5 +588,62 @@ export class InputSystem {
             this.audio.play('eat');
             this.keys['e'] = false;
         }
+    }
+    
+    /**
+     * Setup mobile action button listeners
+     */
+    setupMobileActions(): void {
+        window.addEventListener('mobileAction', ((e: CustomEvent) => {
+            if (this.isChatting) return;
+            
+            const action = e.detail;
+            const playerData = this.getPlayerData();
+            const holding = this.getPlayerHolding();
+            
+            switch (action) {
+                case 'attack':
+                    // Attack in the direction the player is facing (or forward)
+                    if (holding) {
+                        const bowId = this.getItemIdByKey('BOW');
+                        const spearId = this.getItemIdByKey('SPEAR');
+                        
+                        if (holding === bowId || holding === spearId) {
+                            // Shoot forward (could be enhanced to use joystick direction)
+                            const mobileJoystick = (window as any).mobileJoystick;
+                            let angle = 0;
+                            if (mobileJoystick && (Math.abs(mobileJoystick.dx) > 0.1 || Math.abs(mobileJoystick.dy) > 0.1)) {
+                                angle = Math.atan2(mobileJoystick.dy, mobileJoystick.dx);
+                            }
+                            this.socket.emit('shoot', { angle });
+                            this.audio.play('shoot');
+                        }
+                    }
+                    break;
+                    
+                case 'use':
+                    this.socket.emit('use');
+                    this.audio.play('craft');
+                    break;
+                    
+                case 'eat':
+                    this.socket.emit('eat');
+                    this.audio.play('eat');
+                    break;
+                    
+                case 'backpack':
+                    // Toggle between add/take from backpack
+                    if (holding) {
+                        this.socket.emit('addToBackpack');
+                    } else {
+                        this.socket.emit('takeFromBackpack');
+                    }
+                    break;
+                    
+                case 'recipes':
+                    this.callbacks.onToggleRecipeBook?.();
+                    break;
+            }
+        }) as EventListener);
     }
 }
