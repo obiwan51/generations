@@ -8,6 +8,7 @@ import { Animal } from '../../../shared/types.js';
  */
 export class AnimalComponent extends Component {
   public age: number = 0;
+  public lastAttackTime: number = 0;
 
   constructor(
     public x: number,
@@ -97,6 +98,17 @@ export class AnimalAISystem extends System<AnimalComponent> {
   update(_delta: number): void {
     this.tickCounter++;
 
+    // Check carnivore aggression EVERY tick for responsive attacks
+    if (this.aggressionEnabled) {
+      for (const component of this.components) {
+        if (component.isDeleted) continue;
+        if (component.animalDef.isCarnivore) {
+          this.checkAggression(component);
+        }
+      }
+    }
+
+    // Movement only happens at intervals
     if (this.tickCounter % this.updateInterval !== 0) {
       return;
     }
@@ -107,11 +119,6 @@ export class AnimalAISystem extends System<AnimalComponent> {
 
     for (const component of this.components) {
       if (component.isDeleted) continue;
-
-      // Check carnivore aggression
-      if (component.animalDef.isCarnivore && this.aggressionEnabled) {
-        this.checkAggression(component);
-      }
 
       // Random movement
       const moveChance = component.animalDef.speed || 0.2;
@@ -124,11 +131,16 @@ export class AnimalAISystem extends System<AnimalComponent> {
   private checkAggression(component: AnimalComponent): void {
     if (!this.getPlayersInRange || !this.onAnimalAttack) return;
 
+    // Attack cooldown - 2 seconds between attacks
+    const now = Date.now();
+    if (now - component.lastAttackTime < 2000) return;
+
     const playersInRange = this.getPlayersInRange(component.x, component.y, 1.5);
     
     for (const playerId of playersInRange) {
       // Use aggression stat for damage (default 5)
       const baseDamage = Math.round((component.animalDef.aggression || 0.5) * 10);
+      component.lastAttackTime = now;
       this.onAnimalAttack({
         animalName: component.animalDef.name,
         playerId,
@@ -136,6 +148,7 @@ export class AnimalAISystem extends System<AnimalComponent> {
         animalX: component.x,
         animalY: component.y,
       });
+      break; // Only attack one player per cycle
     }
   }
 

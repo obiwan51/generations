@@ -217,6 +217,12 @@ class GameEngine {
       const comps = this.playerComponents.get(attack.playerId);
       if (comps) {
         comps.hunger.decreaseHunger(attack.damage);
+        
+        // Check if player died from this attack
+        if (comps.hunger.isStarving()) {
+          this.killPlayer(attack.playerId, `Killed by ${attack.animalName}`);
+          return;
+        }
       }
       
       // Emit attack event with knockback info
