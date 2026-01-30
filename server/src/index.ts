@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -1158,7 +1159,7 @@ app.get('/admin', (req, res) => {
 
 // 3. Fallback: Any unknown route serves the index.html (Standard for SPA)
 // MUST BE REGISTERED LAST!
-app.get('*', (req, res) => {
+app.get(/(.*)/, (req, res) => {
     const indexPath = path.join(CLIENT_DIST, 'index.html');
     if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
