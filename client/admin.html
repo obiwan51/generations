@@ -1511,9 +1511,8 @@
                     localStorage.setItem('adminToken', adminToken);
                     document.getElementById('login-overlay').style.display = 'none';
                     errorDiv.style.display = 'none';
-                    // Trigger data load
-                    const activeTab = document.querySelector('.nav-item.active');
-                    if (activeTab) activeTab.click();
+                    // Load all data after successful login
+                    await init();
                 } else {
                     errorDiv.textContent = 'Invalid password';
                     errorDiv.style.display = 'block';
@@ -1534,9 +1533,7 @@
                 showLogin();
             } else {
                 document.getElementById('login-overlay').style.display = 'none';
-                // Trigger initial load since we might miss the first click/load
-                const activeTab = document.querySelector('.nav-item.active');
-                if (activeTab) activeTab.click();
+                // Data will be loaded by init() which already ran
             }
         });
 
@@ -2768,6 +2765,9 @@
 
         // Init
         async function init() {
+            // Don't load data if not authenticated
+            if (!adminToken) return;
+            
             await loadConfig();
             await loadSprites();
             await loadRegistry();

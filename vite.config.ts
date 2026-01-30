@@ -1,24 +1,27 @@
+import 'dotenv/config';
 import { defineConfig } from 'vite';
+
+const PORT = process.env.PORT || 3000;
 
 export default defineConfig({
   root: 'client',
   server: {
     proxy: {
       '/socket.io': {
-        target: 'http://localhost:3000',
+        target: `http://localhost:${PORT}`,
         ws: true,
         changeOrigin: true,
       },
       '/admin-api': {
-        target: 'http://localhost:3000',
+        target: `http://localhost:${PORT}`,
         changeOrigin: true,
       },
       '/assets': {
-        target: 'http://localhost:3000',
+        target: `http://localhost:${PORT}`,
         changeOrigin: true,
       },
       '/shared': {
-        target: 'http://localhost:3000',
+        target: `http://localhost:${PORT}`,
         changeOrigin: true,
       },
     },
